@@ -2,6 +2,7 @@ package com.example.wordsbuilder.ui
 
 import BackgroundManager
 import GameBackground
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
@@ -22,6 +23,10 @@ import com.example.wordsbuilder.data.StatsManager
 fun StatsScreen(bgManager: BackgroundManager, onBack: () -> Unit) {
     val context = LocalContext.current
     val statsManager = remember { StatsManager(context) }
+
+    BackHandler {
+        onBack()
+    }
 
     Box(modifier = Modifier.fillMaxSize()) {
         GameBackground(bgManager = bgManager)

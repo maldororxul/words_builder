@@ -2,6 +2,7 @@ package com.example.wordsbuilder.ui.components
 
 import BackgroundManager
 import GameBackground
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -30,6 +31,10 @@ fun ShopScreen(bgManager: BackgroundManager, onBack: () -> Unit) {
     val backgrounds = remember { bgManager.loadBackgrounds() }
     // Состояние текущей вкладки: 0 - Выбор фона (Гардероб), 1 - Купить новые (Магазин)
     var selectedTab by remember { mutableIntStateOf(0) }
+
+    BackHandler {
+        onBack()
+    }
 
     Box(modifier = Modifier.fillMaxSize()) {
         // Живой предпросмотр выбранного фона прямо на заднем плане экрана

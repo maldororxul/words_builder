@@ -2,6 +2,7 @@ package com.example.wordsbuilder.ui
 
 import BackgroundManager
 import GameBackground
+import androidx.activity.compose.BackHandler
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -26,6 +27,10 @@ fun SettingsScreen(bgManager: BackgroundManager, onBack: () -> Unit) {
 
     val locales = AppCompatDelegate.getApplicationLocales()
     val currentLocale = if (!locales.isEmpty) locales[0]?.language ?: "en" else "en"
+
+    BackHandler {
+        onBack()
+    }
 
     Box(modifier = Modifier.fillMaxSize()) {
         GameBackground(bgManager = bgManager)
