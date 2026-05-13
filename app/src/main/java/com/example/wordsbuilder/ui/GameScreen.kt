@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import com.example.wordsbuilder.data.LevelManager
 import generateCrossword
 import generateLevel
+import getRandomWordsCount
 import getSavedCampaignLevelIndex
 import getSavedCoins
 import getSavedLanguage
@@ -78,7 +79,10 @@ fun GameScreen(
             }
         } else {
             val dictionary = DictionaryManager.loadDictionary(context, currentLocale)
-            targetWords = generateLevel(dictionary).first
+            targetWords = generateLevel(
+                dictionary = dictionary,
+                wordCount = getRandomWordsCount(context)
+            ).first
         }
 
         val sortedWords = targetWords.sortedByDescending { it.length }

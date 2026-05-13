@@ -129,3 +129,15 @@ fun handleWordInput(
         onCurrentWordChange(input)
     }
 }
+
+// Сохранение количества слов для случайного режима (по умолчанию 5)
+fun saveRandomWordsCount(context: Context, count: Int) {
+    val prefs = context.getSharedPreferences("words_builder_prefs", Context.MODE_PRIVATE)
+    prefs.edit { putInt("random_words_count", count) }
+}
+
+// Чтение количества слов для случайного режима
+fun getRandomWordsCount(context: Context): Int {
+    val prefs = context.getSharedPreferences("words_builder_prefs", Context.MODE_PRIVATE)
+    return prefs.getInt("random_words_count", 5) // 5 — дефолтное значение
+}

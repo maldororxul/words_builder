@@ -17,12 +17,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.wordsbuilder.R
 import changeLocale
+import saveRandomWordsCount
+import getRandomWordsCount
 
 @Composable
 fun SettingsScreen(bgManager: BackgroundManager, onBack: () -> Unit) {
     val context = LocalContext.current
-    var musicVol by remember { mutableStateOf(SoundManager.musicVolume) }
-    var soundVol by remember { mutableStateOf(SoundManager.soundVolume) }
+    var musicVol by remember { mutableFloatStateOf(SoundManager.musicVolume) }
+    var soundVol by remember { mutableFloatStateOf(SoundManager.soundVolume) }
     var expanded by remember { mutableStateOf(false) }
 
     val locales = AppCompatDelegate.getApplicationLocales()
@@ -93,6 +95,24 @@ fun SettingsScreen(bgManager: BackgroundManager, onBack: () -> Unit) {
                     soundVol = it
                     SoundManager.updateSoundVolume(context, it)
                 },
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)
+            )
+
+            Spacer(modifier = Modifier.height(40.dp))
+
+            // Ползунок для выбора количества слов (5-9)
+            var randomWordsCount by remember { mutableIntStateOf(getRandomWordsCount(context)) }
+
+            Text("Слов в случайном режиме: $randomWordsCount", color = Color.White, fontSize = 18.sp)
+            Slider(
+                value = randomWordsCount.toFloat(),
+                onValueChange = {
+                    val roundedValue = it.toInt()
+                    randomWordsCount = roundedValue
+                    saveRandomWordsCount(context, roundedValue) // Сохраняем целое число на лету
+                },
+                valueRange = 5f..9f, // Ограничиваем диапазон ползунка
+                steps = 3,          // Задает ровно 5 делений: 5, 6, 7, 8, 9
                 modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)
             )
 
