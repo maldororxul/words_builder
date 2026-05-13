@@ -10,10 +10,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.drawText
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.wordsbuilder.R
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.min
@@ -30,6 +32,7 @@ fun WordWheel(
     var selectedIndices by remember { mutableStateOf(emptyList<Int>()) }
     var touchPoint by remember { mutableStateOf<Offset?>(null) }
     val textMeasurer = androidx.compose.ui.text.rememberTextMeasurer()
+    val context = LocalContext.current
 
     Canvas(modifier = Modifier
         .size(300.dp)
@@ -56,7 +59,7 @@ fun WordWheel(
 
                         if (distance < 60f && !selectedIndices.contains(index)) {
                             selectedIndices = selectedIndices + index
-                            SoundManager.playSound("click") // ЗВУК КЛИКА
+                            SoundManager.playSound(context, R.raw.click)
                             // ОБНОВЛЕНИЕ В РЕАЛЬНОМ ВРЕМЕНИ:
                             val currentWord = selectedIndices.map { letters[it] }.joinToString("")
                             onWordComposed(currentWord)
@@ -67,7 +70,7 @@ fun WordWheel(
                     val word = selectedIndices.map { letters[it] }.joinToString("")
                     // Звук ошибки только если слово длиннее 1 буквы и его нет в списке
                     if (word.length > 1 && !targetWords.contains(word)) {
-                        SoundManager.playSound("error")
+                        SoundManager.playSound(context, R.raw.error)
                     }
                     // Всегда уведомляем GameScreen, что ввод завершен
                     val finalWord = selectedIndices.map { letters[it] }.joinToString("")

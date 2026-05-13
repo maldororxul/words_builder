@@ -24,4 +24,7 @@
     <string name="active">Активен</string>
     <string name="all_backgrounds_bought">Все фоны куплены</string>
     <string name="no_backrounds_bought">Нет купленных фонов</string>
+    <string name="settings">Настройки ⚙️</string>
+    <string name="music">Музыка 🎵</string>
+    <string name="sounds">Звуки 🔊️</string>
 </resources>

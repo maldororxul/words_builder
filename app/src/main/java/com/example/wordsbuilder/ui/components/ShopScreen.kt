@@ -136,7 +136,14 @@ fun ShopScreen(bgManager: BackgroundManager, onBack: () -> Unit) {
                                 if (selectedTab == 0) {
                                     // Интерфейс выбора в Гардеробе
                                     if (isSelected) {
-                                        Button(onClick = {}, enabled = false) {
+                                        Button(
+                                            onClick = {},
+                                            enabled = false,
+                                            colors = ButtonDefaults.buttonColors(
+                                                disabledContainerColor = Color(0xFF333333),
+                                                disabledContentColor = Color.White
+                                            )
+                                        ) {
                                             Text(text = stringResource(id = R.string.active))
                                         }
                                     } else {

@@ -9,12 +9,15 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
 import com.example.wordsbuilder.ui.theme.WordsBuilderTheme
@@ -29,6 +32,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.os.LocaleListCompat
 import com.example.wordsbuilder.data.LevelManager
+import com.example.wordsbuilder.ui.SettingsScreen
 import com.example.wordsbuilder.ui.components.ShopScreen
 import getSavedCampaignLevelIndex
 import getSavedLanguage
@@ -55,6 +59,7 @@ class MainActivity : AppCompatActivity() {
             WordsBuilderTheme {
                 var currentScreen by rememberSaveable { mutableStateOf("menu") }
                 var gameMode by rememberSaveable { mutableStateOf("campaign") }
+                val context = LocalContext.current
 
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     Box(modifier = Modifier.fillMaxSize().padding(innerPadding)) {
@@ -66,11 +71,22 @@ class MainActivity : AppCompatActivity() {
 
                         when (currentScreen) {
                             "menu" -> {
+                                LaunchedEffect(currentScreen) {
+                                    SoundManager.switchMusic(
+                                        context = context,
+                                        resId = R.raw.menu_music
+                                    )
+                                }
                                 val locales = AppCompatDelegate.getApplicationLocales()
                                 val currentLocale = if (!locales.isEmpty) locales[0]?.language ?: "en" else "en"
 
-                                val currentCampaignLevel = getSavedCampaignLevelIndex(LocalContext.current, currentLocale)
-                                val totalLevels = LevelManager.getCampaignLevelsCount(context = LocalContext.current, currentLocale)
+                                val currentCampaignLevel = getSavedCampaignLevelIndex(
+                                    context = LocalContext.current,
+                                    langCode = currentLocale
+                                )
+                                val totalLevels = LevelManager.getCampaignLevelsCount(
+                                    context = LocalContext.current,
+                                    langCode = currentLocale)
 
                                 val isCampaignFinished = currentCampaignLevel > totalLevels
                                 // Используем монеты из нашего менеджера
@@ -100,25 +116,54 @@ class MainActivity : AppCompatActivity() {
                                             .padding(top = 16.dp, end = 16.dp)
                                     )
 
-                                    // Маленькая аккуратная кнопка Магазина поверх Главного Меню
-                                    Button(
-                                        onClick = { currentScreen = "shop" },
+                                    Row(
                                         modifier = Modifier
                                             .align(Alignment.BottomCenter)
-                                            .padding(bottom = 80.dp)
+                                            .padding(bottom = 80.dp),
+                                        horizontalArrangement = Arrangement.spacedBy(16.dp),
+                                        verticalAlignment = Alignment.CenterVertically
                                     ) {
-                                        Text(text = stringResource(id = R.string.backgrounds_store))
+                                        Button(onClick = { currentScreen = "shop" }) {
+                                            Text(text = stringResource(id = R.string.backgrounds_store))
+                                        }
+                                        Button(onClick = { currentScreen = "settings" }) {
+                                            Text(text = stringResource(id = R.string.settings))
+                                        }
                                     }
                                 }
                             }
                             "game" -> {
+                                LaunchedEffect(currentScreen) {
+                                    SoundManager.switchMusic(
+                                        context = context,
+                                        resId = R.raw.bg_music
+                                    )
+                                }
                                 GameScreen(
                                     gameMode = gameMode,
                                     paddingValues = innerPadding,
                                     onBackToMenu = { currentScreen = "menu" }
                                 )
                             }
+                            "settings" -> {
+                                LaunchedEffect(currentScreen) {
+                                    SoundManager.switchMusic(
+                                        context = context,
+                                        resId = R.raw.menu_music
+                                    )
+                                }
+                                SettingsScreen(
+                                    bgManager = bgManager,
+                                    onBack = { currentScreen = "menu" }
+                                )
+                            }
                             "shop" -> {
+                                LaunchedEffect(currentScreen) {
+                                    SoundManager.switchMusic(
+                                        context = context,
+                                        resId = R.raw.menu_music
+                                    )
+                                }
                                 ShopScreen(
                                     bgManager = bgManager,
                                     onBack = { currentScreen = "menu" }
@@ -133,7 +178,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        SoundManager.startMusic(this)
+        SoundManager.resumeMusic()
     }
 
     override fun onPause() {

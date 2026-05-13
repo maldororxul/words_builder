@@ -42,10 +42,9 @@ fun HintConfirmationDialog(
                             if (gameMode == "campaign") {
                                 saveCurrentLevelProgress(context, newSolved)
                             }
-
-                            SoundManager.playSound("success")
+                            SoundManager.playSound(context, R.raw.success)
                             if (newSolved.size == targetWords.size) {
-                                SoundManager.playSound("victory")
+                                SoundManager.playSound(context, R.raw.victory)
                             }
 
                             onConfirm(newCoins, newSolved)

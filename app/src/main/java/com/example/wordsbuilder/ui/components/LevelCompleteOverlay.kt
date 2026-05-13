@@ -28,7 +28,7 @@ fun LevelCompleteOverlay(
     onNextLevel: () -> Unit
 ) {
     LaunchedEffect(gameMode, levelReward) {
-        SoundManager.playSound("victory")
+        SoundManager.playSound(context, R.raw.victory)
         if (gameMode == "campaign") {
             val currentCoins = getSavedCoins(context)
             val newCoins = currentCoins + levelReward

@@ -28,4 +28,7 @@
     <string name="active">Activo</string>
     <string name="all_backgrounds_bought">Todos los fondos comprados</string>
     <string name="no_backrounds_bought">No se compraron fondos</string>
+    <string name="settings">Ajustes ⚙️</string>
+    <string name="music">Música 🎵 %1$d</string>
+    <string name="sounds">Sonidos 🔊️ %1$d</string>
 </resources>

@@ -1,6 +1,6 @@
 import android.content.Context
-import androidx.compose.ui.res.stringResource
 import androidx.core.content.edit
+import com.example.wordsbuilder.R
 
 fun generateLevel(dictionary: List<String>, wordCount: Int = 6): Pair<List<String>, List<Char>> {
     if (dictionary.isEmpty()) return Pair(emptyList(), emptyList())
@@ -104,14 +104,14 @@ fun handleWordInput(
                 saveCurrentLevelProgress(context, newSolved)
             }
 
-            SoundManager.playSound("success")
+            SoundManager.playSound(context, R.raw.success)
 
             if (newSolved.size == targetWords.size) {
-                SoundManager.playSound("victory")
+                SoundManager.playSound(context, R.raw.victory)
             }
         }
         else if (word.length > 1) {
-            SoundManager.playSound("error")
+            SoundManager.playSound(context, R.raw.error)
         }
 
         onCurrentWordChange("")

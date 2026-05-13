@@ -12,8 +12,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -70,7 +72,12 @@ fun MainMenu(
             // Кнопка Кампании с номером уровня
             Button(
                 onClick = onStartCampaign,
-                enabled = !isCampaignFinished // Кнопка блокируется, если кампания пройдена
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = Color.White
+                ),
+                enabled = !isCampaignFinished,
+                modifier = Modifier
             ) {
                 Text(
                     text = if (isCampaignFinished) {
@@ -85,45 +92,18 @@ fun MainMenu(
 
             // 2. Кнопка запуска Случайного уровня
             // Не забудь добавить строку random_mode в strings.xml, либо пока напиши текст вручную для проверки
-            OutlinedButton(onClick = onStartRandom) {
+            OutlinedButton(
+                onClick = onStartRandom,
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.secondary,
+                    contentColor = Color.White
+                ),
+                modifier = Modifier
+            ) {
                 Text(text = stringResource(id = R.string.random_level))
             }
 
             Spacer(modifier = Modifier.height(16.dp))
-
-            // Язык
-            Box {
-                OutlinedButton(onClick = { expanded = true }) {
-                    Text(text = stringResource(id = R.string.language))
-                }
-                val context = LocalContext.current
-                DropdownMenu(
-                    expanded = expanded,
-                    onDismissRequest = { expanded = false }
-                ) {
-                    DropdownMenuItem(
-                        text = { Text("English") },
-                        onClick = {
-                            expanded = false
-                            if (currentLocale != "en") changeLocale(context = context, langCode = "en")
-                        }
-                    )
-                    DropdownMenuItem(
-                        text = { Text("Español") },
-                        onClick = {
-                            expanded = false
-                            if (currentLocale != "es") changeLocale(context = context, langCode = "es")
-                        }
-                    )
-                    DropdownMenuItem(
-                        text = { Text("Русский") },
-                        onClick = {
-                            expanded = false
-                            if (currentLocale != "ru") changeLocale(context = context, langCode = "ru")
-                        }
-                    )
-                }
-            }
         }
     }
 }

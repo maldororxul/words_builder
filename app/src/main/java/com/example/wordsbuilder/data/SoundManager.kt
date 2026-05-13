@@ -1,52 +1,86 @@
 import android.content.Context
-import android.media.AudioAttributes
 import android.media.MediaPlayer
-import android.media.SoundPool
 import com.example.wordsbuilder.R
+import androidx.core.content.edit
 
 object SoundManager {
-    private var soundPool: SoundPool? = null
-    private var sounds = mutableMapOf<String, Int>()
-    private var mediaPlayer: MediaPlayer? = null
+    private var musicPlayer: MediaPlayer? = null
+    private var soundPlayer: MediaPlayer? = null
+
+    private const val PREFS_NAME = "game_prefs"
+    private const val KEY_MUSIC_VOL = "music_volume"
+    private const val KEY_SOUND_VOL = "sound_volume"
+
+    var musicVolume: Float = 0.8f
+    var soundVolume: Float = 0.8f
+
+    // Храним ID текущего играющего трека, чтобы не перезапускать его с начала, если он уже играет
+    private var currentMusicResId: Int? = null
 
     fun init(context: Context) {
-        val attrs = AudioAttributes.Builder()
-            .setUsage(AudioAttributes.USAGE_GAME)
-            .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
-            .build()
-
-        soundPool = SoundPool.Builder().setMaxStreams(5).setAudioAttributes(attrs).build()
-
-        // Загружаем эффекты
-        sounds["click"] = soundPool?.load(context, R.raw.click, 1) ?: 0
-        sounds["success"] = soundPool?.load(context, R.raw.success, 1) ?: 0
-        sounds["error"] = soundPool?.load(context, R.raw.error, 1) ?: 0
-        sounds["victory"] = soundPool?.load(context, R.raw.victory, 1) ?: 0
+        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        musicVolume = prefs.getFloat(KEY_MUSIC_VOL, 0.8f)
+        soundVolume = prefs.getFloat(KEY_SOUND_VOL, 0.8f)
     }
 
-    fun playSound(name: String) {
-        sounds[name]?.let { soundPool?.play(it, 1f, 1f, 0, 0, 1f) }
-    }
+    // Универсальный метод переключения музыки
+    fun switchMusic(context: Context, resId: Int) {
+        // Если этот трек уже играет прямо сейчас, ничего не делаем (избегаем заикания звука)
+        if (currentMusicResId == resId && musicPlayer?.isPlaying == true) {
+            return
+        }
 
-    fun startMusic(context: Context) {
-        if (mediaPlayer == null) {
-            mediaPlayer = MediaPlayer.create(context, R.raw.bg_music).apply {
-                isLooping = true
-                setVolume(0.3f, 0.3f) // Немного тише, чтобы не мешать эффектам
-                start()
-            }
-        } else if (!mediaPlayer!!.isPlaying) {
-            mediaPlayer?.start()
+        // Освобождаем старый плеер
+        musicPlayer?.stop()
+        musicPlayer?.release()
+
+        currentMusicResId = resId
+        musicPlayer = MediaPlayer.create(context, resId).apply {
+            isLooping = true
+            setVolume(musicVolume, musicVolume)
+            start()
         }
     }
 
+    fun startMusic(context: Context) {
+        // По умолчанию при холодном старте включаем музыку меню
+        switchMusic(context, R.raw.menu_music)
+    }
+
     fun pauseMusic() {
-        mediaPlayer?.pause()
+        musicPlayer?.pause()
+    }
+
+    fun resumeMusic() {
+        musicPlayer?.start()
+    }
+
+    fun updateMusicVolume(context: Context, volume: Float) {
+        musicVolume = volume
+        musicPlayer?.setVolume(volume, volume)
+        context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+            .edit { putFloat(KEY_MUSIC_VOL, volume) }
+    }
+
+    fun updateSoundVolume(context: Context, volume: Float) {
+        soundVolume = volume
+        context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+            .edit { putFloat(KEY_SOUND_VOL, volume) }
+    }
+
+    fun playSound(context: Context, resId: Int) {
+        soundPlayer?.release()
+        soundPlayer = MediaPlayer.create(context, resId).apply {
+            setVolume(soundVolume, soundVolume)
+            start()
+            setOnCompletionListener { release() }
+        }
     }
 
     fun stopMusic() {
-        mediaPlayer?.stop()
-        mediaPlayer?.release()
-        mediaPlayer = null
+        musicPlayer?.stop()
+        musicPlayer?.release()
+        musicPlayer = null
     }
+
 }
