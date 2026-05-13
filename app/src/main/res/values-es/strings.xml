@@ -1,0 +1,15 @@
+<resources>
+    <string name="start_game">-- Campaign, level %1$d --</string>
+    <string name="random_level">Nivel aleatorio</string>
+    <string name="language">Idioma: ES</string>
+    <string name="next_level">Siguiente nivel</string>
+    <string name="level_completed">¡Nivel completado!</string>
+    <string name="exit_title">¿Estás seguro?</string>
+    <string name="exit_message">Volver al menú principal</string>
+    <string name="yes">Sí</string>
+    <string name="no">No</string>
+    <string name="score_label">Puntuación</string>
+    <string name="help">Ayuda</string>
+    <string name="level_short">-- Lvl. %1$d --</string>
+    <string name="campaign_finished">-- Campaign Completed! --</string>
+</resources>

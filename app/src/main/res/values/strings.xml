@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">Words Builder</string>
+    <string name="start_game">Campaign, level %1$d</string>
+    <string name="random_level">Random Level</string>
+    <string name="language">Language: EN</string>
+    <string name="next_level">Next Level</string>
+    <string name="level_completed">Level Completed!</string>
+    <string name="exit_title">Are you sure?</string>
+    <string name="exit_message">Return to main menu</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="score_label">Score</string>
+    <string name="help">Help</string>
+    <string name="level_short">Lvl. %1$d</string>
+    <string name="campaign_finished">Campaign Completed!</string>
+    <string name="coins_label">Coins: %1$d</string>
+    <string name="hint_confirm_title">Use Hint?</string>
+    <string name="hint_confirm_msg">Are you sure you want to spend %1$d coins for a hint?</string>
+    <string name="not_enough_coins">Not enough coins!</string>
+</resources>

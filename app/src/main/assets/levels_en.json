@@ -1,0 +1,14 @@
+[
+  {
+    "id": 1,
+    "reward": 50,
+    "hint_cost": 20,
+    "words": ["APPLE", "PALE", "LEAP", "PEAL"]
+  },
+  {
+    "id": 2,
+    "reward": 100,
+    "hint_cost": 30,
+    "words": ["PLEASE", "SLEEP", "LEAP", "PEAL", "SALE"]
+  }
+]

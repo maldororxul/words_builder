@@ -1,0 +1,15 @@
+<resources>
+    <string name="start_game">Кампания, уровень %1$d</string>
+    <string name="random_level">Случайный уровень</string>
+    <string name="language">Язык: RU</string>
+    <string name="next_level">Следующий уровень</string>
+    <string name="level_completed">Уровень пройден!</string>
+    <string name="exit_title">Вы уверены?</string>
+    <string name="exit_message">Вернуться в главное меню</string>
+    <string name="yes">Да</string>
+    <string name="no">Нет</string>
+    <string name="score_label">Счет</string>
+    <string name="help">Помощь</string>
+    <string name="level_short">Ур. %1$d</string>
+    <string name="campaign_finished">Кампания пройдена!</string>
+</resources>
