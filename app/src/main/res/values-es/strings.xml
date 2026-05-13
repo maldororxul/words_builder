@@ -10,6 +10,22 @@
     <string name="no">No</string>
     <string name="score_label">Puntuación</string>
     <string name="help">Ayuda</string>
-    <string name="level_short">-- Lvl. %1$d --</string>
-    <string name="campaign_finished">-- Campaign Completed! --</string>
+    <string name="level_short">Nivel %1$d</string>
+    <string name="campaign_finished">¡Campaña completada!</string>
+    <string name="coins_label">Monedas: %1$d</string>
+    <string name="hint_confirm_title">¿Usar pista?</string>
+    <string name="hint_confirm_msg">¿Estás seguro de que quieres gastar %1$d monedas en una pista?</string>
+    <string name="not_enough_coins">¡No tienes suficientes monedas!</string>
+    <string name="bg_name_default">Por defecto</string>
+    <string name="bg_sea_and_sun">Atardecer en el mar</string>
+    <string name="back">Atrás</string>
+    <string name="backgrounds_store">Seleccionar fondo 🎭</string>
+    <string name="my_collection">Mi colección</string>
+    <string name="buy_backgrounds">Comprar fondos</string>
+    <string name="static_background">Estático</string>
+    <string name="video_background">Animación de video</string>
+    <string name="apply">Aplicar</string>
+    <string name="active">Activo</string>
+    <string name="all_backgrounds_bought">Todos los fondos comprados</string>
+    <string name="no_backrounds_bought">No se compraron fondos</string>
 </resources>

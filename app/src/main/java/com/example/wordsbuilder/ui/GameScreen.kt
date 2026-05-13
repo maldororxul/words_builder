@@ -1,5 +1,6 @@
 package com.example.wordsbuilder.ui
 
+import BackgroundManager
 import CrosswordGrid
 import ExitConfirmationDialog
 import GameBottomPanel
@@ -125,9 +126,9 @@ fun GameScreen(
     Box(modifier = Modifier.fillMaxSize()) {
 
         // Фон
-        key(screenKey.intValue) {
-            VideoBackground(videoResId = R.raw.background)
-        }
+//        key(screenKey.intValue) {
+//            BackgroundManager(videoResId = R.drawable.bg_default_draw)
+//        }
 
         Column(modifier = Modifier.fillMaxSize()) {
 

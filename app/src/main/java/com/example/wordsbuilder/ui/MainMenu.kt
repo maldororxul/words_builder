@@ -1,4 +1,5 @@
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -6,6 +7,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -22,7 +24,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -44,35 +48,22 @@ fun MainMenu(
         modifier = Modifier.fillMaxSize()
     ) {
 
-        // Баланс монет в верхнем левом углу меню
-        Row(
-            modifier = Modifier.align(Alignment.TopStart).padding(24.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text("🪙 ", fontSize = 20.sp)
-            Text(
-                text = stringResource(id = R.string.coins_label, coins),
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color.White
-            )
-        }
-
         Column(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
-            // Заглушка под картинку
-            Box(
+            // Лого
+            Image(
+                painter = painterResource(id = R.drawable.ic_game_logo),
+                contentDescription = "Game Logo",
                 modifier = Modifier
-                    .size(200.dp)
-                    .background(Color.Gray),
-                contentAlignment = Alignment.Center
-            ) {
-                Text("LOGO")
-            }
+                    .fillMaxWidth(0.8f) // Занимает 80% ширины экрана
+                    .height(180.dp)     // Фиксированная высота для адаптивности
+                    .padding(top = 32.dp),
+                contentScale = ContentScale.Fit
+            )
 
             Spacer(modifier = Modifier.height(32.dp))
 

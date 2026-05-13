@@ -1,0 +1,16 @@
+[
+  {
+    "id": "bg_default",
+    "nameResKey": "bg_name_default",
+    "type": "image",
+    "resourceName": "bg_default_draw",
+    "price": 0
+  },
+  {
+    "id": "bg_sea_and_sun",
+    "nameResKey": "bg_sea_and_sun",
+    "type": "video",
+    "resourceName": "bg_sea_and_sun",
+    "price": 300
+  }
+]

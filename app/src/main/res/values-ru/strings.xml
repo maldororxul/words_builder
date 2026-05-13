@@ -12,4 +12,16 @@
     <string name="help">Помощь</string>
     <string name="level_short">Ур. %1$d</string>
     <string name="campaign_finished">Кампания пройдена!</string>
+    <string name="bg_name_default">По умолчанию</string>
+    <string name="bg_sea_and_sun">Закат на море</string>
+    <string name="back">Назад</string>
+    <string name="backgrounds_store">Выбрать фон 🎭</string>
+    <string name="my_collection">Моя коллекция</string>
+    <string name="buy_backgrounds">Купить фоны</string>
+    <string name="static_background">Статический</string>
+    <string name="video_background">Видеоанимация</string>
+    <string name="apply">Применить</string>
+    <string name="active">Активен</string>
+    <string name="all_backgrounds_bought">Все фоны куплены</string>
+    <string name="no_backrounds_bought">Нет купленных фонов</string>
 </resources>
