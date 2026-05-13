@@ -1,6 +1,7 @@
 import android.content.Context
 import androidx.core.content.edit
 import com.example.wordsbuilder.R
+import com.example.wordsbuilder.data.StatsManager
 
 fun generateLevel(dictionary: List<String>, wordCount: Int = 6): Pair<List<String>, List<Char>> {
     if (dictionary.isEmpty()) return Pair(emptyList(), emptyList())
@@ -105,6 +106,15 @@ fun handleWordInput(
             }
 
             SoundManager.playSound(context, R.raw.success)
+            val statsManager = StatsManager(context)
+            // 1. Плюс одно разгаданное слово в общий счетчик
+            statsManager.totalWordsSolved += 1
+            // 2. Добавляем слово в список уникальных (метод сам отсечет дубликаты)
+            statsManager.addUniqueWord(word)
+            // 3. Рассчитываем очки: длина слова * 10. Если это кампания — даем бонус x2 (длина * 20)
+            val scoreEarned = if (gameMode == "campaign") (word.length * 20) else (word.length * 10)
+
+            statsManager.totalScore += scoreEarned
 
             if (newSolved.size == targetWords.size) {
                 SoundManager.playSound(context, R.raw.victory)

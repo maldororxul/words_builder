@@ -12,8 +12,8 @@ class BackgroundManager(private val context: Context) {
     private val prefs = context.getSharedPreferences("game_prefs", Context.MODE_PRIVATE)
 
     var coins: Int
-        get() = prefs.getInt("player_coins", 500) // 500 для теста, синхронизировано с вашим getSavedCoins
-        set(value) = prefs.edit { putInt("player_coins", value) }
+        get() = getSavedCoins(context)
+        set(value) = saveCoins(context, value)
 
     var selectedBackgroundId: String
         get() = prefs.getString("selected_bg", "bg_default") ?: "bg_default"

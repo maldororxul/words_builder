@@ -1,6 +1,6 @@
 <resources>
-    <string name="start_game">-- Campaign, level %1$d --</string>
-    <string name="random_level">Nivel aleatorio</string>
+    <string name="start_game">Campaña, nivel %1$d 🏆</string>
+    <string name="random_level">Nivel aleatorio 🎲</string>
     <string name="language">Idioma: ES</string>
     <string name="next_level">Siguiente nivel</string>
     <string name="level_completed">¡Nivel completado!</string>
@@ -31,4 +31,9 @@
     <string name="settings">Ajustes ⚙️</string>
     <string name="music">Música 🎵 %1$d</string>
     <string name="sounds">Sonidos 🔊️ %1$d</string>
+    <string name="statistics">Estadística 📊️</string>
+    <string name="total_score">Puntos ganados:</string>
+    <string name="total_words_solved">Total de palabras resueltas:</string>
+    <string name="uniq_words_solved">Palabras únicas:</string>
+    <string name="hints_taken">Pistas utilizadas:</string>
 </resources>

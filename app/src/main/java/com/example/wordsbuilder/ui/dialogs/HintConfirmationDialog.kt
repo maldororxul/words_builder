@@ -31,6 +31,10 @@ fun HintConfirmationDialog(
                 Button(onClick = {
                     onDismiss()
                     if (coins >= hintCost) {
+
+                        val statsManager = com.example.wordsbuilder.data.StatsManager(context)
+                        statsManager.hintsUsed += 1
+
                         val newCoins = coins - hintCost
                         saveCoins(context, newCoins)
 

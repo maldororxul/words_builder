@@ -1,13 +1,11 @@
 package com.example.wordsbuilder.ui
 
-import BackgroundManager
 import CrosswordGrid
 import ExitConfirmationDialog
 import GameBottomPanel
 import HintConfirmationDialog
 import LevelCompleteOverlay
 import LevelInfo
-import VideoBackground
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -20,7 +18,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -30,7 +27,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import com.example.wordsbuilder.R
 import com.example.wordsbuilder.data.LevelManager
 import generateCrossword
 import generateLevel
@@ -124,11 +120,6 @@ fun GameScreen(
     BackHandler { showExitDialog = true }
 
     Box(modifier = Modifier.fillMaxSize()) {
-
-        // Фон
-//        key(screenKey.intValue) {
-//            BackgroundManager(videoResId = R.drawable.bg_default_draw)
-//        }
 
         Column(modifier = Modifier.fillMaxSize()) {
 

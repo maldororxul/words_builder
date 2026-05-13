@@ -22,6 +22,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
 import com.example.wordsbuilder.ui.theme.WordsBuilderTheme
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
@@ -33,6 +35,7 @@ import androidx.compose.ui.unit.sp
 import androidx.core.os.LocaleListCompat
 import com.example.wordsbuilder.data.LevelManager
 import com.example.wordsbuilder.ui.SettingsScreen
+import com.example.wordsbuilder.ui.StatsScreen
 import com.example.wordsbuilder.ui.components.ShopScreen
 import getSavedCampaignLevelIndex
 import getSavedLanguage
@@ -71,26 +74,21 @@ class MainActivity : AppCompatActivity() {
 
                         when (currentScreen) {
                             "menu" -> {
+
+                                var currentCoins by remember { mutableIntStateOf(bgManager.coins) }
+
                                 LaunchedEffect(currentScreen) {
-                                    SoundManager.switchMusic(
-                                        context = context,
-                                        resId = R.raw.menu_music
-                                    )
+                                    SoundManager.switchMusic(context, R.raw.menu_music)
+                                    currentCoins = bgManager.coins
                                 }
+
                                 val locales = AppCompatDelegate.getApplicationLocales()
                                 val currentLocale = if (!locales.isEmpty) locales[0]?.language ?: "en" else "en"
 
-                                val currentCampaignLevel = getSavedCampaignLevelIndex(
-                                    context = LocalContext.current,
-                                    langCode = currentLocale
-                                )
-                                val totalLevels = LevelManager.getCampaignLevelsCount(
-                                    context = LocalContext.current,
-                                    langCode = currentLocale)
+                                val currentCampaignLevel = getSavedCampaignLevelIndex(LocalContext.current, currentLocale)
+                                val totalLevels = LevelManager.getCampaignLevelsCount(context = LocalContext.current, currentLocale)
 
                                 val isCampaignFinished = currentCampaignLevel > totalLevels
-                                // Используем монеты из нашего менеджера
-                                val currentCoins = bgManager.coins
 
                                 Box(modifier = Modifier.fillMaxSize()) {
                                     MainMenu(
@@ -104,7 +102,10 @@ class MainActivity : AppCompatActivity() {
                                         onStartRandom = {
                                             gameMode = "random"
                                             currentScreen = "game"
-                                        }
+                                        },
+                                        onOpenShop = { currentScreen = "shop" },
+                                        onOpenSettings = { currentScreen = "settings" },
+                                        onOpenStats = { currentScreen = "stats" } // Переход на экран статистики
                                     )
 
                                     Text(
@@ -115,22 +116,16 @@ class MainActivity : AppCompatActivity() {
                                             .align(Alignment.TopEnd)
                                             .padding(top = 16.dp, end = 16.dp)
                                     )
-
-                                    Row(
-                                        modifier = Modifier
-                                            .align(Alignment.BottomCenter)
-                                            .padding(bottom = 80.dp),
-                                        horizontalArrangement = Arrangement.spacedBy(16.dp),
-                                        verticalAlignment = Alignment.CenterVertically
-                                    ) {
-                                        Button(onClick = { currentScreen = "shop" }) {
-                                            Text(text = stringResource(id = R.string.backgrounds_store))
-                                        }
-                                        Button(onClick = { currentScreen = "settings" }) {
-                                            Text(text = stringResource(id = R.string.settings))
-                                        }
-                                    }
                                 }
+                            }
+                            "stats" -> {
+                                LaunchedEffect(currentScreen) {
+                                    SoundManager.switchMusic(context, R.raw.menu_music)
+                                }
+                                StatsScreen(
+                                    bgManager = bgManager,
+                                    onBack = { currentScreen = "menu" }
+                                )
                             }
                             "game" -> {
                                 LaunchedEffect(currentScreen) {
