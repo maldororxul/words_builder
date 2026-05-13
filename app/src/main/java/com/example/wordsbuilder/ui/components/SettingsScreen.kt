@@ -103,7 +103,7 @@ fun SettingsScreen(bgManager: BackgroundManager, onBack: () -> Unit) {
             // Ползунок для выбора количества слов (5-9)
             var randomWordsCount by remember { mutableIntStateOf(getRandomWordsCount(context)) }
 
-            Text("Слов в случайном режиме: $randomWordsCount", color = Color.White, fontSize = 18.sp)
+            Text(stringResource(R.string.random_level_words_count, randomWordsCount), color = Color.White, fontSize = 18.sp)
             Slider(
                 value = randomWordsCount.toFloat(),
                 onValueChange = {

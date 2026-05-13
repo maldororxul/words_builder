@@ -37,4 +37,5 @@
     <string name="total_words_solved">Total Words Solved:</string>
     <string name="uniq_words_solved">Unique Words:</string>
     <string name="hints_taken">Hints Used:</string>
+    <string name="random_level_words_count">Words in random mode: %1$d</string>
 </resources>

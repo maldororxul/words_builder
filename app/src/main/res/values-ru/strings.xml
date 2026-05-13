@@ -35,4 +35,5 @@
     <string name="total_words_solved">Всего слов разгадано:</string>
     <string name="uniq_words_solved">Уникальных слов:</string>
     <string name="hints_taken">Подсказок взято:</string>
+    <string name="random_level_words_count">Слов в случайном режиме: %1$d</string>
 </resources>
