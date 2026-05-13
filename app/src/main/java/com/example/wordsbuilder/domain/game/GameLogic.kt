@@ -1,7 +1,6 @@
 import android.content.Context
 import androidx.core.content.edit
 import com.example.wordsbuilder.R
-import com.example.wordsbuilder.SoundManager
 import com.example.wordsbuilder.data.StatsManager
 
 fun generateLevel(dictionary: List<String>, wordCount: Int = 6): Pair<List<String>, List<Char>> {

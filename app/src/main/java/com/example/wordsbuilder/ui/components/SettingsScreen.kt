@@ -17,7 +17,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.wordsbuilder.R
 import changeLocale
-import com.example.wordsbuilder.SoundManager
 import saveRandomWordsCount
 import getRandomWordsCount
 

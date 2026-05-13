@@ -27,7 +27,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import com.example.wordsbuilder.SoundManager
 import com.example.wordsbuilder.data.LevelManager
 import generateCrossword
 import generateLevel
