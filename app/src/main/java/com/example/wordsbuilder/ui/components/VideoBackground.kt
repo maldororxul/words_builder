@@ -61,7 +61,4 @@ fun VideoBackground(videoResId: Int) {
             playerView.invalidate()
         }
     )
-
-    // Кнопка для отладки (можно убрать потом)
-    // Button(onClick = { playerKey++ }) { Text("Restart Video") }
 }

@@ -7,6 +7,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import com.example.wordsbuilder.R
+import com.example.wordsbuilder.SoundManager
 
 @Composable
 fun HintConfirmationDialog(
@@ -29,6 +30,7 @@ fun HintConfirmationDialog(
             text = { Text(stringResource(R.string.hint_confirm_msg, hintCost)) },
             confirmButton = {
                 Button(onClick = {
+                    SoundManager.playSound(context, R.raw.click)
                     onDismiss()
                     if (coins >= hintCost) {
 
@@ -61,7 +63,12 @@ fun HintConfirmationDialog(
                 }
             },
             dismissButton = {
-                OutlinedButton(onClick = onDismiss) {
+                OutlinedButton(
+                    onClick = {
+                        SoundManager.playSound(context, R.raw.click)
+                        onDismiss()
+                    }
+                ) {
                     Text(stringResource(R.string.no))
                 }
             }

@@ -9,12 +9,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.wordsbuilder.R
+import com.example.wordsbuilder.SoundManager
 
 @Composable
 fun MainMenu(
@@ -27,6 +29,7 @@ fun MainMenu(
     onOpenSettings: () -> Unit,
     onOpenStats: () -> Unit
 ) {
+    val context = LocalContext.current
     Column(
         modifier = Modifier.fillMaxSize().padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -53,7 +56,10 @@ fun MainMenu(
 
             // Кампания (становится непрозрачной и заблокированной по прохождении)
             Button(
-                onClick = onStartCampaign,
+                onClick = {
+                    SoundManager.playSound(context, R.raw.click)
+                    onStartCampaign()
+                },
                 enabled = !isCampaignFinished,
                 modifier = menuButtonModifier,
                 colors = ButtonDefaults.buttonColors(
@@ -72,7 +78,10 @@ fun MainMenu(
 
             // Случайный уровень
             Button(
-                onClick = onStartRandom,
+                onClick = {
+                    SoundManager.playSound(context, R.raw.click)
+                    onStartRandom()
+                },
                 modifier = menuButtonModifier,
                 colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary, contentColor = Color.White)
             ) {
@@ -81,7 +90,10 @@ fun MainMenu(
 
             // Магазин фонов
             Button(
-                onClick = onOpenShop,
+                onClick = {
+                    SoundManager.playSound(context, R.raw.click)
+                    onOpenShop()
+                },
                 modifier = menuButtonModifier,
                 colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.tertiary, contentColor = Color.White)
             ) {
@@ -90,7 +102,10 @@ fun MainMenu(
 
             // Статистика
             Button(
-                onClick = onOpenStats,
+                onClick = {
+                    SoundManager.playSound(context, R.raw.click)
+                    onOpenStats()
+                },
                 modifier = menuButtonModifier,
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF607D8B), contentColor = Color.White)
             ) {
@@ -99,7 +114,10 @@ fun MainMenu(
 
             // Настройки
             Button(
-                onClick = onOpenSettings,
+                onClick = {
+                    SoundManager.playSound(context, R.raw.click)
+                    onOpenSettings()
+                },
                 modifier = menuButtonModifier,
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF795548), contentColor = Color.White)
             ) {

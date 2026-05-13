@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.wordsbuilder.R
 import changeLocale
+import com.example.wordsbuilder.SoundManager
 import saveRandomWordsCount
 import getRandomWordsCount
 
@@ -51,7 +52,10 @@ fun SettingsScreen(bgManager: BackgroundManager, onBack: () -> Unit) {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Button(
-                    onClick = onBack,
+                    onClick = {
+                        SoundManager.playSound(context, R.raw.click)
+                        onBack()
+                    },
                     colors = ButtonDefaults.buttonColors(containerColor = Color.DarkGray)
                 ) {
                     // Используем ваш ресурс для локализации кнопки назад

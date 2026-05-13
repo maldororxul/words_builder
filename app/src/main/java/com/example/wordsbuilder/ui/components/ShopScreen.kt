@@ -18,10 +18,12 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.wordsbuilder.R
+import com.example.wordsbuilder.SoundManager
 
 
 @Composable
@@ -31,6 +33,7 @@ fun ShopScreen(bgManager: BackgroundManager, onBack: () -> Unit) {
     val backgrounds = remember { bgManager.loadBackgrounds() }
     // Состояние текущей вкладки: 0 - Выбор фона (Гардероб), 1 - Купить новые (Магазин)
     var selectedTab by remember { mutableIntStateOf(0) }
+    val context = LocalContext.current
 
     BackHandler {
         onBack()
@@ -56,7 +59,10 @@ fun ShopScreen(bgManager: BackgroundManager, onBack: () -> Unit) {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Button(
-                    onClick = onBack,
+                    onClick = {
+                        SoundManager.playSound(context, R.raw.click)
+                        onBack()
+                    },
                     colors = ButtonDefaults.buttonColors(containerColor = Color.DarkGray)
                 ) {
                     Text(text = stringResource(id = R.string.back), color = Color.White)
@@ -142,7 +148,7 @@ fun ShopScreen(bgManager: BackgroundManager, onBack: () -> Unit) {
                                     // Интерфейс выбора в Гардеробе
                                     if (isSelected) {
                                         Button(
-                                            onClick = {},
+                                            onClick = { SoundManager.playSound(context, R.raw.click)},
                                             enabled = false,
                                             colors = ButtonDefaults.buttonColors(
                                                 disabledContainerColor = Color(0xFF333333),
@@ -154,6 +160,7 @@ fun ShopScreen(bgManager: BackgroundManager, onBack: () -> Unit) {
                                     } else {
                                         Button(
                                             onClick = {
+                                                SoundManager.playSound(context, R.raw.click)
                                                 // 1. Сохраняем ID нового фона в SharedPreferences через менеджер
                                                 bgManager.selectedBackgroundId = bg.id
                                                 // 2. Обновляем локальный стейт экрана Jetpack Compose
@@ -168,6 +175,7 @@ fun ShopScreen(bgManager: BackgroundManager, onBack: () -> Unit) {
                                     Button(
                                         onClick = {
                                             if (bgManager.buyBackground(bg)) {
+                                                SoundManager.playSound(context, R.raw.click)
                                                 playerCoins = bgManager.coins
                                                 bgManager.selectedBackgroundId = bg.id
                                                 selectedId = bg.id

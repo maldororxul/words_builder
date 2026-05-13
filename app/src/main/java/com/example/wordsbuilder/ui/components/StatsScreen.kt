@@ -16,6 +16,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.wordsbuilder.R
+import com.example.wordsbuilder.SoundManager
 import com.example.wordsbuilder.data.StatsManager
 
 
@@ -41,7 +42,10 @@ fun StatsScreen(bgManager: BackgroundManager, onBack: () -> Unit) {
                 horizontalArrangement = Arrangement.Start
             ) {
                 Button(
-                    onClick = onBack,
+                    onClick = {
+                        SoundManager.playSound(context, R.raw.click)
+                        onBack()
+                    },
                     colors = ButtonDefaults.buttonColors(containerColor = Color.DarkGray)
                 ) {
                     Text(text = stringResource(id = R.string.back), color = Color.White)
