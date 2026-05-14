@@ -155,41 +155,41 @@ fun GameScreen(
                     flyTrigger = wordFlyTrigger,
                     modifier = Modifier.fillMaxWidth()
                 )
-            }
-            // === НИЖНЯЯ ПАНЕЛЬ ===
-            GameBottomPanel(
-                currentWord = currentWord,
-                totalScore = totalScore,
-                coins = coins,
-                wheelLetters = wheelLetters,
-                targetWords = targetWords,
-                campaignLevelId = if (gameMode == "campaign") campaignLevelId else null,
-                onWordComposed = { input ->
-                    val isSuccess = handleWordInput(
-                        input = input,
-                        targetWords = targetWords,
-                        solvedWords = solvedWords,
-                        gameMode = gameMode,
-                        context = context,
-                        onSolvedUpdate = { newSolved ->
-                            solvedWords = newSolved
-                        },
-                        onScoreUpdate = { pointsToAdd ->
-                            totalScore += pointsToAdd
-                            saveScore(context, totalScore)
-                        },
-                        onCurrentWordChange = { currentWord = it }
-                    )
-                    if (isSuccess) {
-                        // Фиксируем слово для анимации, пока оно не стерлось
-                        lastSolvedWord = currentWord
-                        // Увеличиваем счетчик, чтобы запустить WordFlyUpEffect
-                        wordFlyTrigger++
-                    }
-                },
-                onHintClick = { showHintDialog = true }
-            )
+                // === НИЖНЯЯ ПАНЕЛЬ ===
+                GameBottomPanel(
+                    currentWord = currentWord,
+                    totalScore = totalScore,
+                    coins = coins,
+                    wheelLetters = wheelLetters,
+                    targetWords = targetWords,
+                    campaignLevelId = if (gameMode == "campaign") campaignLevelId else null,
+                    onWordComposed = { input ->
+                        val isSuccess = handleWordInput(
+                            input = input,
+                            targetWords = targetWords,
+                            solvedWords = solvedWords,
+                            gameMode = gameMode,
+                            context = context,
+                            onSolvedUpdate = { newSolved ->
+                                solvedWords = newSolved
+                            },
+                            onScoreUpdate = { pointsToAdd ->
+                                totalScore += pointsToAdd
+                                saveScore(context, totalScore)
+                            },
+                            onCurrentWordChange = { currentWord = it }
+                        )
+                        if (isSuccess) {
+                            // Фиксируем слово для анимации, пока оно не стерлось
+                            lastSolvedWord = currentWord
+                            // Увеличиваем счетчик, чтобы запустить WordFlyUpEffect
+                            wordFlyTrigger++
+                        }
+                    },
+                    onHintClick = { showHintDialog = true }
+                )
 
+            }
             Spacer(modifier = Modifier.height(8.dp))
         }
 

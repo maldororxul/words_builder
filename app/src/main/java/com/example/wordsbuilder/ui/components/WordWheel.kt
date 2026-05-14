@@ -1,3 +1,5 @@
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.size
@@ -12,7 +14,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.drawText
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.wordsbuilder.R
@@ -26,13 +29,26 @@ import kotlin.math.sqrt
 @Composable
 fun WordWheel(
     letters: List<Char>,
-    targetWords: List<String>, // Добавляем этот параметр
+    targetWords: List<String>,
     onWordComposed: (String) -> Unit
 ) {
     var selectedIndices by remember { mutableStateOf(emptyList<Int>()) }
     var touchPoint by remember { mutableStateOf<Offset?>(null) }
     val textMeasurer = androidx.compose.ui.text.rememberTextMeasurer()
     val context = LocalContext.current
+
+    val CartoonFontFamily = FontFamily(Font(R.font.cartoon))
+
+    // Массив аниматоров для каждой буквы на колесе
+    val scales = letters.indices.map { index ->
+        val isSelected = selectedIndices.contains(index)
+        // Если буква выбрана — увеличиваем её до 1.25х, если нет — возвращаем к 1.0х
+        animateFloatAsState(
+            targetValue = if (isSelected) 1.25f else 1.0f,
+            animationSpec = tween(durationMillis = 100),
+            label = "ScaleArc_$index"
+        )
+    }
 
     Canvas(modifier = Modifier
         .size(300.dp)
@@ -57,10 +73,10 @@ fun WordWheel(
                         )
                         val distance = sqrt((change.position.x - letterPos.x).pow(2) + (change.position.y - letterPos.y).pow(2))
 
-                        if (distance < 60f && !selectedIndices.contains(index)) {
+                        // Увеличиваем зону захвата с учётом потенциального масштабирования круга
+                        if (distance < 90f && !selectedIndices.contains(index)) {
                             selectedIndices = selectedIndices + index
                             SoundManager.playSound(context, R.raw.click)
-                            // ОБНОВЛЕНИЕ В РЕАЛЬНОМ ВРЕМЕНИ:
                             val currentWord = selectedIndices.map { letters[it] }.joinToString("")
                             onWordComposed(currentWord)
                         }
@@ -68,15 +84,11 @@ fun WordWheel(
                 },
                 onDragEnd = {
                     val word = selectedIndices.map { letters[it] }.joinToString("")
-                    // Звук ошибки только если слово длиннее 1 буквы и его нет в списке
                     if (word.length > 1 && !targetWords.contains(word)) {
                         SoundManager.playSound(context, R.raw.error)
                     }
-                    // Всегда уведомляем GameScreen, что ввод завершен
                     val finalWord = selectedIndices.map { letters[it] }.joinToString("")
                     onWordComposed("CHECK:$finalWord")
-                    // При отпускании можно оставить слово или очистить
-                    // (обычно в таких играх слово "улетает" в кроссворд)
                     selectedIndices = emptyList()
                     touchPoint = null
                 }
@@ -86,19 +98,19 @@ fun WordWheel(
         val radius = size.minDimension / 2
         val center = Offset(size.width / 2, size.height / 2)
 
-        // Рисуем линии
+        // Рисуем линии связи между буквами
         if (selectedIndices.isNotEmpty()) {
             val points = selectedIndices.map { index ->
                 val angle = 2 * PI * index / letters.size - PI / 2
                 Offset(center.x + cos(angle).toFloat() * (radius * 0.8f), center.y + sin(angle).toFloat() * (radius * 0.8f))
             }
             for (i in 0 until points.size - 1) {
-                drawLine(Color(0xFF00BCD4), points[i], points[i+1], strokeWidth = 12f)
+                drawLine(Color(0xFF00BCD4), points[i], points[i+1], strokeWidth = 14f)
             }
-            touchPoint?.let { drawLine(Color(0xFF00BCD4), points.last(), it, strokeWidth = 12f) }
+            touchPoint?.let { drawLine(Color(0xFF00BCD4), points.last(), it, strokeWidth = 14f) }
         }
 
-        // Рисуем буквы
+        // Рисуем подложки-круги и мультяшные буквы
         letters.forEachIndexed { index, char ->
             val angle = 2 * PI * index / letters.size - PI / 2
             val letterPos = Offset(
@@ -106,28 +118,43 @@ fun WordWheel(
                 center.y + sin(angle).toFloat() * (radius * 0.8f)
             )
             val isSelected = selectedIndices.contains(index)
-            val textStyle = androidx.compose.ui.text.TextStyle(
-                fontSize = 32.sp, // Увеличили
-                fontWeight = FontWeight.ExtraBold,
-                color = if (isSelected) Color.White else Color.Black
-            )
+
+            // Получаем текущий плавный масштаб для данной буквы
+            val currentScale = scales[index].value
+
+            // Анимированный радиус круга подложки (базовый 65f увеличивается до ~81f при тапе)
+            val animatedRadius = 65f * currentScale
+
             drawCircle(
                 color = if (isSelected) Color(0xFF00BCD4) else Color(0xFFE0E0E0),
-                radius = 50f,
+                radius = animatedRadius,
                 center = letterPos
             )
 
-            // ТОЧНОЕ ЦЕНТРИРОВАНИЕ ТЕКСТА
+            // Анимируем размер шрифта на основе текущего масштаба элемента
+            val animatedFontSize = (38 * currentScale).sp
+
             val textLayoutResult = textMeasurer.measure(
-                text = char.toString(),
-                style = androidx.compose.ui.text.TextStyle(fontSize = 28.sp, fontWeight = androidx.compose.ui.text.font.FontWeight.Bold)
+                text = char.toString().uppercase(),
+                style = androidx.compose.ui.text.TextStyle(
+                    fontSize = animatedFontSize,
+                    fontWeight = androidx.compose.ui.text.font.FontWeight.ExtraBold,
+                    fontFamily = CartoonFontFamily,
+                    color = if (isSelected) Color.White else Color(0xFF333333)
+                )
             )
             val textSize = textLayoutResult.size
+
+            // ИСПРАВЛЕНИЕ СМЕЩЕНИЯ ВВЕРХ:
+            // Большинство кастомных шрифтов имеют завышенный внутренний отступ (Ascent).
+            // Добавление небольшой константы (напр. + 4 пикселя) идеально центрирует текст по вертикали.
+            val verticalCorrection = 6f * currentScale
+
             drawText(
                 textLayoutResult = textLayoutResult,
                 topLeft = Offset(
                     letterPos.x - textSize.width / 2,
-                    letterPos.y - textSize.height / 2
+                    letterPos.y - textSize.height / 2 + verticalCorrection
                 )
             )
         }
