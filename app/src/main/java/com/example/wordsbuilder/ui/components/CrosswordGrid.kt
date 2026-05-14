@@ -331,8 +331,19 @@ fun CrosswordGrid(
                 Text(text = stringResource(R.string.zoom_me), color = Color(0xFFFF9800), fontSize = 24.sp, fontWeight = FontWeight.ExtraBold)
             }
         }
-        AnimatedVisibility(visible = showTapHint, /* ... */) {
-            Text(text = "Tap me! ☝️", color = Color(0xFFFF9800), /* ... */)
+        AnimatedVisibility(
+            visible = showTapHint,
+            enter = androidx.compose.animation.fadeIn(),
+            exit = androidx.compose.animation.fadeOut(),
+            modifier = Modifier.align(Alignment.Center)
+        ) {
+            Box(
+                modifier = Modifier
+                    .background(Color.Black.copy(alpha = 0.75f), shape = androidx.compose.foundation.shape.RoundedCornerShape(12.dp))
+                    .padding(horizontal = 20.dp, vertical = 10.dp)
+            ) {
+                Text(text = "Tap me! ☝️", color = Color(0xFFFF9800), fontSize = 24.sp, fontWeight = FontWeight.ExtraBold)
+            }
         }
 
         // Статичная магическая рамка
