@@ -136,7 +136,7 @@ fun GameScreen(
                 modifier = Modifier
                     .weight(1f)
                     .fillMaxWidth()
-                    .padding(16.dp),
+                    .padding(4.dp),
                 contentAlignment = Alignment.Center
             ) {
                 CrosswordGrid(
@@ -191,7 +191,7 @@ fun GameScreen(
                 )
 
             }
-            Spacer(modifier = Modifier.height(8.dp))
+//            Spacer(modifier = Modifier.height(8.dp))
         }
 
         // === ОКНО ПОБЕДЫ ===

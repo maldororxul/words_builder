@@ -29,7 +29,7 @@ fun GameBottomPanel(
         onWordComposed = onWordComposed,
         onHintClick = onHintClick
     )
-    Spacer(modifier = Modifier.height(24.dp))
+    Spacer(modifier = Modifier.height(10.dp))
     // Баннер рекламы
-    AdBannerPlaceholder()
+//    AdBannerPlaceholder()
 }

@@ -59,31 +59,35 @@ fun CrosswordGrid(
     val cols = maxX - minX + 1
     val rows = maxY - minY + 1
 
-    // Состояние масштаба
+    // Состояние масштаба кроссворда
     var scale by remember { mutableFloatStateOf(1f) }
 
     // Стейты прокрутки кроссворда
     val horizontalScrollState = rememberScrollState()
     val verticalScrollState = rememberScrollState()
 
-    // Отслеживаем только щипок (зум), игнорируя перемещения
+    // Слушатель масштаба
     val transformState = rememberTransformableState { zoomChange, _, _ ->
         scale = (scale * zoomChange).coerceIn(1.0f, 2.5f)
     }
 
+    // КРИТИЧЕСКОЕ ИЗМЕНЕНИЕ 1: transformable вешается на самый верхний контейнер,
+    // чтобы скроллы не перехватывали жест щипка двумя пальцами.
     BoxWithConstraints(
         modifier = modifier
             .fillMaxSize()
-            .transformable(state = transformState)
+            .padding(16.dp)
+            .transformable(state = transformState),
+        contentAlignment = Alignment.Center
     ) {
-        // Базовый размер ячейки под текущий экран (Оригинальная логика)
+        // Базовые размеры сетки под область экрана
         val baseCellSize = min(
             maxWidth / cols.coerceAtLeast(1),
             maxHeight / rows.coerceAtLeast(1)
-        ) * 0.95f
+        ) * 0.90f
 
-        // Физический размер ячейки с учетом зума
-        val cellSize = baseCellSize * scale
+        val gridWidth = baseCellSize * cols
+        val gridHeight = baseCellSize * rows
 
         // Создаём карту всех клеток (Оригинальная логика)
         val cellsMap = mutableMapOf<Pair<Int, Int>, Char>()
@@ -95,77 +99,22 @@ fun CrosswordGrid(
             }
         }
 
-        // Область просмотра со скролл-барами
+        // КРИТИЧЕСКОЕ ИЗМЕНЕНИЕ 2: Окно просмотра жестко ограничено размерами рамки (gridWidth, gridHeight).
+        // Скроллинг работает только внутри него.
         Box(
             modifier = Modifier
-                .fillMaxSize()
+                .size(gridWidth, gridHeight)
                 .horizontalScroll(horizontalScrollState)
                 .verticalScroll(verticalScrollState),
             contentAlignment = Alignment.Center
         ) {
-            // КРИТИЧЕСКОЕ ИЗМЕНЕНИЕ: Оборачиваем кроссворд в контейнер с отступами, чтобы рамка не нализала на крайние буквы
-            val gridWidth = cellSize * cols
-            val gridHeight = cellSize * rows
-            val margin = 16.dp // Отступ от сетки до магической рамки
+            // Динамический размер ячейки на основе текущего зума
+            val cellSize = baseCellSize * scale
 
+            // Внутренний контейнер кроссворда, который физически растет при зуме
             Box(
-                modifier = Modifier
-                    .padding(margin)
-                    .size(gridWidth, gridHeight)
+                modifier = Modifier.size(cellSize * cols, cellSize * rows)
             ) {
-                // РИСУЕМ МАГИЧЕСКУЮ РАМКУ ВОКРУГ СЕТКИ
-                Canvas(modifier = Modifier.fillMaxSize()) {
-                    val orangeColor = Color(0xFFFF9800)
-
-                    // Функция генерации СТАТИЧНЫХ искривленных магических линий
-                    fun drawStaticMagicEdge(start: Offset, end: Offset, edgeId: Int) {
-                        val path = Path().apply { moveTo(start.x, start.y) }
-
-                        // Вычисляем расстояние между точками для определения количества сегментов
-                        val distance = sqrt((end.x - start.x) * (end.x - start.x) + (end.y - start.y) * (end.y - start.y))
-                        val segments = (distance / 20f).toInt().coerceAtLeast(5)
-
-                        // КРИТИЧЕСКОЕ ИЗМЕНЕНИЕ: Жестко фиксируем сид рандома от ID грани и длины,
-                        // благодаря чему линии остаются искривленными, но ПЕРЕСТАЮТ хаотично дрожать.
-                        val rand = Random(edgeId + distance.toInt())
-
-                        for (i in 1 until segments) {
-                            val fraction = i.toFloat() / segments
-                            val baseX = start.x + (end.x - start.x) * fraction
-                            val baseY = start.y + (end.y - start.y) * fraction
-
-                            val dx = end.x - start.x
-                            val dy = end.y - start.y
-                            val length = sqrt(dx * dx + dy * dy)
-                            val nx = -dy / length
-                            val ny = dx / length
-
-                            // Постоянное искривление в стороны до 6 пикселей
-                            val offsetAmount = (rand.nextFloat() - 0.5f) * 12f
-                            path.lineTo(baseX + nx * offsetAmount, baseY + ny * offsetAmount)
-                        }
-                        path.lineTo(end.x, end.y)
-
-                        // Отрисовка неонового контура и белой жилы
-                        drawPath(path = path, color = orangeColor, style = Stroke(width = 8f))
-                        drawPath(path = path, color = Color.White, style = Stroke(width = 2.5f))
-                    }
-
-                    // ТОЧЕЧНОЕ ИЗМЕНЕНИЕ: Увеличиваем отступ с 8f до 24f, чтобы раздвинуть рамку и буквы
-                    val offsetDistance = 24f
-                    val topLeft = Offset(-offsetDistance, -offsetDistance)
-                    val topRight = Offset(size.width + offsetDistance, -offsetDistance)
-                    val bottomLeft = Offset(-offsetDistance, size.height + offsetDistance)
-                    val bottomRight = Offset(size.width + offsetDistance, size.height + offsetDistance)
-
-                    // Отрисовываем 4 фиксированные грани с уникальными ID, чтобы у них были разные изломы
-                    drawStaticMagicEdge(topLeft, topRight, edgeId = 100)       // Верх
-                    drawStaticMagicEdge(topRight, bottomRight, edgeId = 200)   // Право
-                    drawStaticMagicEdge(bottomRight, bottomLeft, edgeId = 300) // Низ
-                    drawStaticMagicEdge(bottomLeft, topLeft, edgeId = 400)     // Лево
-                }
-
-                // Рисуем подложки-круги и мультяшные буквы (Ваша оригинальная логика)
                 cellsMap.forEach { (coords, char) ->
                     val (cx, cy) = coords
                     val gridX = cx - minX
@@ -199,6 +148,50 @@ fun CrosswordGrid(
                     }
                 }
             }
+        }
+
+        // Статичная магическая рамка поверх всего экрана
+        Canvas(
+            modifier = Modifier.size(gridWidth, gridHeight)
+        ) {
+            val orangeColor = Color(0xFFFF9800)
+
+            fun drawStaticMagicEdge(start: Offset, end: Offset, edgeId: Int) {
+                val path = Path().apply { moveTo(start.x, start.y) }
+                val distance = sqrt((end.x - start.x) * (end.x - start.x) + (end.y - start.y) * (end.y - start.y))
+                val segments = (distance / 20f).toInt().coerceAtLeast(5)
+                val rand = Random(edgeId + distance.toInt())
+
+                for (i in 1 until segments) {
+                    val fraction = i.toFloat() / segments
+                    val baseX = start.x + (end.x - start.x) * fraction
+                    val baseY = start.y + (end.y - start.y) * fraction
+
+                    val dx = end.x - start.x
+                    val dy = end.y - start.y
+                    val length = sqrt(dx * dx + dy * dy)
+                    val nx = -dy / length
+                    val ny = dx / length
+
+                    val offsetAmount = (rand.nextFloat() - 0.5f) * 12f
+                    path.lineTo(baseX + nx * offsetAmount, baseY + ny * offsetAmount)
+                }
+                path.lineTo(end.x, end.y)
+
+                drawPath(path = path, color = orangeColor, style = Stroke(width = 8f))
+                drawPath(path = path, color = Color.White, style = Stroke(width = 2.5f))
+            }
+
+            val offsetDistance = 16f
+            val topLeft = Offset(-offsetDistance, -offsetDistance)
+            val topRight = Offset(size.width + offsetDistance, -offsetDistance)
+            val bottomLeft = Offset(-offsetDistance, size.height + offsetDistance)
+            val bottomRight = Offset(size.width + offsetDistance, size.height + offsetDistance)
+
+            drawStaticMagicEdge(topLeft, topRight, edgeId = 100)
+            drawStaticMagicEdge(topRight, bottomRight, edgeId = 200)
+            drawStaticMagicEdge(bottomRight, bottomLeft, edgeId = 300)
+            drawStaticMagicEdge(bottomLeft, topLeft, edgeId = 400)
         }
     }
 }
