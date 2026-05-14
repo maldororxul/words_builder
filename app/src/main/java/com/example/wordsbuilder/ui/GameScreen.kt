@@ -1,6 +1,6 @@
 package com.example.wordsbuilder.ui
 
-import CrosswordGrid
+
 import CurrentWordDisplay
 import ExitConfirmationDialog
 import GameBottomPanel
@@ -28,6 +28,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.example.wordsbuilder.data.LevelManager
+import com.example.wordsbuilder.ui.components.CrosswordGrid
 import com.example.wordsbuilder.ui.components.WordFlyUpEffect
 import com.example.wordsbuilder.ui.dialogs.HintConfirmationDialog
 import generateCrossword
