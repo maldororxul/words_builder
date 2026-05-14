@@ -32,7 +32,6 @@ import androidx.compose.ui.unit.min
 import kotlin.math.sqrt
 import kotlin.random.Random
 import androidx.compose.foundation.gestures.detectTapGestures
-import androidx.compose.foundation.gestures.detectTransformGestures
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.input.pointer.pointerInput
@@ -94,7 +93,7 @@ fun CrosswordGrid(
     BoxWithConstraints(
         modifier = modifier
             .fillMaxSize()
-            .padding(16.dp)
+            .padding(6.dp)
             // КРИТИЧЕСКОЕ ИЗМЕНЕНИЕ: Низкоуровневая обработка жестов через единую шину событий
             .pointerInput(Unit) {
                 awaitPointerEventScope {

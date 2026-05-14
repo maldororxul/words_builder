@@ -107,14 +107,28 @@ fun GameScreen(
         val sortedWords = targetWords.sortedByDescending { it.length }
         val grid = generateCrossword(sortedWords)
 
-        // КРИТИЧЕСКОЕ ИСПРАВЛЕНИЕ: Собираем буквы со ВСЕХ РЕАЛЬНО ПОСТРОЕННЫХ в кроссворде слов,
-        // приводим их к нижнему регистру и перемешиваем для колеса.
+        // ВАЖНОЕ ИСПРАВЛЕНИЕ: Мультисет максимумов для букв колеса
         val builtWords = grid.map { it.word.lowercase() }
-        val allUniqueLetters = builtWords.flatMap { it.toList() }.toSet().map { it.uppercaseChar() }.shuffled()
+        val finalLettersMap = mutableMapOf<Char, Int>()
+
+        builtWords.forEach { word ->
+            val wordFreq = mutableMapOf<Char, Int>()
+            word.forEach { char -> wordFreq[char] = wordFreq.getOrDefault(char, 0) + 1 }
+
+            // Гарантируем, что на колесо попадет МАКСИМАЛЬНОЕ количество повторений, нужное для ЭТОГО слова
+            wordFreq.forEach { (char, count) ->
+                finalLettersMap[char] = maxOf(finalLettersMap.getOrDefault(char, 0), count)
+            }
+        }
+
+        // Разворачиваем карту частот обратно в плоский список букв с дубликатами и перемешиваем
+        val allWheelLetters = finalLettersMap.flatMap { (char, count) ->
+            List(count) { char.uppercaseChar() }
+        }.shuffled()
 
         LevelInfo(
             words = grid.map { it.word },
-            letters = allUniqueLetters, // Теперь на колесе всегда будут ВСЕ нужные буквы (и никогда не больше 15)
+            letters = allWheelLetters, // Передаем на колесо честный, минимально достаточный набор букв (всегда <= 15)
             grid = grid,
             reward = reward,
             hintCost = hintCost

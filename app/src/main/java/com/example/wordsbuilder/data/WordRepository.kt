@@ -28,63 +28,58 @@ object RandomWordGenerator {
         val dictionary = loadFullDictionary(context, langCode)
         if (dictionary.isEmpty()) return emptyMap()
 
-        val validWords = dictionary.toList().filter { it.first.length in 3..12 }
+        val validWords = dictionary.toList().filter { it.first.length in 3..10 }
         if (validWords.isEmpty()) return emptyMap()
 
         val longWordsPool = validWords.filter { it.first.length >= 5 }.shuffled()
         val finalSelection = mutableListOf<Pair<String, String>>()
 
         var attempts = 0
-        val maxAttempts = 300
+        val maxAttempts = 500
 
         while (attempts < maxAttempts && finalSelection.size < targetCount) {
             attempts++
             finalSelection.clear()
 
-            // Карта для хранения максимального количества повторений каждой буквы на колесе
+            // Карта максимальных потребностей в буквах для ВСЕГО набора слов
             val currentWheelRequirements = mutableMapOf<Char, Int>()
 
             // 1. Берем случайное стартовое слово
             val anchorWord = longWordsPool.randomOrNull() ?: validWords.random()
             finalSelection.add(anchorWord)
 
-            // Заполняем требования по буквам для первого слова
+            // Считаем буквы первого слова
             anchorWord.first.lowercase().forEach { char ->
                 currentWheelRequirements[char] = currentWheelRequirements.getOrDefault(char, 0) + 1
             }
 
             val candidateWords = validWords.filter { it.first != anchorWord.first }.shuffled()
 
-            for (candidate in candidateWords) {
+            for (pair in candidateWords) {
                 if (finalSelection.size >= targetCount) break
 
-                val candidateLower = candidate.first.lowercase()
+                val wordLower = pair.first.lowercase()
 
-                // Считаем частоту букв в текущем слове-кандидате
+                // Считаем частоту букв в слове-кандидате
                 val candidateFreq = mutableMapOf<Char, Int>()
-                candidateLower.forEach { char ->
+                wordLower.forEach { char ->
                     candidateFreq[char] = candidateFreq.getOrDefault(char, 0) + 1
                 }
 
-                // Вычисляем пересечения
-                val hasIntersection = candidateLower.any { currentWheelRequirements.containsKey(it) }
-                if (!hasIntersection) continue
-
-                // Проверяем, сколько ВСЕГО букв (с учетом дубликатов) станет на колесе,
-                // если мы объединим требования текущего набора и нового слова
+                // Вычисляем, какими станут требования к колесу (мультисет максимумов)
                 val tempRequirements = HashMap(currentWheelRequirements)
                 candidateFreq.forEach { (char, count) ->
                     val currentMax = tempRequirements.getOrDefault(char, 0)
-                    tempRequirements[char] = max(currentMax, count)
+                    tempRequirements[char] = max(currentMax, count) // Берём МАКСИМУМ, а не сумму!
                 }
 
-                // Считаем общее число букв на колесе (длину мультисета)
+                // Считаем общее физическое количество букв на колесе
                 val totalLettersOnWheel = tempRequirements.values.sum()
 
-                // Если общее число физических букв на колесе не превышает 15 — утверждаем слово
+                // ЖЕСТКИЙ КОНТРОЛЬ ТЗ: Общее число букв (с учетом дубликатов) НЕ ДОЛЖНО превысить 15
                 if (totalLettersOnWheel <= 15) {
-                    finalSelection.add(candidate)
-                    // Фиксируем новые максимальные требования к буквам
+                    finalSelection.add(pair)
+                    // Обновляем глобальные требования к колесу
                     candidateFreq.forEach { (char, count) ->
                         currentWheelRequirements[char] = max(currentWheelRequirements.getOrDefault(char, 0), count)
                     }
