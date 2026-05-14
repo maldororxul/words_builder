@@ -2,15 +2,17 @@ package com.example.wordsbuilder.ui
 
 import CurrentWordDisplay
 import ExitConfirmationDialog
-import GameBottomPanel
 import LevelCompleteOverlay
 import LevelInfo
+import WordWheelContainer
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -78,9 +80,7 @@ fun GameScreen(
         } else {
             // ЧИТАЕМ НАСТРОЙКУ: количество слов из ползунка настроек
             val targetCount = getRandomWordsCount(context)
-
-            // ИСПРАВЛЕНИЕ: Вызываем наш новый умный метод из RandomWordGenerator
-            // Он выдаст "кучный" набор слов с общим алфавитом не более 15 букв
+            // "кучный" набор слов с общим алфавитом не более 15 букв
             RandomWordGenerator.getRandomWordsMap(context, currentLocale, targetCount)
         }
     }
@@ -194,15 +194,13 @@ fun GameScreen(
                     flyTrigger = wordFlyTrigger,
                     modifier = Modifier.fillMaxWidth()
                 )
-
-                // === НИЖНЯЯ ПАНЕЛЬ ===
-                GameBottomPanel(
-                    currentWord = currentWord,
+                // Колесо со всеми оверлеями
+                WordWheelContainer(
+                    letters = wheelLetters,
+                    targetWords = targetWords,
                     totalScore = totalScore,
                     coins = coins,
-                    wheelLetters = wheelLetters,
-                    targetWords = targetWords,
-                    campaignLevelId = if (gameMode == "campaign") campaignLevelId else null,
+                    campaignLevelId = campaignLevelId,
                     onWordComposed = { input ->
                         val isSuccess = handleWordInput(
                             input = input,
@@ -229,6 +227,7 @@ fun GameScreen(
                     },
                     onHintClick = { showHintDialog = true }
                 )
+                Spacer(modifier = Modifier.height(10.dp))
             }
         }
 
