@@ -38,11 +38,12 @@ fun DefinitionDialog(
         }
 
         // ВЫЧИСЛЕНИЕ ОТКРЫТЫХ БУКВ ЧЕРЕЗ ПЕРЕСЕЧЕНИЯ СЕТКИ
+        // Замените блок расчета displayWord в DefinitionDialog.kt на этот:
         val displayWord = remember(word, isWordFullySolved, solvedWords, placedWords) {
             if (isWordFullySolved) {
                 word.uppercase().map { it.toString() }.joinToString(" ")
             } else {
-                // Находим объект PlacedWord для текущего выбранного слова
+                // Приводим целевое слово к нижнему регистру для надежного поиска в сетке
                 val currentPlacedWord = placedWords.find { it.word.lowercase() == word.lowercase() }
 
                 if (currentPlacedWord != null) {
@@ -51,9 +52,12 @@ fun DefinitionDialog(
                         val charX = if (currentPlacedWord.isHorizontal) currentPlacedWord.x + index else currentPlacedWord.x
                         val charY = if (currentPlacedWord.isHorizontal) currentPlacedWord.y else currentPlacedWord.y + index
 
-                        // Буква открыта, если эта координата (X, Y) пересекается ХОТЯ БЫ с одним разгаданным словом на уровне
+                        // Принудительно приводим весь сет отгаданных слов к нижнему регистру
+                        val lowerSolvedWords = solvedWords.map { it.lowercase() }.toSet()
+
+                        // Буква открыта, если эта координата (X, Y) пересекается ХОТЯ БЫ с одним разгаданным словом
                         val isLetterOpenedByCrossroad = placedWords.any { pw ->
-                            solvedWords.contains(pw.word.lowercase()) && pw.word.indices.any { i ->
+                            lowerSolvedWords.contains(pw.word.lowercase()) && pw.word.indices.any { i ->
                                 val px = if (pw.isHorizontal) pw.x + i else pw.x
                                 val py = if (pw.isHorizontal) pw.y else pw.y + i
                                 px == charX && py == charY
@@ -63,11 +67,11 @@ fun DefinitionDialog(
                         if (isLetterOpenedByCrossroad) char.toString().uppercase() else "?"
                     }.joinToString(" ")
                 } else {
-                    // Fallback, если слово почему-то не найдено в сетке
                     word.map { "?" }.joinToString(" ")
                 }
             }
         }
+
 
         Dialog(
             onDismissRequest = {
