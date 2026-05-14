@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.wordsbuilder.R
 import com.example.wordsbuilder.ui.components.GameButton
+import com.example.wordsbuilder.ui.components.PassiveIncomeRow
 
 @Composable
 fun MainMenu(

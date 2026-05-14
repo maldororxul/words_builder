@@ -9,12 +9,10 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.LaunchedEffect
@@ -29,13 +27,14 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.os.LocaleListCompat
 import com.example.wordsbuilder.data.LevelManager
+import com.example.wordsbuilder.data.PassiveIncomeManager
 import com.example.wordsbuilder.ui.SettingsScreen
 import com.example.wordsbuilder.ui.StatsScreen
+import com.example.wordsbuilder.ui.components.PassiveIncomeRow
 import com.example.wordsbuilder.ui.components.ShopScreen
 import getSavedCampaignLevelIndex
 import getSavedLanguage
@@ -43,11 +42,13 @@ import getSavedLanguage
 class MainActivity : AppCompatActivity() {
 
     private lateinit var bgManager: BackgroundManager
+    private lateinit var passiveIncomeManager: PassiveIncomeManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         bgManager = BackgroundManager(this)
+        passiveIncomeManager = PassiveIncomeManager(this)
 
         val savedLang = getSavedLanguage(this)
         val appLocale: LocaleListCompat = LocaleListCompat.forLanguageTags(savedLang)
@@ -74,7 +75,6 @@ class MainActivity : AppCompatActivity() {
 
                         when (currentScreen) {
                             "menu" -> {
-
                                 var currentCoins by remember { mutableIntStateOf(bgManager.coins) }
 
                                 LaunchedEffect(currentScreen) {
@@ -87,27 +87,52 @@ class MainActivity : AppCompatActivity() {
 
                                 val currentCampaignLevel = getSavedCampaignLevelIndex(LocalContext.current, currentLocale)
                                 val totalLevels = LevelManager.getCampaignLevelsCount(context = LocalContext.current, currentLocale)
-
                                 val isCampaignFinished = currentCampaignLevel > totalLevels
 
+                                // Корневой Box для всего экрана меню (удерживает монеты в углу и основной контент)
                                 Box(modifier = Modifier.fillMaxSize()) {
-                                    MainMenu(
-                                        currentLevelId = currentCampaignLevel,
-                                        isCampaignFinished = isCampaignFinished,
-                                        coins = currentCoins,
-                                        onStartCampaign = {
-                                            gameMode = "campaign"
-                                            currentScreen = "game"
-                                        },
-                                        onStartRandom = {
-                                            gameMode = "random"
-                                            currentScreen = "game"
-                                        },
-                                        onOpenShop = { currentScreen = "shop" },
-                                        onOpenSettings = { currentScreen = "settings" },
-                                        onOpenStats = { currentScreen = "stats" } // Переход на экран статистики
-                                    )
 
+                                    // Объединяем меню и прогресс-бар вертикально
+                                    Column(
+                                        modifier = Modifier.fillMaxSize(),
+                                        horizontalAlignment = Alignment.CenterHorizontally
+                                    ) {
+                                        // 1. Сначала отрисовывается главное меню (логотип и вертикальный стек кнопок)
+                                        // Оборачиваем в Box с весом, чтобы меню занимало максимум пространства, двигая бар вниз
+                                        Box(modifier = Modifier.weight(1f)) {
+                                            MainMenu(
+                                                currentLevelId = currentCampaignLevel,
+                                                isCampaignFinished = isCampaignFinished,
+                                                coins = currentCoins,
+                                                onStartCampaign = {
+                                                    gameMode = "campaign"
+                                                    currentScreen = "game"
+                                                },
+                                                onStartRandom = {
+                                                    gameMode = "random"
+                                                    currentScreen = "game"
+                                                },
+                                                onOpenShop = { currentScreen = "shop" },
+                                                onOpenSettings = { currentScreen = "settings" },
+                                                onOpenStats = { currentScreen = "stats" }
+                                            )
+                                        }
+
+                                        // 2. Строго ПОД компонентом меню отрисовываем плашку пассивного заработка
+                                        PassiveIncomeRow(
+                                            incomeManager = passiveIncomeManager,
+                                            modifier = Modifier
+                                                .padding(horizontal = 32.dp)
+                                                .padding(bottom = 24.dp), // Отступ от нижнего края экрана, чтобы не прижималось к рамке
+                                            onCoinsClaimed = { claimedCoins ->
+                                                val updatedBalance = bgManager.coins + claimedCoins
+                                                bgManager.coins = updatedBalance
+                                                currentCoins = updatedBalance
+                                            }
+                                        )
+                                    }
+
+                                    // Монеты остаются поверх всего интерфейса в правом верхнем углу
                                     Text(
                                         text = "🪙 $currentCoins",
                                         fontSize = 22.sp,
