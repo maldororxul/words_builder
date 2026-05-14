@@ -28,6 +28,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.example.wordsbuilder.data.LevelManager
+import com.example.wordsbuilder.domain.game.RandomWordGenerator
 import com.example.wordsbuilder.ui.components.CrosswordGrid
 import com.example.wordsbuilder.ui.components.WordFlyUpEffect
 import com.example.wordsbuilder.ui.dialogs.HintConfirmationDialog
@@ -52,14 +53,15 @@ fun GameScreen(
 ) {
     val context = LocalContext.current
     val currentLocale = remember { getSavedLanguage(context) }
+
     var lastSolvedWord by remember { mutableStateOf("") }
     var wordFlyTrigger by remember { mutableIntStateOf(0) }
+
     // Основные состояния
     var coins by remember { mutableIntStateOf(getSavedCoins(context)) }
     var totalScore by remember { mutableStateOf(getSavedScore(context)) }
     var showHintDialog by remember { mutableStateOf(false) }
     var showExitDialog by remember { mutableStateOf(false) }
-
     var randomLevelCounter by rememberSaveable { mutableIntStateOf(1) }
     var campaignLevelId by rememberSaveable {
         mutableIntStateOf(getSavedCampaignLevelIndex(context, currentLocale))
@@ -67,26 +69,32 @@ fun GameScreen(
 
     val screenKey = rememberSaveable { mutableIntStateOf(0) }
 
-    // Загрузка данных уровня
-    val levelData = remember(currentLocale, randomLevelCounter, campaignLevelId, gameMode) {
+    // Загрузка данных уровня с поддержкой нового формата CampaignLevel и словаря определений
+    val levelData = remember(currentLocale, randomLevelCounter, campaignLevelId, gameMode, screenKey.intValue) {
         var reward = 50
         var hintCost = 20
         var targetWords = listOf<String>()
 
         if (gameMode == "campaign") {
+            // Загружаем список объектов CampaignLevel из JSON
             val allLevels = LevelManager.loadCampaignLevels(context, currentLocale)
             val currentLevel = allLevels.find { it.id == campaignLevelId } ?: allLevels.firstOrNull()
+
             currentLevel?.let {
-                targetWords = it.words
+                // Извлекаем только ключи (сами слова) из структуры Map<String, String>
+                targetWords = it.words.keys.toList()
                 reward = it.reward
                 hintCost = it.hintCost
             }
         } else {
-            val dictionary = DictionaryManager.loadDictionary(context, currentLocale)
-            targetWords = generateLevel(
-                dictionary = dictionary,
-                wordCount = getRandomWordsCount(context)
-            ).first
+            // Для случайного режима читаем новый плоский JSON Map<String, String> из words_XX.json
+            val dictionaryMap = RandomWordGenerator.loadFullDictionary(context, currentLocale)
+            val targetCount = getRandomWordsCount(context)
+
+            // Выбираем случайные ключи-слова
+            targetWords = dictionaryMap.keys.shuffled().take(targetCount)
+            reward = 10  // Дефолтная награда для случайного режима
+            hintCost = 20 // Дефолтная стоимость подсказки для случайного режима
         }
 
         val sortedWords = targetWords.sortedByDescending { it.length }
@@ -128,9 +136,7 @@ fun GameScreen(
     BackHandler { showExitDialog = true }
 
     Box(modifier = Modifier.fillMaxSize()) {
-
         Column(modifier = Modifier.fillMaxSize()) {
-
             // === КРОССВОРД ===
             Box(
                 modifier = Modifier
@@ -145,6 +151,7 @@ fun GameScreen(
                     modifier = Modifier.fillMaxSize()
                 )
             }
+
             Column(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
@@ -156,6 +163,7 @@ fun GameScreen(
                     flyTrigger = wordFlyTrigger,
                     modifier = Modifier.fillMaxWidth()
                 )
+
                 // === НИЖНЯЯ ПАНЕЛЬ ===
                 GameBottomPanel(
                     currentWord = currentWord,
@@ -180,6 +188,7 @@ fun GameScreen(
                             },
                             onCurrentWordChange = { currentWord = it }
                         )
+
                         if (isSuccess) {
                             // Фиксируем слово для анимации, пока оно не стерлось
                             lastSolvedWord = currentWord
@@ -189,16 +198,14 @@ fun GameScreen(
                     },
                     onHintClick = { showHintDialog = true }
                 )
-
             }
-//            Spacer(modifier = Modifier.height(8.dp))
         }
 
         // === ОКНО ПОБЕДЫ ===
         if (isLevelComplete) {
             LevelCompleteOverlay(
                 gameMode = gameMode,
-                levelReward = levelReward,
+                levelReward = levelReward, // Передаем динамическую награду из JSON конфигурации уровня
                 context = context,
                 onCoinsUpdate = { newCoins ->
                     coins = newCoins
@@ -225,9 +232,10 @@ fun GameScreen(
         onDismiss = { showExitDialog = false },
         onConfirm = onBackToMenu
     )
+
     HintConfirmationDialog(
         visible = showHintDialog,
-        hintCost = hintCost,
+        hintCost = hintCost, // Передаем динамическую стоимость подсказки из JSON конфигурации уровня
         coins = coins,
         targetWords = targetWords,
         solvedWords = solvedWords,
