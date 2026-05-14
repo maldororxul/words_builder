@@ -31,6 +31,7 @@ import com.example.wordsbuilder.data.LevelManager
 import com.example.wordsbuilder.domain.game.RandomWordGenerator
 import com.example.wordsbuilder.ui.components.CrosswordGrid
 import com.example.wordsbuilder.ui.components.WordFlyUpEffect
+import com.example.wordsbuilder.ui.dialogs.DefinitionDialog
 import com.example.wordsbuilder.ui.dialogs.HintConfirmationDialog
 import generateCrossword
 import generateLevel
@@ -57,6 +58,10 @@ fun GameScreen(
     var lastSolvedWord by remember { mutableStateOf("") }
     var wordFlyTrigger by remember { mutableIntStateOf(0) }
 
+    // Состояния для показа определений
+    var targetedWordForDefinition by remember { mutableStateOf("") }
+    var showDefinitionDialog by remember { mutableStateOf(false) }
+
     // Основные состояния
     var coins by remember { mutableIntStateOf(getSavedCoins(context)) }
     var totalScore by remember { mutableStateOf(getSavedScore(context)) }
@@ -69,32 +74,35 @@ fun GameScreen(
 
     val screenKey = rememberSaveable { mutableIntStateOf(0) }
 
-    // Загрузка данных уровня с поддержкой нового формата CampaignLevel и словаря определений
-    val levelData = remember(currentLocale, randomLevelCounter, campaignLevelId, gameMode, screenKey.intValue) {
-        var reward = 50
-        var hintCost = 20
-        var targetWords = listOf<String>()
-
+    // Загрузка данных уровня в Map структуры
+    val currentLevelWordsMap = remember(currentLocale, randomLevelCounter, campaignLevelId, gameMode, screenKey.intValue) {
         if (gameMode == "campaign") {
-            // Загружаем список объектов CampaignLevel из JSON
             val allLevels = LevelManager.loadCampaignLevels(context, currentLocale)
             val currentLevel = allLevels.find { it.id == campaignLevelId } ?: allLevels.firstOrNull()
+            currentLevel?.words ?: emptyMap()
+        } else {
+            val dictionaryMap = com.example.wordsbuilder.domain.game.RandomWordGenerator.loadFullDictionary(context, currentLocale)
+            val targetCount = getRandomWordsCount(context)
+            val randomKeys = dictionaryMap.keys.shuffled().take(targetCount)
+            dictionaryMap.filterKeys { randomKeys.contains(it) }
+        }
+    }
 
+    val levelData = remember(currentLevelWordsMap) {
+        val targetWords = currentLevelWordsMap.keys.toList()
+        var reward = 50
+        var hintCost = 20
+
+        if (gameMode == "campaign") {
+            val allLevels = LevelManager.loadCampaignLevels(context, currentLocale)
+            val currentLevel = allLevels.find { it.id == campaignLevelId } ?: allLevels.firstOrNull()
             currentLevel?.let {
-                // Извлекаем только ключи (сами слова) из структуры Map<String, String>
-                targetWords = it.words.keys.toList()
                 reward = it.reward
                 hintCost = it.hintCost
             }
         } else {
-            // Для случайного режима читаем новый плоский JSON Map<String, String> из words_XX.json
-            val dictionaryMap = RandomWordGenerator.loadFullDictionary(context, currentLocale)
-            val targetCount = getRandomWordsCount(context)
-
-            // Выбираем случайные ключи-слова
-            targetWords = dictionaryMap.keys.shuffled().take(targetCount)
-            reward = 10  // Дефолтная награда для случайного режима
-            hintCost = 20 // Дефолтная стоимость подсказки для случайного режима
+            reward = 10
+            hintCost = 20
         }
 
         val sortedWords = targetWords.sortedByDescending { it.length }
@@ -127,7 +135,6 @@ fun GameScreen(
 
     val isLevelComplete = solvedWords.size == targetWords.size && targetWords.isNotEmpty()
 
-    // Музыка
     DisposableEffect(Unit) {
         SoundManager.startMusic(context)
         onDispose { SoundManager.stopMusic() }
@@ -148,6 +155,12 @@ fun GameScreen(
                 CrosswordGrid(
                     placedWords = crosswordGrid,
                     solvedWords = solvedWords,
+                    wordsMap = currentLevelWordsMap, // Передаем словарь определений
+                    selectedWord = if (showDefinitionDialog) targetedWordForDefinition else null, // Подсвечиваем слово, пока открыт диалог
+                    onWordLongPressed = { word ->
+                        targetedWordForDefinition = word
+                        showDefinitionDialog = true // Открываем всплывающее окно
+                    },
                     modifier = Modifier.fillMaxSize()
                 )
             }
@@ -156,7 +169,6 @@ fun GameScreen(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                // Текущее слово
                 CurrentWordDisplay(
                     currentWord = currentWord,
                     triggerWord = lastSolvedWord,
@@ -190,9 +202,7 @@ fun GameScreen(
                         )
 
                         if (isSuccess) {
-                            // Фиксируем слово для анимации, пока оно не стерлось
                             lastSolvedWord = currentWord
-                            // Увеличиваем счетчик, чтобы запустить WordFlyUpEffect
                             wordFlyTrigger++
                         }
                     },
@@ -205,7 +215,7 @@ fun GameScreen(
         if (isLevelComplete) {
             LevelCompleteOverlay(
                 gameMode = gameMode,
-                levelReward = levelReward, // Передаем динамическую награду из JSON конфигурации уровня
+                levelReward = levelReward,
                 context = context,
                 onCoinsUpdate = { newCoins ->
                     coins = newCoins
@@ -235,7 +245,7 @@ fun GameScreen(
 
     HintConfirmationDialog(
         visible = showHintDialog,
-        hintCost = hintCost, // Передаем динамическую стоимость подсказки из JSON конфигурации уровня
+        hintCost = hintCost,
         coins = coins,
         targetWords = targetWords,
         solvedWords = solvedWords,
@@ -246,5 +256,15 @@ fun GameScreen(
             coins = newCoins
             solvedWords = newSolved
         }
+    )
+
+    // ВСПЛЫВАЮЩИЙ ДИАЛОГ ОПРЕДЕЛЕНИЯ СЛОВА
+    DefinitionDialog(
+        visible = showDefinitionDialog,
+        word = targetedWordForDefinition,
+        definition = currentLevelWordsMap[targetedWordForDefinition] ?: "Определение не найдено.",
+        solvedWords = solvedWords,
+        placedWords = crosswordGrid, // Передаем сетку кроссворда
+        onDismiss = { showDefinitionDialog = false }
     )
 }

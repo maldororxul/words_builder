@@ -37,20 +37,27 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.launch
+import com.example.wordsbuilder.R
 
 @Composable
 fun CrosswordGrid(
     placedWords: List<PlacedWord>,
     solvedWords: Set<String>,
+    wordsMap: Map<String, String>, // Принимаем карту "Слово -> Определение"
+    onWordLongPressed: (String) -> Unit, // Коллбэк долгого тапа
+    selectedWord: String?, // Текущее подсвеченное слово
     modifier: Modifier = Modifier
 ) {
     if (placedWords.isEmpty()) {
         Text("Failed to generate crossword!", color = Color.White)
         return
     }
+
+    val context = LocalContext.current
 
     // Находим границы (Оригинальная логика)
     val allX = placedWords.flatMap { pw ->
@@ -66,42 +73,35 @@ fun CrosswordGrid(
     val cols = maxX - minX + 1
     val rows = maxY - minY + 1
 
-    // ЕДИНАЯ ТОЧКА ПРАВДЫ ДЛЯ МАСШТАБА
     val scaleState = remember { androidx.compose.animation.core.Animatable(1f) }
     val coroutineScope = rememberCoroutineScope()
-
-    // Состояние видимости обучающей надписи "Zoom me!"
     var showZoomHint by remember { mutableStateOf(false) }
 
-    // Запускаем анимацию подсказки строго ОДИН раз при открытии уровня
     LaunchedEffect(placedWords) {
         kotlinx.coroutines.delay(200L)
         showZoomHint = true
-        scaleState.animateTo(
-            targetValue = 1.3f,
-            animationSpec = androidx.compose.animation.core.tween(durationMillis = 500)
-        )
+        scaleState.animateTo(1.3f, androidx.compose.animation.core.tween(500))
         kotlinx.coroutines.delay(400L)
         showZoomHint = false
-        scaleState.animateTo(
-            targetValue = 1.0f,
-            animationSpec = androidx.compose.animation.core.tween(durationMillis = 400)
-        )
+        scaleState.animateTo(1.0f, androidx.compose.animation.core.tween(400))
     }
 
-    // Стейты прокрутки кроссворда
     val horizontalScrollState = rememberScrollState()
     val verticalScrollState = rememberScrollState()
 
-    // Слушатель масштаба (использует snapTo для мгновенного обновления без анимации)
     val transformState = rememberTransformableState { zoomChange, _, _ ->
-        val targetScale = (scaleState.value * zoomChange).coerceIn(1.0f, 2.5f)
+        // Коэффициент чувствительности: 2.2f (ускоряет реакцию на щипок пальцев более чем в два раза)
+        val sensitivity = 2.2f
+
+        // Вычисляем модифицированное изменение масштаба относительно единицы
+        val adjustedZoom = 1f + (zoomChange - 1f) * sensitivity
+
+        val targetScale = (scaleState.value * adjustedZoom).coerceIn(1.0f, 2.5f)
         coroutineScope.launch {
             scaleState.snapTo(targetScale)
         }
     }
 
-    // Внешний контейнер занимает ВСЁ доступное пространство экрана
     BoxWithConstraints(
         modifier = modifier
             .fillMaxSize()
@@ -111,19 +111,15 @@ fun CrosswordGrid(
                     onDoubleTap = { touchOffset ->
                         coroutineScope.launch {
                             if (scaleState.value > 1.0f) {
-                                // СБРОС: Плавно возвращаем масштаб к 1.0 и центрируем скролл
                                 launch { scaleState.animateTo(1.0f, androidx.compose.animation.core.tween(300)) }
                                 launch { horizontalScrollState.animateScrollTo(0) }
                                 launch { verticalScrollState.animateScrollTo(0) }
                             } else {
-                                // УВЕЛИЧЕНИЕ В ТОЧКУ КЛИКА
                                 val targetScale = 2.5f
                                 val centerX = size.width / 2f
                                 val centerY = size.height / 2f
-
                                 val deltaX = touchOffset.x - centerX
                                 val deltaY = touchOffset.y - centerY
-
                                 val scrollTargetX = (deltaX * targetScale).toInt()
                                 val scrollTargetY = (deltaY * targetScale).toInt()
 
@@ -138,13 +134,8 @@ fun CrosswordGrid(
             .transformable(state = transformState),
         contentAlignment = Alignment.Center
     ) {
-        // Базовые размеры ячейки (Оригинальная логика)
-        val baseCellSize = min(
-            maxWidth / cols.coerceAtLeast(1),
-            maxHeight / rows.coerceAtLeast(1)
-        ) * 0.90f
+        val baseCellSize = min(maxWidth / cols.coerceAtLeast(1), maxHeight / rows.coerceAtLeast(1)) * 0.90f
 
-        // Окно просмотра (скролла) занимает fillMaxSize()
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -152,7 +143,6 @@ fun CrosswordGrid(
                 .verticalScroll(verticalScrollState),
             contentAlignment = Alignment.Center
         ) {
-            // Динамический размер ячейки зависит от анимируемого scaleState.value
             val cellSize = baseCellSize * scaleState.value
 
             val cellsMap = mutableMapOf<Pair<Int, Int>, Char>()
@@ -164,15 +154,20 @@ fun CrosswordGrid(
                 }
             }
 
-            // Внутренний контейнер кроссворда
-            Box(
-                modifier = Modifier.size(cellSize * cols, cellSize * rows)
-            ) {
-                // Находим цикл клеток cellsMap.forEach внутри Box(modifier = Modifier.size(...)) и заменяем его:
+            Box(modifier = Modifier.size(cellSize * cols, cellSize * rows)) {
                 cellsMap.forEach { (coords, char) ->
                     val (cx, cy) = coords
                     val gridX = cx - minX
                     val gridY = cy - minY
+
+                    // Проверяем, принадлежит ли текущая ячейка выбранному для подсветки слову
+                    val isPartofSelectedWord = selectedWord != null && placedWords.any { pw ->
+                        pw.word == selectedWord && pw.word.indices.any { i ->
+                            val px = if (pw.isHorizontal) pw.x + i else pw.x
+                            val py = if (pw.isHorizontal) pw.y else pw.y + i
+                            px == cx && py == cy
+                        }
+                    }
 
                     val isVisible = placedWords.any { pw ->
                         solvedWords.contains(pw.word) &&
@@ -183,60 +178,71 @@ fun CrosswordGrid(
                                 }
                     }
 
-                    // Регистрируем ваш мультяшный шрифт для ячеек
-                    val CartoonFontFamily = remember { androidx.compose.ui.text.font.FontFamily(androidx.compose.ui.text.font.Font(com.example.wordsbuilder.R.font.cartoon)) }
-
-                    // Скругление углов плитки адаптируется под её размер (примерно 15% от размера ячейки)
+                    val CartoonFontFamily = remember { androidx.compose.ui.text.font.FontFamily(androidx.compose.ui.text.font.Font(R.font.cartoon)) }
                     val tileShape = androidx.compose.foundation.shape.RoundedCornerShape((cellSize.value * 0.15f).dp)
-                    val shadowHeight = (cellSize.value * 0.08f).dp // Толщина 3D-подложки
+                    val shadowHeight = (cellSize.value * 0.08f).dp
 
                     Box(
                         modifier = Modifier
                             .offset(x = cellSize * gridX, y = cellSize * gridY)
                             .size(cellSize)
-                            .padding(2.dp) // Небольшой зазор между плитками для объема
-                    ) {
-                        // 1. ЗАДНИЙ СЛОЙ (3D-ТЕНЬ ПЛИТКИ)
-                        // Для угаданных — глубокий темно-зеленый, для пустых — темно-серый
-                        Box(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .background(
-                                    color = if (isVisible) Color(0xFF1B5E20) else Color(0xFF424242),
-                                    shape = tileShape
+                            .padding(2.dp)
+                            // Обрабатываем Долгий тап по плитке
+                            .pointerInput(placedWords, coords) {
+                                detectTapGestures(
+                                    onLongPress = {
+                                        // Ищем слово, которому принадлежит эта ячейка
+                                        val clickedWord = placedWords.find { pw ->
+                                            pw.word.indices.any { i ->
+                                                val px = if (pw.isHorizontal) pw.x + i else pw.x
+                                                val py = if (pw.isHorizontal) pw.y else pw.y + i
+                                                px == cx && py == cy
+                                            }
+                                        }
+                                        clickedWord?.let {
+                                            SoundManager.playSound(context, R.raw.click)
+                                            onWordLongPressed(it.word)
+                                        }
+                                    }
                                 )
-                        )
+                            }
+                    ) {
+                        // 1. ЗАДНИЙ СЛОЙ (3D-ТЕНЬ)
+                        val shadowColor = when {
+                            isPartofSelectedWord -> Color(0xFFE65100) // Глубокий темно-оранжевый
+                            isVisible -> Color(0xFF1B5E20)
+                            else -> Color(0xFF424242)
+                        }
+                        Box(modifier = Modifier.fillMaxSize().background(color = shadowColor, shape = tileShape))
 
                         // 2. ПЕРЕДНИЙ СЛОЙ (КРЫШКА ПЛИТКИ)
-                        // Смещен чуть выше, создавая честный эффект объема плитки
+                        val containerColor = when {
+                            isPartofSelectedWord -> Color(0xFFFF9800) // Наш яркий оранжевый бренд-цвет
+                            isVisible -> Color(0xFF4CAF50)
+                            else -> Color(0xFFE0E0E0)
+                        }
+                        val borderColor = when {
+                            isPartofSelectedWord -> Color(0xFFFFB74D)
+                            isVisible -> Color(0xFF81C784)
+                            else -> Color.White
+                        }
+
                         Box(
                             modifier = Modifier
                                 .fillMaxSize()
-                                .padding(bottom = shadowHeight) // Освобождаем место под нижнюю грань-тень
-                                .background(
-                                    color = if (isVisible) Color(0xFF4CAF50) else Color(0xFFE0E0E0), // Сочный зеленый / Приятный светло-серый
-                                    shape = tileShape
-                                )
-                                // Аккуратный внутренний бортик, подчеркивающий мультяшность плитки
-                                .border(
-                                    width = (cellSize.value * 0.04f).dp,
-                                    color = if (isVisible) Color(0xFF81C784) else Color.White,
-                                    shape = tileShape
-                                ),
+                                .padding(bottom = shadowHeight)
+                                .background(color = containerColor, shape = tileShape)
+                                .border(width = (cellSize.value * 0.04f).dp, color = borderColor, shape = tileShape),
                             contentAlignment = Alignment.Center
                         ) {
                             if (isVisible) {
                                 Text(
                                     text = char.toString().uppercase(),
-                                    // Используем ваш мультяшный шрифт
                                     fontFamily = CartoonFontFamily,
-                                    // Размер шрифта динамически подстраивается под сжатие ячейки
                                     fontSize = with(LocalDensity.current) { (cellSize * 0.55f).toSp() },
                                     fontWeight = FontWeight.ExtraBold,
-                                    color = Color.White, // Белые сочные буквы на зеленой плитке
-                                    modifier = Modifier
-                                        // Небольшая вертикальная коррекция, чтобы компенсировать отступы шрифта
-                                        .offset(y = (cellSize.value * 0.02f).dp)
+                                    color = Color.White,
+                                    modifier = Modifier.offset(y = (cellSize.value * 0.02f).dp)
                                 )
                             }
                         }
@@ -245,7 +251,7 @@ fun CrosswordGrid(
             }
         }
 
-        // Мультяшная надпись по центру экрана
+        // Обучающая надпись "Zoom me!"
         androidx.compose.animation.AnimatedVisibility(
             visible = showZoomHint,
             enter = androidx.compose.animation.fadeIn(),
@@ -258,7 +264,7 @@ fun CrosswordGrid(
                     .padding(horizontal = 20.dp, vertical = 10.dp)
             ) {
                 Text(
-                    text = stringResource(com.example.wordsbuilder.R.string.zoom_me),
+                    text = stringResource(R.string.zoom_me),
                     color = Color(0xFFFF9800),
                     fontSize = 24.sp,
                     fontWeight = FontWeight.ExtraBold
@@ -266,38 +272,30 @@ fun CrosswordGrid(
             }
         }
 
-        // Статичная магическая рамка поверх всего экрана
-        Canvas(
-            modifier = Modifier.fillMaxSize()
-        ) {
+        // Статичная магическая рамка
+        Canvas(modifier = Modifier.fillMaxSize()) {
             val orangeColor = Color(0xFFFF9800)
-
             fun drawStaticMagicEdge(start: Offset, end: Offset, edgeId: Int) {
                 val path = Path().apply { moveTo(start.x, start.y) }
                 val distance = sqrt((end.x - start.x) * (end.x - start.x) + (end.y - start.y) * (end.y - start.y))
                 val segments = (distance / 20f).toInt().coerceAtLeast(5)
                 val rand = Random(edgeId + distance.toInt())
-
                 for (i in 1 until segments) {
                     val fraction = i.toFloat() / segments
                     val baseX = start.x + (end.x - start.x) * fraction
                     val baseY = start.y + (end.y - start.y) * fraction
-
                     val dx = end.x - start.x
                     val dy = end.y - start.y
                     val length = sqrt(dx * dx + dy * dy)
                     val nx = -dy / length
                     val ny = dx / length
-
                     val offsetAmount = (rand.nextFloat() - 0.5f) * 12f
                     path.lineTo(baseX + nx * offsetAmount, baseY + ny * offsetAmount)
                 }
                 path.lineTo(end.x, end.y)
-
                 drawPath(path = path, color = orangeColor, style = Stroke(width = 8f))
                 drawPath(path = path, color = Color.White, style = Stroke(width = 2.5f))
             }
-
             val offsetDistance = 0f
             val topLeft = Offset(offsetDistance, offsetDistance)
             val topRight = Offset(size.width - offsetDistance, offsetDistance)
