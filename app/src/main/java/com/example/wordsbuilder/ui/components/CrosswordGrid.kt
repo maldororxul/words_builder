@@ -168,6 +168,7 @@ fun CrosswordGrid(
             Box(
                 modifier = Modifier.size(cellSize * cols, cellSize * rows)
             ) {
+                // Находим цикл клеток cellsMap.forEach внутри Box(modifier = Modifier.size(...)) и заменяем его:
                 cellsMap.forEach { (coords, char) ->
                     val (cx, cy) = coords
                     val gridX = cx - minX
@@ -182,21 +183,62 @@ fun CrosswordGrid(
                                 }
                     }
 
+                    // Регистрируем ваш мультяшный шрифт для ячеек
+                    val CartoonFontFamily = remember { androidx.compose.ui.text.font.FontFamily(androidx.compose.ui.text.font.Font(com.example.wordsbuilder.R.font.cartoon)) }
+
+                    // Скругление углов плитки адаптируется под её размер (примерно 15% от размера ячейки)
+                    val tileShape = androidx.compose.foundation.shape.RoundedCornerShape((cellSize.value * 0.15f).dp)
+                    val shadowHeight = (cellSize.value * 0.08f).dp // Толщина 3D-подложки
+
                     Box(
                         modifier = Modifier
                             .offset(x = cellSize * gridX, y = cellSize * gridY)
                             .size(cellSize)
-                            .background(Color.White.copy(alpha = 0.95f))
-                            .border(1.dp, Color.DarkGray),
-                        contentAlignment = Alignment.Center
+                            .padding(2.dp) // Небольшой зазор между плитками для объема
                     ) {
-                        if (isVisible) {
-                            Text(
-                                text = char.toString(),
-                                fontSize = with(LocalDensity.current) { (cellSize * 0.6f).toSp() },
-                                fontWeight = FontWeight.Bold,
-                                color = Color.Black
-                            )
+                        // 1. ЗАДНИЙ СЛОЙ (3D-ТЕНЬ ПЛИТКИ)
+                        // Для угаданных — глубокий темно-зеленый, для пустых — темно-серый
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .background(
+                                    color = if (isVisible) Color(0xFF1B5E20) else Color(0xFF424242),
+                                    shape = tileShape
+                                )
+                        )
+
+                        // 2. ПЕРЕДНИЙ СЛОЙ (КРЫШКА ПЛИТКИ)
+                        // Смещен чуть выше, создавая честный эффект объема плитки
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(bottom = shadowHeight) // Освобождаем место под нижнюю грань-тень
+                                .background(
+                                    color = if (isVisible) Color(0xFF4CAF50) else Color(0xFFE0E0E0), // Сочный зеленый / Приятный светло-серый
+                                    shape = tileShape
+                                )
+                                // Аккуратный внутренний бортик, подчеркивающий мультяшность плитки
+                                .border(
+                                    width = (cellSize.value * 0.04f).dp,
+                                    color = if (isVisible) Color(0xFF81C784) else Color.White,
+                                    shape = tileShape
+                                ),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            if (isVisible) {
+                                Text(
+                                    text = char.toString().uppercase(),
+                                    // Используем ваш мультяшный шрифт
+                                    fontFamily = CartoonFontFamily,
+                                    // Размер шрифта динамически подстраивается под сжатие ячейки
+                                    fontSize = with(LocalDensity.current) { (cellSize * 0.55f).toSp() },
+                                    fontWeight = FontWeight.ExtraBold,
+                                    color = Color.White, // Белые сочные буквы на зеленой плитке
+                                    modifier = Modifier
+                                        // Небольшая вертикальная коррекция, чтобы компенсировать отступы шрифта
+                                        .offset(y = (cellSize.value * 0.02f).dp)
+                                )
+                            }
                         }
                     }
                 }
