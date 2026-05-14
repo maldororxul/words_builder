@@ -34,8 +34,11 @@ import androidx.compose.ui.unit.min
 import kotlin.math.sqrt
 import kotlin.random.Random
 import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.launch
 
 @Composable
@@ -65,6 +68,33 @@ fun CrosswordGrid(
 
     // Состояние масштаба кроссворда
     var scale by remember { mutableFloatStateOf(1f) }
+    val scaleState = remember { androidx.compose.animation.core.Animatable(1f) }
+
+    // Состояние видимости обучающей надписи "Zoom me!"
+    var showZoomHint by remember { mutableStateOf(false) }
+
+    // Запускаем анимацию подсказки строго ОДИН раз при открытии уровня
+    LaunchedEffect(placedWords) {
+        // Небольшая задержка перед стартом, чтобы игрок успел увидеть кроссворд
+        kotlinx.coroutines.delay(200L)
+
+        // 1. Показываем надпись и плавно приближаем кроссворд
+        showZoomHint = true
+        scaleState.animateTo(
+            targetValue = 1.3f,
+            animationSpec = androidx.compose.animation.core.tween(durationMillis = 500)
+        )
+
+        // Задерживаем кроссворд в приближенном состоянии на мгновение
+        kotlinx.coroutines.delay(400L)
+
+        // 2. Скрываем надпись и плавно возвращаем масштаб к оригиналу (1.0f)
+        showZoomHint = false
+        scaleState.animateTo(
+            targetValue = 1.0f,
+            animationSpec = androidx.compose.animation.core.tween(durationMillis = 400)
+        )
+    }
 
     // Стейты прокрутки кроссворда
     val horizontalScrollState = rememberScrollState()
@@ -189,6 +219,27 @@ fun CrosswordGrid(
                         }
                     }
                 }
+            }
+        }
+
+        // ТОЧЕЧНОЕ ИЗМЕНЕНИЕ: Вставляем красивую мультяшную надпись по центру экрана
+        androidx.compose.animation.AnimatedVisibility(
+            visible = showZoomHint,
+            enter = androidx.compose.animation.fadeIn(),
+            exit = androidx.compose.animation.fadeOut(),
+            modifier = Modifier.align(Alignment.Center)
+        ) {
+            Box(
+                modifier = Modifier
+                    .background(Color.Black.copy(alpha = 0.75f), shape = androidx.compose.foundation.shape.RoundedCornerShape(12.dp))
+                    .padding(horizontal = 20.dp, vertical = 10.dp)
+            ) {
+                Text(
+                    text = "Zoom me! 🔍",
+                    color = Color(0xFFFF9800), // Сочный оранжевый цвет в тон вашей магической рамки
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.ExtraBold
+                )
             }
         }
 
