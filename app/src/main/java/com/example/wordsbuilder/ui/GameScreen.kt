@@ -1,6 +1,7 @@
 package com.example.wordsbuilder.ui
 
 import CrosswordGrid
+import CurrentWordDisplay
 import ExitConfirmationDialog
 import GameBottomPanel
 import LevelCompleteOverlay
@@ -27,6 +28,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.example.wordsbuilder.data.LevelManager
+import com.example.wordsbuilder.ui.components.WordFlyUpEffect
 import com.example.wordsbuilder.ui.dialogs.HintConfirmationDialog
 import generateCrossword
 import generateLevel
@@ -49,7 +51,8 @@ fun GameScreen(
 ) {
     val context = LocalContext.current
     val currentLocale = remember { getSavedLanguage(context) }
-
+    var lastSolvedWord by remember { mutableStateOf("") }
+    var wordFlyTrigger by remember { mutableIntStateOf(0) }
     // Основные состояния
     var coins by remember { mutableIntStateOf(getSavedCoins(context)) }
     var totalScore by remember { mutableStateOf(getSavedScore(context)) }
@@ -141,7 +144,18 @@ fun GameScreen(
                     modifier = Modifier.fillMaxSize()
                 )
             }
-
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                // Текущее слово
+                CurrentWordDisplay(
+                    currentWord = currentWord,
+                    triggerWord = lastSolvedWord,
+                    flyTrigger = wordFlyTrigger,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
             // === НИЖНЯЯ ПАНЕЛЬ ===
             GameBottomPanel(
                 currentWord = currentWord,
@@ -151,7 +165,7 @@ fun GameScreen(
                 targetWords = targetWords,
                 campaignLevelId = if (gameMode == "campaign") campaignLevelId else null,
                 onWordComposed = { input ->
-                    handleWordInput(
+                    val isSuccess = handleWordInput(
                         input = input,
                         targetWords = targetWords,
                         solvedWords = solvedWords,
@@ -166,6 +180,12 @@ fun GameScreen(
                         },
                         onCurrentWordChange = { currentWord = it }
                     )
+                    if (isSuccess) {
+                        // Фиксируем слово для анимации, пока оно не стерлось
+                        lastSolvedWord = currentWord
+                        // Увеличиваем счетчик, чтобы запустить WordFlyUpEffect
+                        wordFlyTrigger++
+                    }
                 },
                 onHintClick = { showHintDialog = true }
             )

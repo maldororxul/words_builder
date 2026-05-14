@@ -19,24 +19,17 @@ fun GameBottomPanel(
     onWordComposed: (String) -> Unit,
     onHintClick: () -> Unit
 ) {
-    Column(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        // Текущее слово
-        CurrentWordDisplay(currentWord)
-        // Колесо со всеми оверлеями
-        WordWheelContainer(
-            letters = wheelLetters,
-            targetWords = targetWords,
-            totalScore = totalScore,
-            coins = coins,
-            campaignLevelId = campaignLevelId,
-            onWordComposed = onWordComposed,
-            onHintClick = onHintClick
-        )
-        Spacer(modifier = Modifier.height(24.dp))
-        // Баннер рекламы
-        AdBannerPlaceholder()
-    }
+    // Колесо со всеми оверлеями
+    WordWheelContainer(
+        letters = wheelLetters,
+        targetWords = targetWords,
+        totalScore = totalScore,
+        coins = coins,
+        campaignLevelId = campaignLevelId,
+        onWordComposed = onWordComposed,
+        onHintClick = onHintClick
+    )
+    Spacer(modifier = Modifier.height(24.dp))
+    // Баннер рекламы
+    AdBannerPlaceholder()
 }

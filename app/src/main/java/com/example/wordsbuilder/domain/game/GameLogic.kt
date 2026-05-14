@@ -87,7 +87,7 @@ fun handleWordInput(
     onSolvedUpdate: (Set<String>) -> Unit,
     onScoreUpdate: (Int) -> Unit,           // сюда передаём delta
     onCurrentWordChange: (String) -> Unit
-) {
+): Boolean {
     if (input.startsWith("CHECK:")) {
         val word = input.removePrefix("CHECK:")
 
@@ -119,6 +119,7 @@ fun handleWordInput(
             if (newSolved.size == targetWords.size) {
                 SoundManager.playSound(context, R.raw.victory)
             }
+            return true
         }
         else if (word.length > 1) {
             SoundManager.playSound(context, R.raw.error)
@@ -128,6 +129,7 @@ fun handleWordInput(
     } else {
         onCurrentWordChange(input)
     }
+    return false
 }
 
 // Сохранение количества слов для случайного режима (по умолчанию 5)
