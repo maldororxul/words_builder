@@ -236,9 +236,9 @@ fun CrosswordGrid(
                     val (cx, cy) = coords
                     val gridX = cx - minX
                     val gridY = cy - minY
-
-                    val isPartofSelectedWord = selectedWord != null && placedWords.any { pw ->
-                        pw.word.lowercase() == selectedWord.lowercase() && pw.word.indices.any { i ->
+                    val effectiveSelectedWord = selectedWord ?: tutorialSelectedWord
+                    val isPartofSelectedWord = effectiveSelectedWord != null && placedWords.any { pw ->
+                        pw.word.lowercase() == effectiveSelectedWord.lowercase() && pw.word.indices.any { i ->
                             val px = if (pw.isHorizontal) pw.x + i else pw.x
                             val py = if (pw.isHorizontal) pw.y else pw.y + i
                             px == cx && py == cy
@@ -257,7 +257,6 @@ fun CrosswordGrid(
                     val cartoonFontFamily = remember { androidx.compose.ui.text.font.FontFamily(androidx.compose.ui.text.font.Font(R.font.cartoon)) }
                     val tileShape = androidx.compose.foundation.shape.RoundedCornerShape((cellSize.value * 0.15f).dp)
                     val shadowHeight = (cellSize.value * 0.08f).dp
-                    val effectiveSelectedWord = selectedWord ?: tutorialSelectedWord
 
                     Box(
                         modifier = Modifier
@@ -342,7 +341,7 @@ fun CrosswordGrid(
                     .background(Color.Black.copy(alpha = 0.75f), shape = androidx.compose.foundation.shape.RoundedCornerShape(12.dp))
                     .padding(horizontal = 20.dp, vertical = 10.dp)
             ) {
-                Text(text = "Tap me! ☝️", color = Color(0xFFFF9800), fontSize = 24.sp, fontWeight = FontWeight.ExtraBold)
+                Text(text = stringResource(R.string.tap_me), color = Color(0xFFFF9800), fontSize = 24.sp, fontWeight = FontWeight.ExtraBold)
             }
         }
 

@@ -40,5 +40,6 @@
     <string name="random_level_words_count">Words in random mode: %1$d</string>
     <string name="bonus_coins">Bonus 🪙 </string>
     <string name="get">Get!</string>
-    <string name="zoom_me">"Zoom me! 🔍"</string>
+    <string name="zoom_me">Zoom me! 🔍</string>
+    <string name="tap_me">Long-tap me! ☝️</string>
 </resources>
