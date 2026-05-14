@@ -11,7 +11,7 @@
     <string name="score_label">Счет</string>
     <string name="help">Помощь</string>
     <string name="hint_confirm_title">Использовать подсказку?</string>
-    <string name="hint_confirm_msg">Вы уверены, что хотите потратить %1$d монет на подсказку?</string>
+    <string name="hint_confirm_msg">Вы уверены, что хотите потратить %1$d🪙 на подсказку?</string>
     <string name="not_enough_coins">Недостаточно монет!</string>
     <string name="level_short">Ур. %1$d</string>
     <string name="campaign_finished">Кампания пройдена!</string>

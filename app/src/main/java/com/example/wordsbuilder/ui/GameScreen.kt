@@ -3,7 +3,6 @@ package com.example.wordsbuilder.ui
 import CrosswordGrid
 import ExitConfirmationDialog
 import GameBottomPanel
-import HintConfirmationDialog
 import LevelCompleteOverlay
 import LevelInfo
 import androidx.activity.compose.BackHandler
@@ -28,6 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.example.wordsbuilder.data.LevelManager
+import com.example.wordsbuilder.ui.dialogs.HintConfirmationDialog
 import generateCrossword
 import generateLevel
 import getRandomWordsCount

@@ -14,7 +14,7 @@
     <string name="campaign_finished">¡Campaña completada!</string>
     <string name="coins_label">Monedas: %1$d</string>
     <string name="hint_confirm_title">¿Usar pista?</string>
-    <string name="hint_confirm_msg">¿Estás seguro de que quieres gastar %1$d monedas en una pista?</string>
+    <string name="hint_confirm_msg">¿Estás seguro de que quieres gastar %1$d🪙 en una pista?</string>
     <string name="not_enough_coins">¡No tienes suficientes monedas!</string>
     <string name="bg_name_default">Por defecto</string>
     <string name="bg_sea_and_sun">Atardecer en el mar</string>

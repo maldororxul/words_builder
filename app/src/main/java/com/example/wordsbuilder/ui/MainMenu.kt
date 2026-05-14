@@ -65,7 +65,7 @@ fun MainMenu(
                     containerColor = MaterialTheme.colorScheme.primary,
                     contentColor = Color.White,
                     disabledContainerColor = Color(0xFF333333),
-                    disabledContentColor = Color.Gray
+                    disabledContentColor = Color.White
                 )
             ) {
                 Text(
@@ -82,7 +82,7 @@ fun MainMenu(
                     onStartRandom()
                 },
                 modifier = menuButtonModifier,
-                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary, contentColor = Color.White)
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF333333), contentColor = Color.White)
             ) {
                 Text(text = stringResource(id = R.string.random_level), fontSize = 18.sp, fontWeight = FontWeight.Bold)
             }
@@ -94,7 +94,7 @@ fun MainMenu(
                     onOpenShop()
                 },
                 modifier = menuButtonModifier,
-                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.tertiary, contentColor = Color.White)
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF333333), contentColor = Color.White)
             ) {
                 Text(text = stringResource(id = R.string.backgrounds_store), fontSize = 18.sp, fontWeight = FontWeight.Bold)
             }
@@ -106,7 +106,7 @@ fun MainMenu(
                     onOpenStats()
                 },
                 modifier = menuButtonModifier,
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF607D8B), contentColor = Color.White)
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF333333), contentColor = Color.White)
             ) {
                 Text(text = stringResource(id = R.string.statistics), fontSize = 18.sp, fontWeight = FontWeight.Bold)
             }
@@ -118,7 +118,7 @@ fun MainMenu(
                     onOpenSettings()
                 },
                 modifier = menuButtonModifier,
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF795548), contentColor = Color.White)
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF333333), contentColor = Color.White)
             ) {
                 Text(text = stringResource(id = R.string.settings), fontSize = 18.sp, fontWeight = FontWeight.Bold)
             }

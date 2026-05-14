@@ -15,7 +15,7 @@
     <string name="campaign_finished">Campaign Completed!</string>
     <string name="coins_label">Coins: %1$d</string>
     <string name="hint_confirm_title">Use Hint?</string>
-    <string name="hint_confirm_msg">Are you sure you want to spend %1$d coins for a hint?</string>
+    <string name="hint_confirm_msg">Are you sure you want to spend %1$d🪙 for a hint?</string>
     <string name="not_enough_coins">Not enough coins!</string>
     <string name="bg_name_default">Default</string>
     <string name="bg_sea_and_sun">Sunset at the sea</string>
