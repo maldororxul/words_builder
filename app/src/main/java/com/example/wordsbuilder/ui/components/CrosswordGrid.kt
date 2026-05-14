@@ -144,10 +144,10 @@ fun CrosswordGrid(
         // Окно просмотра кроссворда
         Box(
             modifier = Modifier
-                .size(gridWidth, gridHeight)
+                .fillMaxSize()
                 .horizontalScroll(horizontalScrollState)
                 .verticalScroll(verticalScrollState),
-            contentAlignment = Alignment.Center
+            contentAlignment = Alignment.Center // Держит кроссворд строго по центру экрана
         ) {
             val cellSize = baseCellSize * scaleState.value
 
@@ -160,7 +160,10 @@ fun CrosswordGrid(
                 }
             }
 
-            Box(modifier = Modifier.size(cellSize * cols, cellSize * rows)) {
+            // 2. Внутренний контейнер кроссворда, который физически растет при зуме
+            Box(
+                modifier = Modifier.size(cellSize * cols, cellSize * rows)
+            ) {
                 cellsMap.forEach { (coords, char) ->
                     val (cx, cy) = coords
                     val gridX = cx - minX
@@ -183,7 +186,7 @@ fun CrosswordGrid(
                                 }
                     }
 
-                    val CartoonFontFamily = remember { androidx.compose.ui.text.font.FontFamily(androidx.compose.ui.text.font.Font(R.font.cartoon)) }
+                    val CartoonFontFamily = remember { androidx.compose.ui.text.font.FontFamily(androidx.compose.ui.text.font.Font(com.example.wordsbuilder.R.font.cartoon)) }
                     val tileShape = androidx.compose.foundation.shape.RoundedCornerShape((cellSize.value * 0.15f).dp)
                     val shadowHeight = (cellSize.value * 0.08f).dp
 
@@ -240,6 +243,7 @@ fun CrosswordGrid(
             }
         }
 
+
         // Обучающая надпись "Zoom me!"
         androidx.compose.animation.AnimatedVisibility(
             visible = showZoomHint,
@@ -257,7 +261,7 @@ fun CrosswordGrid(
         }
 
         // Статичная магическая рамка
-        Canvas(modifier = Modifier.size(gridWidth, gridHeight)) {
+        Canvas(modifier = Modifier.fillMaxSize()) {
             val orangeColor = Color(0xFFFF9800)
             fun drawStaticMagicEdge(start: Offset, end: Offset, edgeId: Int) {
                 val path = Path().apply { moveTo(start.x, start.y) }
@@ -280,11 +284,13 @@ fun CrosswordGrid(
                 drawPath(path = path, color = orangeColor, style = Stroke(width = 8f))
                 drawPath(path = path, color = Color.White, style = Stroke(width = 2.5f))
             }
-            val offsetDistance = 16f
-            val topLeft = Offset(-offsetDistance, -offsetDistance)
-            val topRight = Offset(size.width + offsetDistance, -offsetDistance)
-            val bottomLeft = Offset(-offsetDistance, size.height + offsetDistance)
-            val bottomRight = Offset(size.width + offsetDistance, size.height + offsetDistance)
+
+            // Зазоры (в пикселях) внутрь от краев экрана смартфона, чтобы линии ложились красиво
+            val offsetDistance = 0f
+            val topLeft = Offset(offsetDistance, offsetDistance)
+            val topRight = Offset(size.width - offsetDistance, offsetDistance)
+            val bottomLeft = Offset(offsetDistance, size.height - offsetDistance)
+            val bottomRight = Offset(size.width - offsetDistance, size.height - offsetDistance)
 
             drawStaticMagicEdge(topLeft, topRight, edgeId = 100)
             drawStaticMagicEdge(topRight, bottomRight, edgeId = 200)
