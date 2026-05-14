@@ -71,8 +71,7 @@ fun CrosswordGrid(
         scale = (scale * zoomChange).coerceIn(1.0f, 2.5f)
     }
 
-    // КРИТИЧЕСКОЕ ИЗМЕНЕНИЕ 1: transformable вешается на самый верхний контейнер,
-    // чтобы скроллы не перехватывали жест щипка двумя пальцами.
+    // Внешний контейнер занимает ВСЁ доступное пространство экрана
     BoxWithConstraints(
         modifier = modifier
             .fillMaxSize()
@@ -80,38 +79,34 @@ fun CrosswordGrid(
             .transformable(state = transformState),
         contentAlignment = Alignment.Center
     ) {
-        // Базовые размеры сетки под область экрана
+        // Базовые размеры ячейки (Оригинальная логика)
         val baseCellSize = min(
             maxWidth / cols.coerceAtLeast(1),
             maxHeight / rows.coerceAtLeast(1)
         ) * 0.90f
 
-        val gridWidth = baseCellSize * cols
-        val gridHeight = baseCellSize * rows
-
-        // Создаём карту всех клеток (Оригинальная логика)
-        val cellsMap = mutableMapOf<Pair<Int, Int>, Char>()
-        placedWords.forEach { pw ->
-            pw.word.forEachIndexed { i, char ->
-                val x = if (pw.isHorizontal) pw.x + i else pw.x
-                val y = if (pw.isHorizontal) pw.y else pw.y + i
-                cellsMap[Pair(x, y)] = char
-            }
-        }
-
-        // КРИТИЧЕСКОЕ ИЗМЕНЕНИЕ 2: Окно просмотра жестко ограничено размерами рамки (gridWidth, gridHeight).
-        // Скроллинг работает только внутри него.
+        // КРИТИЧЕСКОЕ ИЗМЕНЕНИЕ 1: Окно просмотра (скролла) теперь занимает fillMaxSize().
+        // Оно ограничено краями компонента, а не размерами сгенерированного кроссворда.
         Box(
             modifier = Modifier
-                .size(gridWidth, gridHeight)
+                .fillMaxSize()
                 .horizontalScroll(horizontalScrollState)
                 .verticalScroll(verticalScrollState),
             contentAlignment = Alignment.Center
         ) {
-            // Динамический размер ячейки на основе текущего зума
             val cellSize = baseCellSize * scale
 
-            // Внутренний контейнер кроссворда, который физически растет при зуме
+            // ТОЧЕЧНОЕ ИЗМЕНЕНИЕ: Создаём карту клеток прямо ЗДЕСЬ (внутри Box скролла)
+            val cellsMap = mutableMapOf<Pair<Int, Int>, Char>()
+            placedWords.forEach { pw ->
+                pw.word.forEachIndexed { i, char ->
+                    val x = if (pw.isHorizontal) pw.x + i else pw.x
+                    val y = if (pw.isHorizontal) pw.y else pw.y + i
+                    cellsMap[Pair(x, y)] = char
+                }
+            }
+
+            // Теперь этот внутренний Box отлично видит cellsMap
             Box(
                 modifier = Modifier.size(cellSize * cols, cellSize * rows)
             ) {
@@ -120,6 +115,7 @@ fun CrosswordGrid(
                     val gridX = cx - minX
                     val gridY = cy - minY
 
+                    // Проверяем видимость (Оригинальная логика)
                     val isVisible = placedWords.any { pw ->
                         solvedWords.contains(pw.word) &&
                                 pw.word.indices.any { i ->
@@ -150,9 +146,10 @@ fun CrosswordGrid(
             }
         }
 
-        // Статичная магическая рамка поверх всего экрана
+        // КРИТИЧЕСКОЕ ИЗМЕНЕНИЕ 2: Холст рамки растягивается на fillMaxSize().
+        // Линии молний теперь будут рисоваться строго по внешнему периметру всего игрового экрана.
         Canvas(
-            modifier = Modifier.size(gridWidth, gridHeight)
+            modifier = Modifier.fillMaxSize()
         ) {
             val orangeColor = Color(0xFFFF9800)
 
@@ -182,11 +179,12 @@ fun CrosswordGrid(
                 drawPath(path = path, color = Color.White, style = Stroke(width = 2.5f))
             }
 
-            val offsetDistance = 16f
-            val topLeft = Offset(-offsetDistance, -offsetDistance)
-            val topRight = Offset(size.width + offsetDistance, -offsetDistance)
-            val bottomLeft = Offset(-offsetDistance, size.height + offsetDistance)
-            val bottomRight = Offset(size.width + offsetDistance, size.height + offsetDistance)
+            // Отступы внутрь от краев экрана, чтобы рамка выглядела гармонично
+            val offsetDistance = 0f
+            val topLeft = Offset(offsetDistance, offsetDistance)
+            val topRight = Offset(size.width - offsetDistance, offsetDistance)
+            val bottomLeft = Offset(offsetDistance, size.height - offsetDistance)
+            val bottomRight = Offset(size.width - offsetDistance, size.height - offsetDistance)
 
             drawStaticMagicEdge(topLeft, topRight, edgeId = 100)
             drawStaticMagicEdge(topRight, bottomRight, edgeId = 200)
