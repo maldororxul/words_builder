@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Words Builder</string>
-    <string name="start_game">Campaign, level %1$d 🏆</string>
-    <string name="random_level">Random Level 🎲</string>
+    <string name="start_game">CAMPAIGN, LEVEL %1$d 🏆</string>
+    <string name="random_level">RANDOM LEVEL 🎲</string>
     <string name="language">Language: EN</string>
     <string name="next_level">Next Level</string>
     <string name="level_completed">Level Completed!</string>
@@ -12,7 +12,7 @@
     <string name="score_label">Score</string>
     <string name="help">Help</string>
     <string name="level_short">Lvl. %1$d</string>
-    <string name="campaign_finished">Campaign Completed!</string>
+    <string name="campaign_finished">CAMPAIGN COMPLETED!</string>
     <string name="coins_label">Coins: %1$d</string>
     <string name="hint_confirm_title">Use Hint?</string>
     <string name="hint_confirm_msg">Are you sure you want to spend %1$d🪙 for a hint?</string>
@@ -20,7 +20,7 @@
     <string name="bg_name_default">Default</string>
     <string name="bg_sea_and_sun">Sunset at the sea</string>
     <string name="back">Back</string>
-    <string name="backgrounds_store">Select Background 🎭</string>
+    <string name="backgrounds_store">SELECT BACKGROUND 🎭</string>
     <string name="my_collection">My Collection</string>
     <string name="buy_backgrounds">Buy Backgrounds</string>
     <string name="static_background">Static</string>
@@ -29,10 +29,10 @@
     <string name="active">Active</string>
     <string name="all_backgrounds_bought">All backgrounds were bought</string>
     <string name="no_backrounds_bought">No Backrounds Bought</string>
-    <string name="settings">Settings ⚙️</string>
+    <string name="settings">SETTINGS ⚙️</string>
     <string name="music">Music 🎵</string>
     <string name="sounds">Sounds 🔊️</string>
-    <string name="statistics">Statistics 📊️</string>
+    <string name="statistics">STATISTICS 📊️</string>
     <string name="total_score">Total Score:</string>
     <string name="total_words_solved">Total Words Solved:</string>
     <string name="uniq_words_solved">Unique Words:</string>

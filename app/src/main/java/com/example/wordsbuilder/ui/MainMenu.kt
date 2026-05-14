@@ -16,6 +16,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.wordsbuilder.R
+import com.example.wordsbuilder.ui.components.GameButton
 
 @Composable
 fun MainMenu(
@@ -28,7 +29,6 @@ fun MainMenu(
     onOpenSettings: () -> Unit,
     onOpenStats: () -> Unit
 ) {
-    val context = LocalContext.current
     Column(
         modifier = Modifier.fillMaxSize().padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -44,86 +44,28 @@ fun MainMenu(
                 .padding(top = 32.dp),
             contentScale = ContentScale.Fit
         )
-
         // Блок кнопок меню (Один под другим, общая ширина)
         Column(
             modifier = Modifier.fillMaxWidth().padding(horizontal = 32.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            val menuButtonModifier = Modifier.fillMaxWidth().height(50.dp)
-
             // Кампания (становится непрозрачной и заблокированной по прохождении)
-            Button(
-                onClick = {
-                    SoundManager.playSound(context, R.raw.click)
-                    onStartCampaign()
-                },
+            GameButton(
+                text = if (isCampaignFinished) stringResource(id = R.string.campaign_finished) else
+                    stringResource(id = R.string.start_game, currentLevelId),
                 enabled = !isCampaignFinished,
-                modifier = menuButtonModifier,
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.primary,
-                    contentColor = Color.White,
-                    disabledContainerColor = Color(0xFF333333),
-                    disabledContentColor = Color.White
-                )
-            ) {
-                Text(
-                    text = if (isCampaignFinished) stringResource(id = R.string.campaign_finished) else stringResource(id = R.string.start_game, currentLevelId),
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold
-                )
-            }
-
+                onClick = onStartCampaign
+            )
             // Случайный уровень
-            Button(
-                onClick = {
-                    SoundManager.playSound(context, R.raw.click)
-                    onStartRandom()
-                },
-                modifier = menuButtonModifier,
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF333333), contentColor = Color.White)
-            ) {
-                Text(text = stringResource(id = R.string.random_level), fontSize = 18.sp, fontWeight = FontWeight.Bold)
-            }
-
+            GameButton(text = stringResource(id = R.string.random_level), onClick = onStartRandom)
             // Магазин фонов
-            Button(
-                onClick = {
-                    SoundManager.playSound(context, R.raw.click)
-                    onOpenShop()
-                },
-                modifier = menuButtonModifier,
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF333333), contentColor = Color.White)
-            ) {
-                Text(text = stringResource(id = R.string.backgrounds_store), fontSize = 18.sp, fontWeight = FontWeight.Bold)
-            }
-
+            GameButton(text = stringResource(id = R.string.backgrounds_store), onClick = onOpenShop)
             // Статистика
-            Button(
-                onClick = {
-                    SoundManager.playSound(context, R.raw.click)
-                    onOpenStats()
-                },
-                modifier = menuButtonModifier,
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF333333), contentColor = Color.White)
-            ) {
-                Text(text = stringResource(id = R.string.statistics), fontSize = 18.sp, fontWeight = FontWeight.Bold)
-            }
-
+            GameButton(text = stringResource(id = R.string.statistics), onClick = onOpenStats)
             // Настройки
-            Button(
-                onClick = {
-                    SoundManager.playSound(context, R.raw.click)
-                    onOpenSettings()
-                },
-                modifier = menuButtonModifier,
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF333333), contentColor = Color.White)
-            ) {
-                Text(text = stringResource(id = R.string.settings), fontSize = 18.sp, fontWeight = FontWeight.Bold)
-            }
+            GameButton(text = stringResource(id = R.string.settings), onClick = onOpenSettings)
         }
-
         // Подвал / Отступ снизу для балансировки интерфейса
         Spacer(modifier = Modifier.height(16.dp))
     }

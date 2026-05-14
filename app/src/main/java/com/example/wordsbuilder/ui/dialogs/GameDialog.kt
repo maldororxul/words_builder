@@ -14,6 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -86,37 +87,16 @@ fun GameDialog(
                             modifier = Modifier.fillMaxWidth(),
                             verticalArrangement = Arrangement.spacedBy(10.dp)
                         ) {
-                            val buttonModifier = Modifier.fillMaxWidth().height(48.dp)
-
-                            Button(
-                                onClick = {
-                                    SoundManager.playSound(context, R.raw.click)
-                                    onConfirm()
-                                },
-                                modifier = buttonModifier,
-                                colors = ButtonDefaults.buttonColors(
-                                    containerColor = MaterialTheme.colorScheme.primary,
-                                    contentColor = Color.White
-                                ),
-                                shape = RoundedCornerShape(12.dp)
-                            ) {
-                                Text(text = confirmButtonText, fontSize = 16.sp, fontWeight = FontWeight.Bold)
-                            }
-
-                            Button(
-                                onClick = {
-                                    SoundManager.playSound(context, R.raw.click)
-                                    onDismiss()
-                                },
-                                modifier = buttonModifier,
-                                colors = ButtonDefaults.buttonColors(
-                                    containerColor = Color(0xFF3A3A43),
-                                    contentColor = Color.White
-                                ),
-                                shape = RoundedCornerShape(12.dp)
-                            ) {
-                                Text(text = dismissButtonText, fontSize = 16.sp, fontWeight = FontWeight.Bold)
-                            }
+                            GameButton(
+                                text = confirmButtonText,
+                                onClick = onConfirm,
+                                containerColor = Color(0xFF4CAF50)
+                            )
+                            GameButton(
+                                text = dismissButtonText,
+                                onClick = onDismiss,
+                                containerColor = Color(0xFFF44336)
+                            )
                         }
                     }
                 }

@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.wordsbuilder.R
 import changeLocale
+import com.example.wordsbuilder.ui.components.GameButton
 import saveRandomWordsCount
 import getRandomWordsCount
 
@@ -50,16 +51,11 @@ fun SettingsScreen(bgManager: BackgroundManager, onBack: () -> Unit) {
                 horizontalArrangement = Arrangement.Start,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Button(
-                    onClick = {
-                        SoundManager.playSound(context, R.raw.click)
-                        onBack()
-                    },
-                    colors = ButtonDefaults.buttonColors(containerColor = Color.DarkGray)
-                ) {
-                    // Используем ваш ресурс для локализации кнопки назад
-                    Text(text = stringResource(id = R.string.back), color = Color.White)
-                }
+                GameButton(
+                    text = stringResource(id = R.string.back),
+                    onClick = onBack,
+                    modifier = Modifier.weight(0.50f)
+                )
             }
 
             Spacer(modifier = Modifier.height(24.dp))

@@ -1,6 +1,6 @@
 <resources>
-    <string name="start_game">Кампания, уровень %1$d 🏆</string>
-    <string name="random_level">Случайный уровень 🎲</string>
+    <string name="start_game">КАМПАНИЯ, УРОВЕНЬ %1$d 🏆</string>
+    <string name="random_level">СЛУЧАЙНЫЙ УРОВЕНЬ 🎲</string>
     <string name="language">Язык: RU</string>
     <string name="next_level">Следующий уровень</string>
     <string name="level_completed">Уровень пройден!</string>
@@ -14,11 +14,11 @@
     <string name="hint_confirm_msg">Вы уверены, что хотите потратить %1$d🪙 на подсказку?</string>
     <string name="not_enough_coins">Недостаточно монет!</string>
     <string name="level_short">Ур. %1$d</string>
-    <string name="campaign_finished">Кампания пройдена!</string>
+    <string name="campaign_finished">КАМПАНИЯ ПРОЙДЕНА!</string>
     <string name="bg_name_default">По умолчанию</string>
     <string name="bg_sea_and_sun">Закат на море</string>
     <string name="back">Назад</string>
-    <string name="backgrounds_store">Выбрать фон 🎭</string>
+    <string name="backgrounds_store">ВЫБРАТЬ ФОН 🎭</string>
     <string name="my_collection">Моя коллекция</string>
     <string name="buy_backgrounds">Купить фоны</string>
     <string name="static_background">Статический</string>
@@ -27,10 +27,10 @@
     <string name="active">Активен</string>
     <string name="all_backgrounds_bought">Все фоны куплены</string>
     <string name="no_backrounds_bought">Нет купленных фонов</string>
-    <string name="settings">Настройки ⚙️</string>
+    <string name="settings">НАСТРОЙКИ ⚙️</string>
     <string name="music">Музыка 🎵</string>
     <string name="sounds">Звуки 🔊️</string>
-    <string name="statistics">Статистика 📊️</string>
+    <string name="statistics">СТАТИСТИКА 📊️</string>
     <string name="total_score">Очков заработано:</string>
     <string name="total_words_solved">Всего слов разгадано:</string>
     <string name="uniq_words_solved">Уникальных слов:</string>

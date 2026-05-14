@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.example.wordsbuilder.R
+import com.example.wordsbuilder.ui.components.GameButton
 import saveCoins
 import saveCurrentLevelProgress
 
@@ -92,8 +93,9 @@ fun HintConfirmationDialog(
                         ) {
                             val buttonModifier = Modifier.fillMaxWidth().height(48.dp)
 
-                            // Кнопка подтверждения с ВАШЕЙ ОРИГИНАЛЬНОЙ РАБОЧЕЙ ЛОГИКОЙ
-                            Button(
+                            // Кнопка подтверждения
+                            GameButton(
+                                text = stringResource(id = R.string.yes),
                                 onClick = {
                                     SoundManager.playSound(context, R.raw.click)
                                     if (coins >= hintCost) {
@@ -122,31 +124,14 @@ fun HintConfirmationDialog(
                                         onDismiss()
                                     }
                                 },
-                                modifier = buttonModifier,
-                                colors = ButtonDefaults.buttonColors(
-                                    containerColor = MaterialTheme.colorScheme.primary,
-                                    contentColor = Color.White
-                                ),
-                                shape = RoundedCornerShape(12.dp)
-                            ) {
-                                Text(text = stringResource(id = R.string.yes), fontSize = 16.sp, fontWeight = FontWeight.Bold)
-                            }
-
+                                containerColor = Color(0xFF4CAF50)
+                            )
                             // Кнопка отмены
-                            Button(
-                                onClick = {
-                                    SoundManager.playSound(context, R.raw.click)
-                                    onDismiss()
-                                },
-                                modifier = buttonModifier,
-                                colors = ButtonDefaults.buttonColors(
-                                    containerColor = Color(0xFF3A3A43),
-                                    contentColor = Color.White
-                                ),
-                                shape = RoundedCornerShape(12.dp)
-                            ) {
-                                Text(text = stringResource(id = R.string.no), fontSize = 16.sp, fontWeight = FontWeight.Bold)
-                            }
+                            GameButton(
+                                text = stringResource(id = R.string.no),
+                                onClick = onDismiss,
+                                containerColor = Color(0xFFF44336)
+                            )
                         }
                     }
                 }

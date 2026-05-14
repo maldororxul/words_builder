@@ -1,6 +1,6 @@
 <resources>
-    <string name="start_game">Campaña, nivel %1$d 🏆</string>
-    <string name="random_level">Nivel aleatorio 🎲</string>
+    <string name="start_game">CAMPAÑA, NIVEL %1$d 🏆</string>
+    <string name="random_level">NIVEL ALEATORIO 🎲</string>
     <string name="language">Idioma: ES</string>
     <string name="next_level">Siguiente nivel</string>
     <string name="level_completed">¡Nivel completado!</string>
@@ -11,7 +11,7 @@
     <string name="score_label">Puntuación</string>
     <string name="help">Ayuda</string>
     <string name="level_short">Nivel %1$d</string>
-    <string name="campaign_finished">¡Campaña completada!</string>
+    <string name="campaign_finished">¡CAMPAÑA COMPLETADA!</string>
     <string name="coins_label">Monedas: %1$d</string>
     <string name="hint_confirm_title">¿Usar pista?</string>
     <string name="hint_confirm_msg">¿Estás seguro de que quieres gastar %1$d🪙 en una pista?</string>
@@ -19,7 +19,7 @@
     <string name="bg_name_default">Por defecto</string>
     <string name="bg_sea_and_sun">Atardecer en el mar</string>
     <string name="back">Atrás</string>
-    <string name="backgrounds_store">Seleccionar fondo 🎭</string>
+    <string name="backgrounds_store">SELECCIONAR FONDO 🎭</string>
     <string name="my_collection">Mi colección</string>
     <string name="buy_backgrounds">Comprar fondos</string>
     <string name="static_background">Estático</string>
@@ -28,10 +28,10 @@
     <string name="active">Activo</string>
     <string name="all_backgrounds_bought">Todos los fondos comprados</string>
     <string name="no_backrounds_bought">No se compraron fondos</string>
-    <string name="settings">Ajustes ⚙️</string>
+    <string name="settings">AJUSTES ⚙️</string>
     <string name="music">Música 🎵 %1$d</string>
     <string name="sounds">Sonidos 🔊️ %1$d</string>
-    <string name="statistics">Estadística 📊️</string>
+    <string name="statistics">ESTADÍSTICA 📊️</string>
     <string name="total_score">Puntos ganados:</string>
     <string name="total_words_solved">Total de palabras resueltas:</string>
     <string name="uniq_words_solved">Palabras únicas:</string>

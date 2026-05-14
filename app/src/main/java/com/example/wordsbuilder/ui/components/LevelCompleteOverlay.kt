@@ -18,6 +18,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.wordsbuilder.R
+import com.example.wordsbuilder.ui.components.GameButton
 
 @Composable
 fun LevelCompleteOverlay(
@@ -51,17 +52,8 @@ fun LevelCompleteOverlay(
                 fontSize = 32.sp,
                 fontWeight = FontWeight.Bold
             )
-
             Spacer(modifier = Modifier.height(24.dp))
-
-            Button(
-                onClick = {
-                    SoundManager.playSound(context, R.raw.click)
-                    onNextLevel()
-                }
-            ) {
-                Text(text = stringResource(id = R.string.next_level))
-            }
+            GameButton(text = stringResource(id = R.string.next_level), onClick = onNextLevel)
         }
     }
 }

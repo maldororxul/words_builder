@@ -57,15 +57,11 @@ fun ShopScreen(bgManager: BackgroundManager, onBack: () -> Unit) {
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Button(
-                    onClick = {
-                        SoundManager.playSound(context, R.raw.click)
-                        onBack()
-                    },
-                    colors = ButtonDefaults.buttonColors(containerColor = Color.DarkGray)
-                ) {
-                    Text(text = stringResource(id = R.string.back), color = Color.White)
-                }
+                GameButton(
+                    text = stringResource(id = R.string.back),
+                    onClick = onBack,
+                    modifier = Modifier.weight(0.50f)
+                )
                 Text("🪙 $playerCoins", fontSize = 20.sp, color = Color.White)
             }
 
@@ -129,7 +125,11 @@ fun ShopScreen(bgManager: BackgroundManager, onBack: () -> Unit) {
                                 horizontalArrangement = Arrangement.SpaceBetween,
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
-                                Column {
+                                Column(
+                                    modifier = Modifier
+                                        .weight(0.65f)
+                                        .padding(end = 8.dp) // Небольшой отступ справа, чтобы текст не прилипал к кнопке
+                                ) {
                                     Text(
                                         text = localizedName,
                                         fontSize = 18.sp,
@@ -146,32 +146,26 @@ fun ShopScreen(bgManager: BackgroundManager, onBack: () -> Unit) {
                                 if (selectedTab == 0) {
                                     // Интерфейс выбора в Гардеробе
                                     if (isSelected) {
-                                        Button(
-                                            onClick = { SoundManager.playSound(context, R.raw.click)},
+                                        GameButton(
+                                            text = stringResource(id = R.string.active),
+                                            onClick = { },
                                             enabled = false,
-                                            colors = ButtonDefaults.buttonColors(
-                                                disabledContainerColor = Color(0xFF333333),
-                                                disabledContentColor = Color.White
-                                            )
-                                        ) {
-                                            Text(text = stringResource(id = R.string.active))
-                                        }
+                                            modifier = Modifier.weight(0.35f)
+                                        )
                                     } else {
-                                        Button(
+                                        GameButton(
+                                            text = stringResource(id = R.string.apply),
                                             onClick = {
-                                                SoundManager.playSound(context, R.raw.click)
-                                                // 1. Сохраняем ID нового фона в SharedPreferences через менеджер
                                                 bgManager.selectedBackgroundId = bg.id
-                                                // 2. Обновляем локальный стейт экрана Jetpack Compose
                                                 selectedId = bg.id
-                                            }
-                                        ) {
-                                            Text(text = stringResource(id = R.string.apply))
-                                        }
+                                            },
+                                            modifier = Modifier.weight(0.35f)
+                                        )
                                     }
                                 } else {
                                     // Интерфейс покупки в Магазине
-                                    Button(
+                                    GameButton(
+                                        text = "${bg.price} 🪙",
                                         onClick = {
                                             if (bgManager.buyBackground(bg)) {
                                                 SoundManager.playSound(context, R.raw.click)
@@ -183,10 +177,8 @@ fun ShopScreen(bgManager: BackgroundManager, onBack: () -> Unit) {
                                             }
                                         },
                                         enabled = playerCoins >= bg.price,
-                                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4CAF50)) // Зеленая кнопка
-                                    ) {
-                                        Text("${bg.price} 🪙", color = Color.White)
-                                    }
+                                        modifier = Modifier.weight(0.35f)
+                                    )
                                 }
                             }
                         }
