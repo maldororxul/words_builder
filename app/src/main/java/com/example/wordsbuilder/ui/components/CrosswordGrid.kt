@@ -5,7 +5,7 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.calculateZoom
-import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -36,6 +35,8 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.draw.clipToBounds
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.areAnyPressed
 import androidx.compose.ui.input.pointer.changedToUp
 import androidx.compose.ui.platform.LocalContext
@@ -153,13 +154,55 @@ fun CrosswordGrid(
             },
         contentAlignment = Alignment.Center
     ) {
-        val baseCellSize = min(maxWidth / cols.coerceAtLeast(1), maxHeight / rows.coerceAtLeast(1)) * 0.90f
+        val density = LocalDensity.current   // ← добавь это
+
+        val baseCellSize = min(
+            maxWidth / cols.coerceAtLeast(1),
+            maxHeight / rows.coerceAtLeast(1)
+        ) * 0.90f
+
+        val cellSize = baseCellSize * scaleState.value
+
+        val gridWidth = cellSize * cols
+        val gridHeight = cellSize * rows
+
+        val offset = remember { mutableStateOf(Offset.Zero) }
+        val maxOffset = remember { mutableStateOf(Offset.Zero) }
+
+        LaunchedEffect(gridWidth, gridHeight, maxWidth, maxHeight, scaleState.value) {
+            with(density) {
+                val extraWidth = (gridWidth - maxWidth).coerceAtLeast(0.dp).toPx()
+                val extraHeight = (gridHeight - maxHeight).coerceAtLeast(0.dp).toPx()
+
+                maxOffset.value = Offset(extraWidth / 2f, extraHeight / 2f)
+            }
+        }
 
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .horizontalScroll(horizontalScrollState)
-                .verticalScroll(verticalScrollState),
+                .clipToBounds()                    // ← КЛИППИНГ
+                .pointerInput(Unit) {
+                    detectDragGestures(
+                        onDrag = { change, dragAmount ->
+                            change.consume()
+                            var newOffset = offset.value + dragAmount
+
+                            val maxX = maxOffset.value.x
+                            val maxY = maxOffset.value.y
+
+                            newOffset = Offset(
+                                newOffset.x.coerceIn(-maxX, maxX),
+                                newOffset.y.coerceIn(-maxY, maxY)
+                            )
+                            offset.value = newOffset
+                        }
+                    )
+                }
+                .graphicsLayer {
+                    translationX = offset.value.x
+                    translationY = offset.value.y
+                },
             contentAlignment = Alignment.Center
         ) {
             val cellSize = baseCellSize * scaleState.value
@@ -173,7 +216,7 @@ fun CrosswordGrid(
                 }
             }
 
-            Box(modifier = Modifier.size(cellSize * cols, cellSize * rows)) {
+            Box(modifier = Modifier.size(gridWidth, gridHeight)) {
                 cellsMap.forEach { (coords, char) ->
                     val (cx, cy) = coords
                     val gridX = cx - minX
