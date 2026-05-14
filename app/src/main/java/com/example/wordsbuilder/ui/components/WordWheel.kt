@@ -48,28 +48,6 @@ fun WordWheel(
         }
     }
 
-    // ИСПРАВЛЕНИЕ: Создаем массив состояний масштаба в обход деструктивных циклов .map
-    // С помощью StateList мы регистрируем аниматоры во вселенной Compose легально
-    val scales = remember(letters.size) { mutableStateListOf<Float>().apply {
-        repeat(letters.size) { add(1.0f) }
-    } }
-
-    // Каждую секунду синхронизируем аниматоры с индексами выбранных букв
-    letters.forEachIndexed { index, _ ->
-        val isSelected = selectedIndices.contains(index)
-        val animatedScale by animateFloatAsState(
-            targetValue = if (isSelected) 1.25f else 1.0f,
-            animationSpec = tween(durationMillis = 100),
-            label = "ScaleArc_$index"
-        )
-        // Записываем анимированное значение в наш контролируемый список
-        SideEffect {
-            if (index < scales.size) {
-                scales[index] = animatedScale
-            }
-        }
-    }
-
     Canvas(modifier = Modifier
         .size(300.dp)
         .pointerInput(letters) {
@@ -117,11 +95,20 @@ fun WordWheel(
         val radius = size.minDimension / 2
         val center = Offset(size.width / 2, size.height / 2)
 
-        // Отрисовываем большую круглую полупрозрачную подложку самого колеса
+        // 1. Отрисовываем большую круглую полупрозрачную темную подложку самого колеса
         drawCircle(
             color = Color.Black.copy(alpha = 0.25f),
             radius = radius * 0.95f,
             center = center
+        )
+
+        // ИСПРАВЛЕНИЕ ПРЕДМЕТА 2: Белая круглая полупрозрачная подложка, на которой лежат буквы
+        // Рисуем её строго по внутреннему кольцу расположения букв (radius * 0.8f)
+        drawCircle(
+            color = Color.White.copy(alpha = 0.15f),
+            radius = radius * 0.8f,
+            center = center,
+            style = Stroke(width = 130f) // Ширина кольца-подложки идеально перекрывает размеры кружков букв
         )
 
         // Отрисовка "магических" искривленных разрядов (Path) вместо прямых линий
@@ -175,8 +162,9 @@ fun WordWheel(
             )
             val isSelected = selectedIndices.contains(index)
 
-            // Безопасно вытаскиваем текущий стейт из списка
-            val currentScale = scales.getOrNull(index) ?: 1.0f
+            // ИСПРАВЛЕНИЕ ПРЕДМЕТА 1: Вызываем встроенный расчет масштаба прямо внутри цикла отрисовки
+            // Это гарантирует, что Compose мгновенно вернет размер буквы к 1.0f в ту же миллисекунду, как selectedIndices очистится
+            val currentScale = if (isSelected) 1.25f else 1.0f
             val animatedRadius = 65f * currentScale
 
             drawCircle(
