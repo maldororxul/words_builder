@@ -4,6 +4,7 @@ import PlacedWord
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.gestures.calculateZoom
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -36,6 +37,8 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.input.pointer.areAnyPressed
+import androidx.compose.ui.input.pointer.changedToUp
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.sp
@@ -88,50 +91,63 @@ fun CrosswordGrid(
     val horizontalScrollState = rememberScrollState()
     val verticalScrollState = rememberScrollState()
 
-    // Внешний контейнер экрана
     BoxWithConstraints(
         modifier = modifier
             .fillMaxSize()
             .padding(16.dp)
-            // ИСПРАВЛЕНИЕ: Единый поток ввода для Двойного тапа и Щипка одновременно
+            // КРИТИЧЕСКОЕ ИЗМЕНЕНИЕ: Низкоуровневая обработка жестов через единую шину событий
             .pointerInput(Unit) {
-                // Запуск параллельного слушателя тапов внутри того же ОДНОГО pointerInput
-                coroutineScope.launch {
-                    detectTapGestures(
-                        onDoubleTap = { touchOffset ->
-                            coroutineScope.launch {
-                                if (scaleState.value > 1.0f) {
-                                    // СБРОС: Возвращаем масштаб к 1.0 и центрируем скролл
-                                    launch { scaleState.animateTo(1.0f, androidx.compose.animation.core.tween(300)) }
-                                    launch { horizontalScrollState.animateScrollTo(0) }
-                                    launch { verticalScrollState.animateScrollTo(0) }
-                                } else {
-                                    // УВЕЛИЧЕНИЕ В ТОЧКУ КЛИКА
-                                    val targetScale = 2.5f
-                                    val centerX = size.width / 2f
-                                    val centerY = size.height / 2f
-                                    val deltaX = touchOffset.x - centerX
-                                    val deltaY = touchOffset.y - centerY
-                                    val scrollTargetX = (deltaX * targetScale).toInt()
-                                    val scrollTargetY = (deltaY * targetScale).toInt()
+                awaitPointerEventScope {
+                    var lastTapTime = 0L
 
-                                    launch { scaleState.animateTo(targetScale, androidx.compose.animation.core.tween(300)) }
-                                    launch { horizontalScrollState.animateScrollTo(scrollTargetX.coerceAtLeast(0)) }
-                                    launch { verticalScrollState.animateScrollTo(scrollTargetY.coerceAtLeast(0)) }
+                    while (true) {
+                        val event = awaitPointerEvent()
+                        val changes = event.changes
+
+                        // Обработка Pinch-to-Zoom (два и более пальца)
+                        if (changes.size >= 2) {
+                            val zoomChange = event.calculateZoom()
+                            if (zoomChange != 1.0f) {
+                                val sensitivity = 1.8f
+                                val adjustedZoom = 1f + (zoomChange - 1f) * sensitivity
+                                val targetScale = (scaleState.value * adjustedZoom).coerceIn(1.0f, 2.5f)
+                                coroutineScope.launch {
+                                    scaleState.snapTo(targetScale)
                                 }
                             }
                         }
-                    )
-                }
+                        // Обработка Двойного Тапа (один палец)
+                        else if (changes.size == 1 && !event.buttons.areAnyPressed) {
+                            val change = changes.first()
+                            if (change.changedToUp()) {
+                                val currentTime = System.currentTimeMillis()
+                                // Интервал между тапами менее 300мс считается двойным кликом
+                                if (currentTime - lastTapTime < 300L) {
+                                    val touchOffset = change.position
+                                    coroutineScope.launch {
+                                        if (scaleState.value > 1.0f) {
+                                            launch { scaleState.animateTo(1.0f, androidx.compose.animation.core.tween(300)) }
+                                            launch { horizontalScrollState.animateScrollTo(0) }
+                                            launch { verticalScrollState.animateScrollTo(0) }
+                                        } else {
+                                            val targetScale = 2.5f
+                                            val centerX = size.width / 2f
+                                            val centerY = size.height / 2f
+                                            val deltaX = touchOffset.x - centerX
+                                            val deltaY = touchOffset.y - centerY
+                                            val scrollTargetX = (deltaX * targetScale).toInt()
+                                            val scrollTargetY = (deltaY * targetScale).toInt()
 
-                // Параллельная обработка мультитач-щипка (Pinch-to-Zoom) на уровне GPU
-                detectTransformGestures(panZoomLock = false) { _, _, zoomChange, _ ->
-                    if (zoomChange != 1.0f) {
-                        val sensitivity = 1.8f // Повышенный коэффициент отзывчивости
-                        val adjustedZoom = 1f + (zoomChange - 1f) * sensitivity
-                        val targetScale = (scaleState.value * adjustedZoom).coerceIn(1.0f, 2.5f)
-                        coroutineScope.launch {
-                            scaleState.snapTo(targetScale)
+                                            launch { scaleState.animateTo(targetScale, androidx.compose.animation.core.tween(300)) }
+                                            launch { horizontalScrollState.animateScrollTo(scrollTargetX.coerceAtLeast(0)) }
+                                            launch { verticalScrollState.animateScrollTo(scrollTargetY.coerceAtLeast(0)) }
+                                        }
+                                    }
+                                    lastTapTime = 0L // Сбрасываем триггер
+                                } else {
+                                    lastTapTime = currentTime
+                                }
+                            }
                         }
                     }
                 }
@@ -140,7 +156,6 @@ fun CrosswordGrid(
     ) {
         val baseCellSize = min(maxWidth / cols.coerceAtLeast(1), maxHeight / rows.coerceAtLeast(1)) * 0.90f
 
-        // ИСПРАВЛЕНИЕ: Окно просмотра (скролла) теперь ВСЕГДА занимает fillMaxSize(), а не gridWidth/gridHeight
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -159,7 +174,6 @@ fun CrosswordGrid(
                 }
             }
 
-            // Внутренний холст кроссворда, размер которого честно зависит от cellSize
             Box(modifier = Modifier.size(cellSize * cols, cellSize * rows)) {
                 cellsMap.forEach { (coords, char) ->
                     val (cx, cy) = coords
@@ -193,6 +207,7 @@ fun CrosswordGrid(
                             .size(cellSize)
                             .padding(2.dp)
                             .pointerInput(placedWords, coords) {
+                                // Кастомный pointerInput на ячейке изолирован и отвечает только за LongPress
                                 detectTapGestures(
                                     onLongPress = {
                                         val clickedWord = placedWords.find { pw ->
@@ -256,7 +271,7 @@ fun CrosswordGrid(
             }
         }
 
-        // Статичная магическая рамка теперь ВСЕГДА растянута на fillMaxSize()
+        // Статичная магическая рамка
         Canvas(modifier = Modifier.fillMaxSize()) {
             val orangeColor = Color(0xFFFF9800)
             fun drawStaticMagicEdge(start: Offset, end: Offset, edgeId: Int) {
