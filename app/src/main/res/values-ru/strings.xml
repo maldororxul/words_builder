@@ -38,4 +38,5 @@
     <string name="random_level_words_count">Слов в случайном режиме: %1$d</string>
     <string name="bonus_coins">Бонус 🪙 </string>
     <string name="get">Забрать!</string>
+    <string name="zoom_me">"Увеличь меня! 🔍"</string>
 </resources>

@@ -18,7 +18,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -38,6 +37,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.launch
 
@@ -66,29 +66,22 @@ fun CrosswordGrid(
     val cols = maxX - minX + 1
     val rows = maxY - minY + 1
 
-    // Состояние масштаба кроссворда
-    var scale by remember { mutableFloatStateOf(1f) }
+    // ЕДИНАЯ ТОЧКА ПРАВДЫ ДЛЯ МАСШТАБА
     val scaleState = remember { androidx.compose.animation.core.Animatable(1f) }
+    val coroutineScope = rememberCoroutineScope()
 
     // Состояние видимости обучающей надписи "Zoom me!"
     var showZoomHint by remember { mutableStateOf(false) }
 
     // Запускаем анимацию подсказки строго ОДИН раз при открытии уровня
     LaunchedEffect(placedWords) {
-        // Небольшая задержка перед стартом, чтобы игрок успел увидеть кроссворд
         kotlinx.coroutines.delay(200L)
-
-        // 1. Показываем надпись и плавно приближаем кроссворд
         showZoomHint = true
         scaleState.animateTo(
             targetValue = 1.3f,
             animationSpec = androidx.compose.animation.core.tween(durationMillis = 500)
         )
-
-        // Задерживаем кроссворд в приближенном состоянии на мгновение
         kotlinx.coroutines.delay(400L)
-
-        // 2. Скрываем надпись и плавно возвращаем масштаб к оригиналу (1.0f)
         showZoomHint = false
         scaleState.animateTo(
             targetValue = 1.0f,
@@ -100,53 +93,43 @@ fun CrosswordGrid(
     val horizontalScrollState = rememberScrollState()
     val verticalScrollState = rememberScrollState()
 
-    // Слушатель масштаба
+    // Слушатель масштаба (использует snapTo для мгновенного обновления без анимации)
     val transformState = rememberTransformableState { zoomChange, _, _ ->
-        scale = (scale * zoomChange).coerceIn(1.0f, 2.5f)
+        val targetScale = (scaleState.value * zoomChange).coerceIn(1.0f, 2.5f)
+        coroutineScope.launch {
+            scaleState.snapTo(targetScale)
+        }
     }
-
-    val coroutineScope = rememberCoroutineScope()
 
     // Внешний контейнер занимает ВСЁ доступное пространство экрана
     BoxWithConstraints(
         modifier = modifier
             .fillMaxSize()
             .padding(8.dp)
-            // 1. Добавляем перехватчик ДВОЙНОГО ТАПА
             .pointerInput(Unit) {
                 detectTapGestures(
-                    onDoubleTap = { touchOffset -> // Получаем точные пиксельные координаты тапа на экране
-                        if (scale > 1.0f) {
-                            // СБРОС: Возвращаем масштаб к 1.0 и плавно центрируем кроссворд
-                            scale = 1.0f
-                            coroutineScope.launch {
-                                horizontalScrollState.animateScrollTo(0)
-                                verticalScrollState.animateScrollTo(0)
-                            }
-                        } else {
-                            // УВЕЛИЧЕНИЕ В ТОЧКУ КЛИКА:
-                            val targetScale = 2.5f
+                    onDoubleTap = { touchOffset ->
+                        coroutineScope.launch {
+                            if (scaleState.value > 1.0f) {
+                                // СБРОС: Плавно возвращаем масштаб к 1.0 и центрируем скролл
+                                launch { scaleState.animateTo(1.0f, androidx.compose.animation.core.tween(300)) }
+                                launch { horizontalScrollState.animateScrollTo(0) }
+                                launch { verticalScrollState.animateScrollTo(0) }
+                            } else {
+                                // УВЕЛИЧЕНИЕ В ТОЧКУ КЛИКА
+                                val targetScale = 2.5f
+                                val centerX = size.width / 2f
+                                val centerY = size.height / 2f
 
-                            // Получаем геометрический центр области просмотра
-                            val centerX = size.width / 2f
-                            val centerY = size.height / 2f
+                                val deltaX = touchOffset.x - centerX
+                                val deltaY = touchOffset.y - centerY
 
-                            // Вычисляем расстояние от центра экрана до пальца пользователя
-                            val deltaX = touchOffset.x - centerX
-                            val deltaY = touchOffset.y - centerY
+                                val scrollTargetX = (deltaX * targetScale).toInt()
+                                val scrollTargetY = (deltaY * targetScale).toInt()
 
-                            // Рассчитываем, на сколько пикселей нужно сместить скролл-бары,
-                            // чтобы точка тапа оказалась ровно по центру экрана после зума
-                            val scrollTargetX = (deltaX * targetScale).toInt()
-                            val scrollTargetY = (deltaY * targetScale).toInt()
-
-                            // Применяем новый масштаб
-                            scale = targetScale
-
-                            // Плавно скроллим холст в расчетную точку (coerced автоматически ограничит края)
-                            coroutineScope.launch {
-                                horizontalScrollState.animateScrollTo(scrollTargetX.coerceAtLeast(0))
-                                verticalScrollState.animateScrollTo(scrollTargetY.coerceAtLeast(0))
+                                launch { scaleState.animateTo(targetScale, androidx.compose.animation.core.tween(300)) }
+                                launch { horizontalScrollState.animateScrollTo(scrollTargetX.coerceAtLeast(0)) }
+                                launch { verticalScrollState.animateScrollTo(scrollTargetY.coerceAtLeast(0)) }
                             }
                         }
                     }
@@ -161,8 +144,7 @@ fun CrosswordGrid(
             maxHeight / rows.coerceAtLeast(1)
         ) * 0.90f
 
-        // КРИТИЧЕСКОЕ ИЗМЕНЕНИЕ 1: Окно просмотра (скролла) теперь занимает fillMaxSize().
-        // Оно ограничено краями компонента, а не размерами сгенерированного кроссворда.
+        // Окно просмотра (скролла) занимает fillMaxSize()
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -170,9 +152,9 @@ fun CrosswordGrid(
                 .verticalScroll(verticalScrollState),
             contentAlignment = Alignment.Center
         ) {
-            val cellSize = baseCellSize * scale
+            // Динамический размер ячейки зависит от анимируемого scaleState.value
+            val cellSize = baseCellSize * scaleState.value
 
-            // ТОЧЕЧНОЕ ИЗМЕНЕНИЕ: Создаём карту клеток прямо ЗДЕСЬ (внутри Box скролла)
             val cellsMap = mutableMapOf<Pair<Int, Int>, Char>()
             placedWords.forEach { pw ->
                 pw.word.forEachIndexed { i, char ->
@@ -182,7 +164,7 @@ fun CrosswordGrid(
                 }
             }
 
-            // Теперь этот внутренний Box отлично видит cellsMap
+            // Внутренний контейнер кроссворда
             Box(
                 modifier = Modifier.size(cellSize * cols, cellSize * rows)
             ) {
@@ -191,7 +173,6 @@ fun CrosswordGrid(
                     val gridX = cx - minX
                     val gridY = cy - minY
 
-                    // Проверяем видимость (Оригинальная логика)
                     val isVisible = placedWords.any { pw ->
                         solvedWords.contains(pw.word) &&
                                 pw.word.indices.any { i ->
@@ -222,7 +203,7 @@ fun CrosswordGrid(
             }
         }
 
-        // ТОЧЕЧНОЕ ИЗМЕНЕНИЕ: Вставляем красивую мультяшную надпись по центру экрана
+        // Мультяшная надпись по центру экрана
         androidx.compose.animation.AnimatedVisibility(
             visible = showZoomHint,
             enter = androidx.compose.animation.fadeIn(),
@@ -235,16 +216,15 @@ fun CrosswordGrid(
                     .padding(horizontal = 20.dp, vertical = 10.dp)
             ) {
                 Text(
-                    text = "Zoom me! 🔍",
-                    color = Color(0xFFFF9800), // Сочный оранжевый цвет в тон вашей магической рамки
+                    text = stringResource(com.example.wordsbuilder.R.string.zoom_me),
+                    color = Color(0xFFFF9800),
                     fontSize = 24.sp,
                     fontWeight = FontWeight.ExtraBold
                 )
             }
         }
 
-        // КРИТИЧЕСКОЕ ИЗМЕНЕНИЕ 2: Холст рамки растягивается на fillMaxSize().
-        // Линии молний теперь будут рисоваться строго по внешнему периметру всего игрового экрана.
+        // Статичная магическая рамка поверх всего экрана
         Canvas(
             modifier = Modifier.fillMaxSize()
         ) {
@@ -276,7 +256,6 @@ fun CrosswordGrid(
                 drawPath(path = path, color = Color.White, style = Stroke(width = 2.5f))
             }
 
-            // Отступы внутрь от краев экрана, чтобы рамка выглядела гармонично
             val offsetDistance = 0f
             val topLeft = Offset(offsetDistance, offsetDistance)
             val topRight = Offset(size.width - offsetDistance, offsetDistance)

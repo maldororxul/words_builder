@@ -39,4 +39,5 @@
     <string name="random_level_words_count">Palabras en modo aleatorio: %1$d</string>
     <string name="bonus_coins">Primo 🪙 </string>
     <string name="get">¡Recibir!</string>
+    <string name="zoom_me">"¡Agrandame! 🔍"</string>
 </resources>
