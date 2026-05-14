@@ -1,6 +1,5 @@
 package com.example.wordsbuilder.ui
 
-
 import CurrentWordDisplay
 import ExitConfirmationDialog
 import GameBottomPanel
@@ -10,10 +9,8 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -30,11 +27,9 @@ import androidx.compose.ui.unit.dp
 import com.example.wordsbuilder.data.LevelManager
 import com.example.wordsbuilder.domain.game.RandomWordGenerator
 import com.example.wordsbuilder.ui.components.CrosswordGrid
-import com.example.wordsbuilder.ui.components.WordFlyUpEffect
 import com.example.wordsbuilder.ui.dialogs.DefinitionDialog
 import com.example.wordsbuilder.ui.dialogs.HintConfirmationDialog
 import generateCrossword
-import generateLevel
 import getRandomWordsCount
 import getSavedCampaignLevelIndex
 import getSavedCoins
@@ -81,7 +76,7 @@ fun GameScreen(
             val currentLevel = allLevels.find { it.id == campaignLevelId } ?: allLevels.firstOrNull()
             currentLevel?.words ?: emptyMap()
         } else {
-            val dictionaryMap = com.example.wordsbuilder.domain.game.RandomWordGenerator.loadFullDictionary(context, currentLocale)
+            val dictionaryMap = RandomWordGenerator.loadFullDictionary(context, currentLocale)
             val targetCount = getRandomWordsCount(context)
             val randomKeys = dictionaryMap.keys.shuffled().take(targetCount)
             dictionaryMap.filterKeys { randomKeys.contains(it) }
@@ -135,6 +130,7 @@ fun GameScreen(
 
     val isLevelComplete = solvedWords.size == targetWords.size && targetWords.isNotEmpty()
 
+    // Музыка
     DisposableEffect(Unit) {
         SoundManager.startMusic(context)
         onDispose { SoundManager.stopMusic() }
@@ -169,6 +165,7 @@ fun GameScreen(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
+                // Текущее слово
                 CurrentWordDisplay(
                     currentWord = currentWord,
                     triggerWord = lastSolvedWord,
@@ -202,7 +199,9 @@ fun GameScreen(
                         )
 
                         if (isSuccess) {
+                            // Фиксируем слово для анимации, пока оно не стерлось
                             lastSolvedWord = currentWord
+                            // Увеличиваем счетчик, чтобы запустить WordFlyUpEffect
                             wordFlyTrigger++
                         }
                     },
@@ -215,7 +214,7 @@ fun GameScreen(
         if (isLevelComplete) {
             LevelCompleteOverlay(
                 gameMode = gameMode,
-                levelReward = levelReward,
+                levelReward = levelReward, // Передаем динамическую награду из JSON конфигурации уровня
                 context = context,
                 onCoinsUpdate = { newCoins ->
                     coins = newCoins
@@ -245,7 +244,7 @@ fun GameScreen(
 
     HintConfirmationDialog(
         visible = showHintDialog,
-        hintCost = hintCost,
+        hintCost = hintCost, // Передаем динамическую стоимость подсказки из JSON конфигурации уровня
         coins = coins,
         targetWords = targetWords,
         solvedWords = solvedWords,
@@ -257,7 +256,6 @@ fun GameScreen(
             solvedWords = newSolved
         }
     )
-
     // ВСПЛЫВАЮЩИЙ ДИАЛОГ ОПРЕДЕЛЕНИЯ СЛОВА
     DefinitionDialog(
         visible = showDefinitionDialog,
