@@ -1,7 +1,5 @@
 package com.example.wordsbuilder.ui.components
 
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.tween
 import androidx.compose.animation.core.withInfiniteAnimationFrameMillis
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.gestures.detectDragGestures
@@ -34,7 +32,7 @@ fun WordWheel(
     val textMeasurer = androidx.compose.ui.text.rememberTextMeasurer()
     val context = LocalContext.current
 
-    val CartoonFontFamily = FontFamily(Font(R.font.cartoon))
+    val cartoonFontFamily = FontFamily(Font(R.font.cartoon))
 
     // Временной триггер для постоянного обновления искривлений "магических" линий на каждом кадре экрана
     var animationTicks by remember { mutableLongStateOf(0L) }
@@ -102,7 +100,7 @@ fun WordWheel(
             center = center
         )
 
-        // ИСПРАВЛЕНИЕ ПРЕДМЕТА 2: Белая круглая полупрозрачная подложка, на которой лежат буквы
+        // Белая круглая полупрозрачная подложка, на которой лежат буквы
         // Рисуем её строго по внутреннему кольцу расположения букв (radius * 0.8f)
         drawCircle(
             color = Color.White.copy(alpha = 0.15f),
@@ -180,12 +178,12 @@ fun WordWheel(
                 style = androidx.compose.ui.text.TextStyle(
                     fontSize = animatedFontSize,
                     fontWeight = androidx.compose.ui.text.font.FontWeight.ExtraBold,
-                    fontFamily = CartoonFontFamily,
+                    fontFamily = cartoonFontFamily,
                     color = if (isSelected) Color.White else Color(0xFF333333)
                 )
             )
             val textSize = textLayoutResult.size
-            val verticalCorrection = 14f * currentScale
+            val verticalCorrection = 8f * currentScale
 
             drawText(
                 textLayoutResult = textLayoutResult,
