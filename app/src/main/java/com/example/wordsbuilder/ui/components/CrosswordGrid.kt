@@ -85,18 +85,39 @@ fun CrosswordGrid(
             // 1. Добавляем перехватчик ДВОЙНОГО ТАПА
             .pointerInput(Unit) {
                 detectTapGestures(
-                    onDoubleTap = {
-                        // Если масштаб уже увеличен — сбрасываем всё к исходному виду
+                    onDoubleTap = { touchOffset -> // Получаем точные пиксельные координаты тапа на экране
                         if (scale > 1.0f) {
+                            // СБРОС: Возвращаем масштаб к 1.0 и плавно центрируем кроссворд
                             scale = 1.0f
-                            // Плавно возвращаем скролл-бары в центр/начало
                             coroutineScope.launch {
                                 horizontalScrollState.animateScrollTo(0)
                                 verticalScrollState.animateScrollTo(0)
                             }
                         } else {
-                            // Если масштаб стандартный — увеличиваем до максимума
-                            scale = 2.5f
+                            // УВЕЛИЧЕНИЕ В ТОЧКУ КЛИКА:
+                            val targetScale = 2.5f
+
+                            // Получаем геометрический центр области просмотра
+                            val centerX = size.width / 2f
+                            val centerY = size.height / 2f
+
+                            // Вычисляем расстояние от центра экрана до пальца пользователя
+                            val deltaX = touchOffset.x - centerX
+                            val deltaY = touchOffset.y - centerY
+
+                            // Рассчитываем, на сколько пикселей нужно сместить скролл-бары,
+                            // чтобы точка тапа оказалась ровно по центру экрана после зума
+                            val scrollTargetX = (deltaX * targetScale).toInt()
+                            val scrollTargetY = (deltaY * targetScale).toInt()
+
+                            // Применяем новый масштаб
+                            scale = targetScale
+
+                            // Плавно скроллим холст в расчетную точку (coerced автоматически ограничит края)
+                            coroutineScope.launch {
+                                horizontalScrollState.animateScrollTo(scrollTargetX.coerceAtLeast(0))
+                                verticalScrollState.animateScrollTo(scrollTargetY.coerceAtLeast(0))
+                            }
                         }
                     }
                 )
