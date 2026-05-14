@@ -1,6 +1,7 @@
 package com.example.wordsbuilder.ui.components
 
 import PlacedWord
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -79,13 +80,27 @@ fun CrosswordGrid(
     val coroutineScope = rememberCoroutineScope()
     var showZoomHint by remember { mutableStateOf(false) }
 
+    var showTapHint by remember { mutableStateOf(false) }
+    var tutorialSelectedWord by remember { mutableStateOf<String?>(null) }
+
     LaunchedEffect(placedWords) {
+        // --- АНИМАЦИЯ 1: ЗУМ ---
         kotlinx.coroutines.delay(200L)
         showZoomHint = true
         scaleState.animateTo(1.3f, androidx.compose.animation.core.tween(500))
         kotlinx.coroutines.delay(400L)
         showZoomHint = false
         scaleState.animateTo(1.0f, androidx.compose.animation.core.tween(400))
+        // --- АНИМАЦИЯ 2: ТАП (Новая) ---
+        val randomWord = placedWords.randomOrNull()?.word
+        if (randomWord != null) {
+            kotlinx.coroutines.delay(300L) // Пауза
+            tutorialSelectedWord = randomWord
+            showTapHint = true
+            kotlinx.coroutines.delay(1500L) // Длительность
+            showTapHint = false
+            tutorialSelectedWord = null
+        }
     }
 
     val horizontalScrollState = rememberScrollState()
@@ -239,9 +254,10 @@ fun CrosswordGrid(
                                 }
                     }
 
-                    val CartoonFontFamily = remember { androidx.compose.ui.text.font.FontFamily(androidx.compose.ui.text.font.Font(R.font.cartoon)) }
+                    val cartoonFontFamily = remember { androidx.compose.ui.text.font.FontFamily(androidx.compose.ui.text.font.Font(R.font.cartoon)) }
                     val tileShape = androidx.compose.foundation.shape.RoundedCornerShape((cellSize.value * 0.15f).dp)
                     val shadowHeight = (cellSize.value * 0.08f).dp
+                    val effectiveSelectedWord = selectedWord ?: tutorialSelectedWord
 
                     Box(
                         modifier = Modifier
@@ -287,7 +303,7 @@ fun CrosswordGrid(
                             if (isVisible) {
                                 Text(
                                     text = char.toString().uppercase(),
-                                    fontFamily = CartoonFontFamily,
+                                    fontFamily = cartoonFontFamily,
                                     fontSize = with(LocalDensity.current) { (cellSize * 0.55f).toSp() },
                                     fontWeight = FontWeight.Bold,
                                     color = Color.White,
@@ -301,7 +317,7 @@ fun CrosswordGrid(
         }
 
         // Обучающая надпись "Zoom me!"
-        androidx.compose.animation.AnimatedVisibility(
+        AnimatedVisibility(
             visible = showZoomHint,
             enter = androidx.compose.animation.fadeIn(),
             exit = androidx.compose.animation.fadeOut(),
@@ -314,6 +330,9 @@ fun CrosswordGrid(
             ) {
                 Text(text = stringResource(R.string.zoom_me), color = Color(0xFFFF9800), fontSize = 24.sp, fontWeight = FontWeight.ExtraBold)
             }
+        }
+        AnimatedVisibility(visible = showTapHint, /* ... */) {
+            Text(text = "Tap me! ☝️", color = Color(0xFFFF9800), /* ... */)
         }
 
         // Статичная магическая рамка
