@@ -93,40 +93,41 @@ fun CrosswordGrid(
         modifier = modifier
             .fillMaxSize()
             .padding(16.dp)
-            // ПОТОК 1: Отдельный изолированный инпут для отслеживания ДВОЙНОГО ТАПА
+            // ИСПРАВЛЕНИЕ: Единый поток ввода для Двойного тапа и Щипка одновременно
             .pointerInput(Unit) {
-                detectTapGestures(
-                    onDoubleTap = { touchOffset ->
-                        coroutineScope.launch {
-                            if (scaleState.value > 1.0f) {
-                                // СБРОС: Плавно возвращаем масштаб к 1.0 и центрируем скролл
-                                launch { scaleState.animateTo(1.0f, androidx.compose.animation.core.tween(300)) }
-                                launch { horizontalScrollState.animateScrollTo(0) }
-                                launch { verticalScrollState.animateScrollTo(0) }
-                            } else {
-                                // УВЕЛИЧЕНИЕ В ТОЧКУ КЛИКА
-                                val targetScale = 2.5f
-                                val centerX = size.width / 2f
-                                val centerY = size.height / 2f
-                                val deltaX = touchOffset.x - centerX
-                                val deltaY = touchOffset.y - centerY
-                                val scrollTargetX = (deltaX * targetScale).toInt()
-                                val scrollTargetY = (deltaY * targetScale).toInt()
+                // Запуск параллельного слушателя тапов внутри того же ОДНОГО pointerInput
+                coroutineScope.launch {
+                    detectTapGestures(
+                        onDoubleTap = { touchOffset ->
+                            coroutineScope.launch {
+                                if (scaleState.value > 1.0f) {
+                                    // СБРОС: Возвращаем масштаб к 1.0 и центрируем скролл
+                                    launch { scaleState.animateTo(1.0f, androidx.compose.animation.core.tween(300)) }
+                                    launch { horizontalScrollState.animateScrollTo(0) }
+                                    launch { verticalScrollState.animateScrollTo(0) }
+                                } else {
+                                    // УВЕЛИЧЕНИЕ В ТОЧКУ КЛИКА
+                                    val targetScale = 2.5f
+                                    val centerX = size.width / 2f
+                                    val centerY = size.height / 2f
+                                    val deltaX = touchOffset.x - centerX
+                                    val deltaY = touchOffset.y - centerY
+                                    val scrollTargetX = (deltaX * targetScale).toInt()
+                                    val scrollTargetY = (deltaY * targetScale).toInt()
 
-                                launch { scaleState.animateTo(targetScale, androidx.compose.animation.core.tween(300)) }
-                                launch { horizontalScrollState.animateScrollTo(scrollTargetX.coerceAtLeast(0)) }
-                                launch { verticalScrollState.animateScrollTo(scrollTargetY.coerceAtLeast(0)) }
+                                    launch { scaleState.animateTo(targetScale, androidx.compose.animation.core.tween(300)) }
+                                    launch { horizontalScrollState.animateScrollTo(scrollTargetX.coerceAtLeast(0)) }
+                                    launch { verticalScrollState.animateScrollTo(scrollTargetY.coerceAtLeast(0)) }
+                                }
                             }
                         }
-                    }
-                )
-            }
-            // ПОТОК 2: Отдельный изолированный инпут для аппаратного ЩИПКА (Pinch-to-Zoom)
-            // Теперь они работают параллельно и не блокируют друг друга!
-            .pointerInput(Unit) {
+                    )
+                }
+
+                // Параллельная обработка мультитач-щипка (Pinch-to-Zoom) на уровне GPU
                 detectTransformGestures(panZoomLock = false) { _, _, zoomChange, _ ->
                     if (zoomChange != 1.0f) {
-                        val sensitivity = 1.8f // Наш повышенный коэффициент отзывчивости
+                        val sensitivity = 1.8f // Повышенный коэффициент отзывчивости
                         val adjustedZoom = 1f + (zoomChange - 1f) * sensitivity
                         val targetScale = (scaleState.value * adjustedZoom).coerceIn(1.0f, 2.5f)
                         coroutineScope.launch {
@@ -138,16 +139,14 @@ fun CrosswordGrid(
         contentAlignment = Alignment.Center
     ) {
         val baseCellSize = min(maxWidth / cols.coerceAtLeast(1), maxHeight / rows.coerceAtLeast(1)) * 0.90f
-        val gridWidth = baseCellSize * cols
-        val gridHeight = baseCellSize * rows
 
-        // Окно просмотра кроссворда
+        // ИСПРАВЛЕНИЕ: Окно просмотра (скролла) теперь ВСЕГДА занимает fillMaxSize(), а не gridWidth/gridHeight
         Box(
             modifier = Modifier
                 .fillMaxSize()
                 .horizontalScroll(horizontalScrollState)
                 .verticalScroll(verticalScrollState),
-            contentAlignment = Alignment.Center // Держит кроссворд строго по центру экрана
+            contentAlignment = Alignment.Center
         ) {
             val cellSize = baseCellSize * scaleState.value
 
@@ -160,10 +159,8 @@ fun CrosswordGrid(
                 }
             }
 
-            // 2. Внутренний контейнер кроссворда, который физически растет при зуме
-            Box(
-                modifier = Modifier.size(cellSize * cols, cellSize * rows)
-            ) {
+            // Внутренний холст кроссворда, размер которого честно зависит от cellSize
+            Box(modifier = Modifier.size(cellSize * cols, cellSize * rows)) {
                 cellsMap.forEach { (coords, char) ->
                     val (cx, cy) = coords
                     val gridX = cx - minX
@@ -186,7 +183,7 @@ fun CrosswordGrid(
                                 }
                     }
 
-                    val CartoonFontFamily = remember { androidx.compose.ui.text.font.FontFamily(androidx.compose.ui.text.font.Font(com.example.wordsbuilder.R.font.cartoon)) }
+                    val CartoonFontFamily = remember { androidx.compose.ui.text.font.FontFamily(androidx.compose.ui.text.font.Font(R.font.cartoon)) }
                     val tileShape = androidx.compose.foundation.shape.RoundedCornerShape((cellSize.value * 0.15f).dp)
                     val shadowHeight = (cellSize.value * 0.08f).dp
 
@@ -243,7 +240,6 @@ fun CrosswordGrid(
             }
         }
 
-
         // Обучающая надпись "Zoom me!"
         androidx.compose.animation.AnimatedVisibility(
             visible = showZoomHint,
@@ -260,7 +256,7 @@ fun CrosswordGrid(
             }
         }
 
-        // Статичная магическая рамка
+        // Статичная магическая рамка теперь ВСЕГДА растянута на fillMaxSize()
         Canvas(modifier = Modifier.fillMaxSize()) {
             val orangeColor = Color(0xFFFF9800)
             fun drawStaticMagicEdge(start: Offset, end: Offset, edgeId: Int) {
@@ -284,8 +280,6 @@ fun CrosswordGrid(
                 drawPath(path = path, color = orangeColor, style = Stroke(width = 8f))
                 drawPath(path = path, color = Color.White, style = Stroke(width = 2.5f))
             }
-
-            // Зазоры (в пикселях) внутрь от краев экрана смартфона, чтобы линии ложились красиво
             val offsetDistance = 0f
             val topLeft = Offset(offsetDistance, offsetDistance)
             val topRight = Offset(size.width - offsetDistance, offsetDistance)
