@@ -203,7 +203,10 @@ fun CrosswordGrid(
 
                     Box(
                         modifier = Modifier
-                            .offset(x = cellSize * gridX, y = cellSize * gridY)
+                            .offset(
+                                x = cellSize * gridX,
+                                y = (cellSize * gridY) - (shadowHeight * gridY) // Вычитаем накопительный зазор тени
+                            )
                             .size(cellSize)
                             .padding(2.dp)
                             .pointerInput(placedWords, coords) {

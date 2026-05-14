@@ -69,21 +69,25 @@ fun GameScreen(
 
     val screenKey = rememberSaveable { mutableIntStateOf(0) }
 
-    // Загрузка данных уровня в Map структуры
+    // ШАГ 1: Загрузка данных уровня в Map структуры с УМНЫМ ПОДБОРОМ для случайного режима
     val currentLevelWordsMap = remember(currentLocale, randomLevelCounter, campaignLevelId, gameMode, screenKey.intValue) {
         if (gameMode == "campaign") {
             val allLevels = LevelManager.loadCampaignLevels(context, currentLocale)
             val currentLevel = allLevels.find { it.id == campaignLevelId } ?: allLevels.firstOrNull()
             currentLevel?.words ?: emptyMap()
         } else {
-            val dictionaryMap = RandomWordGenerator.loadFullDictionary(context, currentLocale)
+            // ЧИТАЕМ НАСТРОЙКУ: количество слов из ползунка настроек
             val targetCount = getRandomWordsCount(context)
-            val randomKeys = dictionaryMap.keys.shuffled().take(targetCount)
-            dictionaryMap.filterKeys { randomKeys.contains(it) }
+
+            // ИСПРАВЛЕНИЕ: Вызываем наш новый умный метод из RandomWordGenerator
+            // Он выдаст "кучный" набор слов с общим алфавитом не более 15 букв
+            RandomWordGenerator.getRandomWordsMap(context, currentLocale, targetCount)
         }
     }
 
+    // ШАГ 2: Генерация сетки кроссворда и подготовка колеса букв
     val levelData = remember(currentLevelWordsMap) {
+        // Берем слова, которые нам уже гарантированно правильно подобрал первый блок
         val targetWords = currentLevelWordsMap.keys.toList()
         var reward = 50
         var hintCost = 20
@@ -102,11 +106,15 @@ fun GameScreen(
 
         val sortedWords = targetWords.sortedByDescending { it.length }
         val grid = generateCrossword(sortedWords)
-        val wheelLetters = (sortedWords.firstOrNull() ?: "").toList().shuffled()
+
+        // КРИТИЧЕСКОЕ ИСПРАВЛЕНИЕ: Собираем буквы со ВСЕХ РЕАЛЬНО ПОСТРОЕННЫХ в кроссворде слов,
+        // приводим их к нижнему регистру и перемешиваем для колеса.
+        val builtWords = grid.map { it.word.lowercase() }
+        val allUniqueLetters = builtWords.flatMap { it.toList() }.toSet().map { it.uppercaseChar() }.shuffled()
 
         LevelInfo(
             words = grid.map { it.word },
-            letters = wheelLetters,
+            letters = allUniqueLetters, // Теперь на колесе всегда будут ВСЕ нужные буквы (и никогда не больше 15)
             grid = grid,
             reward = reward,
             hintCost = hintCost
