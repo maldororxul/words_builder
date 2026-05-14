@@ -33,6 +33,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.min
 import kotlin.math.sqrt
 import kotlin.random.Random
+import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.runtime.rememberCoroutineScope
+import kotlinx.coroutines.launch
 
 @Composable
 fun CrosswordGrid(
@@ -71,11 +75,32 @@ fun CrosswordGrid(
         scale = (scale * zoomChange).coerceIn(1.0f, 2.5f)
     }
 
+    val coroutineScope = rememberCoroutineScope()
+
     // Внешний контейнер занимает ВСЁ доступное пространство экрана
     BoxWithConstraints(
         modifier = modifier
             .fillMaxSize()
-            .padding(16.dp)
+            .padding(8.dp)
+            // 1. Добавляем перехватчик ДВОЙНОГО ТАПА
+            .pointerInput(Unit) {
+                detectTapGestures(
+                    onDoubleTap = {
+                        // Если масштаб уже увеличен — сбрасываем всё к исходному виду
+                        if (scale > 1.0f) {
+                            scale = 1.0f
+                            // Плавно возвращаем скролл-бары в центр/начало
+                            coroutineScope.launch {
+                                horizontalScrollState.animateScrollTo(0)
+                                verticalScrollState.animateScrollTo(0)
+                            }
+                        } else {
+                            // Если масштаб стандартный — увеличиваем до максимума
+                            scale = 2.5f
+                        }
+                    }
+                )
+            }
             .transformable(state = transformState),
         contentAlignment = Alignment.Center
     ) {
