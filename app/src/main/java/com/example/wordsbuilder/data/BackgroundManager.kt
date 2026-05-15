@@ -2,6 +2,9 @@
 import android.annotation.SuppressLint
 import android.content.Context
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -10,16 +13,23 @@ import androidx.core.content.edit
 
 class BackgroundManager(private val context: Context) {
     private val prefs = context.getSharedPreferences("game_prefs", Context.MODE_PRIVATE)
-    // Переменная для хранения оригинального бэкграунда, который купил/выбрал игрок в магазине
-    private var originalBackgroundId: String = selectedBackgroundId
+
+    // Хранилище временного фона в оперативной памяти
+    private var tempBackgroundModel: BackgroundModel? = null
+    private var originalBackgroundId: String = "bg_default"
 
     var coins: Int
         get() = getSavedCoins(context)
         set(value) = saveCoins(context, value)
 
-    var selectedBackgroundId: String
+    // Идентификатор сохраненного в конфиге фона
+    private var savedBackgroundId: String
         get() = prefs.getString("selected_bg", "bg_default") ?: "bg_default"
         set(value) = prefs.edit { putString("selected_bg", value) }
+
+    // Главный реактивный стейт для Jetpack Compose
+    var selectedBackgroundId by mutableStateOf(savedBackgroundId)
+        public set
 
     fun loadBackgrounds(): List<BackgroundModel> {
         return try {
@@ -31,6 +41,10 @@ class BackgroundManager(private val context: Context) {
     }
 
     fun getCurrentBackground(): BackgroundModel {
+        // Если сейчас активен временный фон уровня — отдаем его сразу без чтения JSON
+        if (selectedBackgroundId == "temp_level_bg" && tempBackgroundModel != null) {
+            return tempBackgroundModel!!
+        }
         val list = loadBackgrounds()
         return list.find { it.id == selectedBackgroundId } ?: list.firstOrNull() ?: BackgroundModel("bg_default", "bg_name_default", "image", "bg_default_draw", 0)
     }
@@ -55,7 +69,7 @@ class BackgroundManager(private val context: Context) {
     fun setTemporaryBackground(resourceName: String) {
         val detectedType = if (resourceName.startsWith("vid_") || resourceName.contains("video")) "video" else "image"
 
-        val tempBg = BackgroundModel(
+        tempBackgroundModel = BackgroundModel(
             id = "temp_level_bg",
             nameResKey = "temp_bg",
             type = detectedType,
@@ -63,18 +77,24 @@ class BackgroundManager(private val context: Context) {
             price = 0
         )
 
-        // Сохраняем текущий пользовательский ID, если мы еще не на временном фоне
         if (selectedBackgroundId != "temp_level_bg") {
             originalBackgroundId = selectedBackgroundId
         }
 
-        // Перезаписываем активный ID, чтобы метод getCurrentBackground() вернул этот объект
-        selectedBackgroundId = tempBg.id
+        // Оповещаем Compose об изменении фона
+        selectedBackgroundId = "temp_level_bg"
     }
 
     fun resetToMenuBackground() {
-        // Возвращаем тот фон, который был у пользователя до старта уровня
+        tempBackgroundModel = null
         selectedBackgroundId = originalBackgroundId
+    }
+
+    fun selectBackground(id: String) {
+        if (isPurchased(id)) {
+            savedBackgroundId = id
+            selectedBackgroundId = id
+        }
     }
 
     @SuppressLint("LocalContextResourcesRead", "DiscouragedApi")

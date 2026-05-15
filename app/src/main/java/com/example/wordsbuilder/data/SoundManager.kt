@@ -14,7 +14,6 @@ object SoundManager {
     var musicVolume: Float = 0.8f
     var soundVolume: Float = 0.8f
 
-    // Храним ID текущего играющего трека, чтобы не перезапускать его с начала, если он уже играет
     private var currentMusicResId: Int? = null
 
     fun init(context: Context) {
@@ -23,27 +22,24 @@ object SoundManager {
         soundVolume = prefs.getFloat(KEY_SOUND_VOL, 0.8f)
     }
 
-    // Универсальный метод переключения музыки
     fun switchMusic(context: Context, resId: Int) {
-        // Если этот трек уже играет прямо сейчас, ничего не делаем (избегаем заикания звука)
+        // Проверка: если этот трек уже играет, игнорируем вызов
         if (currentMusicResId == resId && musicPlayer?.isPlaying == true) {
             return
         }
 
-        // Освобождаем старый плеер
         musicPlayer?.stop()
         musicPlayer?.release()
 
         currentMusicResId = resId
         musicPlayer = MediaPlayer.create(context, resId).apply {
-            isLooping = true
+            isLooping = true // Бесконечный повтор для фоновой музыки
             setVolume(musicVolume, musicVolume)
             start()
         }
     }
 
     fun startMusic(context: Context) {
-        // По умолчанию при холодном старте включаем музыку меню
         switchMusic(context, R.raw.menu_music)
     }
 
@@ -77,24 +73,17 @@ object SoundManager {
         }
     }
 
+    // Метод для одиночных немузыкальных событий (если нужен)
     fun playMusic(context: Context, resId: Int) {
-        musicPlayer?.release()
-        musicPlayer = MediaPlayer.create(context, resId).apply {
-            setVolume(musicVolume, musicVolume)
-            start()
-            setOnCompletionListener { release() }
-        }
+        switchMusic(context, resId)
     }
 
     fun playMusicByName(context: Context, musicResName: String) {
         val musicResId = context.resources.getIdentifier(musicResName, "raw", context.packageName)
         if (musicResId != 0) {
-            // Вызываем ваш существующий метод воспроизведения музыки по ID
-            playMusic(context, musicResId)
+            switchMusic(context, musicResId)
         } else {
-            // Фоллбэк, если трек не найден — играем дефолтную музыку меню
-            val defaultId = context.resources.getIdentifier("menu_music", "raw", context.packageName)
-            if (defaultId != 0) playMusic(context, defaultId)
+            switchMusic(context, R.raw.menu_music)
         }
     }
 
@@ -102,6 +91,6 @@ object SoundManager {
         musicPlayer?.stop()
         musicPlayer?.release()
         musicPlayer = null
+        currentMusicResId = null
     }
-
 }

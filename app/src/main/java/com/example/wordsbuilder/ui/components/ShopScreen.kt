@@ -7,8 +7,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Tab
@@ -158,7 +156,7 @@ fun ShopScreen(bgManager: BackgroundManager, onBack: () -> Unit) {
                                         GameButton(
                                             text = stringResource(id = R.string.apply),
                                             onClick = {
-                                                bgManager.selectedBackgroundId = bg.id
+                                                bgManager.selectBackground(bg.id)
                                                 selectedId = bg.id
                                             },
                                             modifier = Modifier.weight(0.35f)
@@ -172,7 +170,7 @@ fun ShopScreen(bgManager: BackgroundManager, onBack: () -> Unit) {
                                             if (bgManager.buyBackground(bg)) {
                                                 SoundManager.playSound(context, R.raw.click)
                                                 playerCoins = bgManager.coins
-                                                bgManager.selectedBackgroundId = bg.id
+                                                bgManager.selectBackground(bg.id)
                                                 selectedId = bg.id
                                                 // После покупки автоматически переводим пользователя в гардероб смотреть на новинку
                                                 selectedTab = 0

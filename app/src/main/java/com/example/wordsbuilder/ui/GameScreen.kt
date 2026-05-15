@@ -61,46 +61,66 @@ fun GameScreen(
     var lastSolvedWord by remember { mutableStateOf("") }
     var wordFlyTrigger by remember { mutableIntStateOf(0) }
 
-    // Стейт показа стартового экрана (для кампании — true, для случайного — false)
-    var showStartOverlay by remember { mutableStateOf(gameMode == "campaign") }
     var campaignLevelId by rememberSaveable {
         mutableIntStateOf(getSavedCampaignLevelIndex(context, currentLocale))
     }
+    var randomLevelCounter by rememberSaveable { mutableIntStateOf(1) }
+    val screenKey = rememberSaveable { mutableIntStateOf(0) }
 
     val allLevels = LevelManager.loadCampaignLevels(context, currentLocale)
     val currentLevel = allLevels.find { it.id == campaignLevelId } ?: allLevels.firstOrNull()
     currentLevel?.words ?: emptyMap()
 
-    // Конфигурация медиа-ресурсов для текущей сессии
-    val bgResName = remember {
+    // ШАГ 1: Загрузка данных уровня в Map структуры с УМНЫМ ПОДБОРОМ для случайного режима
+    val currentLevelWordsMap = remember(currentLocale, randomLevelCounter, campaignLevelId, gameMode, screenKey.intValue) {
+        if (gameMode == "campaign") {
+            val allLevels = LevelManager.loadCampaignLevels(context, currentLocale)
+            val currentLevel = allLevels.find { it.id == campaignLevelId } ?: allLevels.firstOrNull()
+            currentLevel?.words ?: emptyMap()
+        } else {
+            val targetCount = getRandomWordsCount(context)
+            RandomWordGenerator.getRandomWordsMap(context, currentLocale, targetCount)
+        }
+    }
+
+    // Управление состоянием заставки (Сбрасываем в true при смене уровня)
+    var showStartOverlay by remember(campaignLevelId, randomLevelCounter, screenKey.intValue) {
+        mutableStateOf(gameMode == "campaign")
+    }
+
+    // ФИКС Проблемы №2 и №3: Добавляем ключи перезапуска remember, чтобы строки ресурсов обновлялись вместе с уровнем
+    val bgResName = remember(campaignLevelId, randomLevelCounter, screenKey.intValue, gameMode) {
         if (gameMode == "campaign" && currentLevel != null) {
             currentLevel.bgRes
         } else {
-            // Выбираем случайный фон из уровней en.json
             val mediaPool = LevelManager.getAllAvailableMediaResources(context)
             mediaPool.map { it.first }.randomOrNull() ?: "bg_forest"
         }
     }
 
-    val musicResName = remember {
+    val musicResName = remember(campaignLevelId, randomLevelCounter, screenKey.intValue, gameMode) {
         if (gameMode == "campaign" && currentLevel != null) {
             currentLevel.musicRes
         } else {
-            // Выбираем случайную музыку из уровней en.json
             val mediaPool = LevelManager.getAllAvailableMediaResources(context)
             mediaPool.map { it.second }.randomOrNull() ?: "music_cozy_forest"
         }
     }
 
-    // Запуск фонового трека уровня при старте экрана (или после закрытия заставки)
-    LaunchedEffect(musicResName, showStartOverlay) {
+    // Динамическое переключение фонов и музыки через менеджеры
+    LaunchedEffect(bgResName, musicResName, showStartOverlay) {
         if (!showStartOverlay) {
+            bgManager.setTemporaryBackground(bgResName)
             SoundManager.playMusicByName(context, musicResName)
+        } else {
+            bgManager.resetToMenuBackground()
+            SoundManager.playMusicByName(context, "menu_music")
         }
     }
 
     // Обработка кнопки "Назад" (сброс музыки на меню)
     val handleBack = {
+        bgManager.resetToMenuBackground()
         SoundManager.playMusicByName(context, "menu_music")
         onBackToMenu()
     }
@@ -114,23 +134,6 @@ fun GameScreen(
     var totalScore by remember { mutableIntStateOf(getSavedScore(context)) }
     var showHintDialog by remember { mutableStateOf(false) }
     var showExitDialog by remember { mutableStateOf(false) }
-    var randomLevelCounter by rememberSaveable { mutableIntStateOf(1) }
-
-    val screenKey = rememberSaveable { mutableIntStateOf(0) }
-
-    // ШАГ 1: Загрузка данных уровня в Map структуры с УМНЫМ ПОДБОРОМ для случайного режима
-    val currentLevelWordsMap = remember(currentLocale, randomLevelCounter, campaignLevelId, gameMode, screenKey.intValue) {
-        if (gameMode == "campaign") {
-            val allLevels = LevelManager.loadCampaignLevels(context, currentLocale)
-            val currentLevel = allLevels.find { it.id == campaignLevelId } ?: allLevels.firstOrNull()
-            currentLevel?.words ?: emptyMap()
-        } else {
-            // ЧИТАЕМ НАСТРОЙКУ: количество слов из ползунка настроек
-            val targetCount = getRandomWordsCount(context)
-            // "кучный" набор слов с общим алфавитом не более 15 букв
-            RandomWordGenerator.getRandomWordsMap(context, currentLocale, targetCount)
-        }
-    }
 
     // ШАГ 2: Генерация сетки кроссворда и подготовка колеса букв
     val levelData = remember(currentLevelWordsMap) {
@@ -190,20 +193,35 @@ fun GameScreen(
 
     var currentWord by remember { mutableStateOf("") }
 
-    // Прогресс уровня
-    var solvedWords: Set<String> by remember {
+    // ФИКС Проблемы №1 и №4: Добавляем ключ зависимости currentLevelWordsMap в remember,
+    // чтобы при смене уровня прогресс гарантированно сбрасывался или считывался заново
+    var solvedWords: Set<String> by remember(currentLevelWordsMap) {
         mutableStateOf(
             if (gameMode == "campaign") getSavedLevelProgress(context) else emptySet()
         )
     }
 
-    val isLevelComplete = solvedWords.size == targetWords.size && targetWords.isNotEmpty()
+    // Прогресс уровня
+//    var solvedWords: Set<String> by remember {
+//        mutableStateOf(
+//            if (gameMode == "campaign") getSavedLevelProgress(context) else emptySet()
+//        )
+//    }
+
+//    val isLevelComplete = solvedWords.size == targetWords.size && targetWords.isNotEmpty()
+    val isLevelComplete = targetWords.isNotEmpty() && solvedWords.size == targetWords.size
 
     // Музыка
     DisposableEffect(Unit) {
         SoundManager.startMusic(context)
         onDispose { SoundManager.stopMusic() }
     }
+
+//    // Музыка
+//    DisposableEffect(Unit) {
+//        SoundManager.startMusic(context)
+//        onDispose { SoundManager.stopMusic() }
+//    }
 
     BackHandler { showExitDialog = true }
 
@@ -315,7 +333,7 @@ fun GameScreen(
                     coins = newCoins
                 },
                 onNextLevel = {
-                    if (gameMode == " campaign") {
+                    if (gameMode == "campaign") {
                         campaignLevelId++
                         saveCampaignLevelIndex(context, currentLocale, campaignLevelId)
                         saveCurrentLevelProgress(context, emptySet())
@@ -334,7 +352,7 @@ fun GameScreen(
     ExitConfirmationDialog(
         visible = showExitDialog,
         onDismiss = { showExitDialog = false },
-        onConfirm = onBackToMenu
+        onConfirm = handleBack
     )
 
     HintConfirmationDialog(

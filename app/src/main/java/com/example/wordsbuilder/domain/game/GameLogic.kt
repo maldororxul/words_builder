@@ -44,7 +44,7 @@ fun saveCoins(context: Context, amount: Int) {
 
 fun getSavedCoins(context: Context): Int {
     val prefs = context.getSharedPreferences("game_prefs", Context.MODE_PRIVATE)
-    return prefs.getInt("game_coins", 100) // 100 стартовых монет игроку
+    return prefs.getInt("game_coins", 1000) // 1000 стартовых монет игроку
 }
 
 fun handleWordInput(
