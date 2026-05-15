@@ -24,6 +24,19 @@ object LevelManager {
         }
     }
 
+    fun getAvailableMediaResourcesUpToLevel(context: Context, maxLevelId: Int): List<Pair<String, String>> {
+        return try {
+            val jsonString = context.assets.open("levels_en.json").bufferedReader().use { it.readText() }
+            val listType = object : com.google.gson.reflect.TypeToken<List<CampaignLevel>>() {}.type
+            val levels: List<CampaignLevel> = com.google.gson.Gson().fromJson(jsonString, listType)
+
+            // Фильтруем уровни: берем только те, чей ID меньше или равен текущему уровню игрока
+            levels.filter { it.id <= maxLevelId }.map { it.bgRes to it.musicRes }
+        } catch (e: Exception) {
+            listOf("bg_forest" to "music_cozy_forest") // Фолбэк на случай ошибки
+        }
+    }
+
     fun getAllAvailableMediaResources(context: Context): List<Pair<String, String>> {
         return try {
             val jsonString = context.assets.open("levels_en.json").bufferedReader().use { it.readText() }

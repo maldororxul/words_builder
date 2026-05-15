@@ -46,7 +46,7 @@ class BackgroundManager(private val context: Context) {
             return tempBackgroundModel!!
         }
         val list = loadBackgrounds()
-        return list.find { it.id == selectedBackgroundId } ?: list.firstOrNull() ?: BackgroundModel("bg_default", "bg_name_default", "image", "bg_default_draw", 0)
+        return list.find { it.id == selectedBackgroundId } ?: list.firstOrNull() ?: BackgroundModel("bg_default", "bg_default_name", "image", "bg_default_draw", 0)
     }
 
     fun isPurchased(id: String): Boolean {

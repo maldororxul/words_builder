@@ -88,24 +88,24 @@ fun GameScreen(
         mutableStateOf(gameMode == "campaign")
     }
 
-    // ФИКС Проблемы №2 и №3: Добавляем ключи перезапуска remember, чтобы строки ресурсов обновлялись вместе с уровнем
-    val bgResName = remember(campaignLevelId, randomLevelCounter, screenKey.intValue, gameMode) {
+    // Выбираем связанную пару (фон + музыка) на основе текущего прогресса игрока
+    val matchedMedia = remember(campaignLevelId, randomLevelCounter, screenKey.intValue, gameMode) {
         if (gameMode == "campaign" && currentLevel != null) {
-            currentLevel.bgRes
+            // Для кампании берем родные ресурсы уровня
+            Pair(currentLevel.bgRes, currentLevel.musicRes)
         } else {
-            val mediaPool = LevelManager.getAllAvailableMediaResources(context)
-            mediaPool.map { it.first }.randomOrNull() ?: "bg_forest"
+            // Узнаем, до какого уровня кампании дошел игрок прямо сейчас
+            val maxUnlockedCampaignLevel = getSavedCampaignLevelIndex(context, currentLocale)
+            // Получаем пул медиафайлов только от открытых уровней кампании
+            val mediaPool = LevelManager.getAvailableMediaResourcesUpToLevel(context, maxUnlockedCampaignLevel)
+            // Выбираем случайную пару из доступного пула
+            mediaPool.randomOrNull() ?: Pair("bg_forest", "music_cozy_forest")
         }
     }
 
-    val musicResName = remember(campaignLevelId, randomLevelCounter, screenKey.intValue, gameMode) {
-        if (gameMode == "campaign" && currentLevel != null) {
-            currentLevel.musicRes
-        } else {
-            val mediaPool = LevelManager.getAllAvailableMediaResources(context)
-            mediaPool.map { it.second }.randomOrNull() ?: "music_cozy_forest"
-        }
-    }
+    // Разделяем на отдельные переменные для использования в LaunchedEffect
+    val bgResName = matchedMedia.first
+    val musicResName = matchedMedia.second
 
     // Динамическое переключение фонов и музыки через менеджеры
     LaunchedEffect(bgResName, musicResName, showStartOverlay) {

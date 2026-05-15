@@ -1,16 +1,51 @@
 [
   {
     "id": "bg_default",
-    "nameResKey": "bg_name_default",
+    "nameResKey": "bg_default_name",
     "type": "image",
-    "resourceName": "bg_default_draw",
-    "price": 0
+    "resourceName": "bg_default",
+    "price": 2000
+  },
+  {
+    "id": "bg_academy",
+    "nameResKey": "bg_academy_name",
+    "type": "image",
+    "resourceName": "bg_academy",
+    "price": 2000
+  },
+  {
+    "id": "bg_labyrinth",
+    "nameResKey": "bg_labyrinth_name",
+    "type": "image",
+    "resourceName": "bg_labyrinth_draw",
+    "price": 2000
+  },
+  {
+    "id": "bg_observatory",
+    "nameResKey": "bg_observatory_name",
+    "type": "image",
+    "resourceName": "bg_observatory_draw",
+    "price": 2000
+  },
+  {
+    "id": "bg_royal_library",
+    "nameResKey": "bg_royal_library_name",
+    "type": "image",
+    "resourceName": "bg_royal_library_draw",
+    "price": 2000
+  },
+  {
+    "id": "bg_steampunk_lab",
+    "nameResKey": "bg_steampunk_lab_name",
+    "type": "image",
+    "resourceName": "bg_steampunk_lab_draw",
+    "price": 2000
   },
   {
     "id": "bg_sea_and_sun",
     "nameResKey": "bg_sea_and_sun",
     "type": "video",
     "resourceName": "bg_sea_and_sun",
-    "price": 300
+    "price": 3000
   }
 ]

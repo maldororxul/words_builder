@@ -17,7 +17,14 @@
     <string name="hint_confirm_title">Use Hint?</string>
     <string name="hint_confirm_msg">Are you sure you want to spend %1$d🪙 for a hint?</string>
     <string name="not_enough_coins">Not enough coins!</string>
-    <string name="bg_name_default">Default</string>
+    <string name="bg_default_name">Default</string>
+
+    <string name="bg_academy_name">Academy</string>
+    <string name="bg_labyrinth_name">Myth</string>
+    <string name="bg_observatory_name">Space</string>
+    <string name="bg_royal_library_name">Royal Library</string>
+    <string name="bg_steampunk_lab_name">Steampunk</string>
+
     <string name="bg_sea_and_sun">Sunset at the sea</string>
     <string name="back">Back</string>
     <string name="backgrounds_store">SELECT BACKGROUND 🎭</string>
@@ -45,4 +52,6 @@
     <string name="watch_ads">Watch AD x%1$d 📺</string>
     <string name="double_reward">Double Reward 🎉</string>
     <string name="your_reward">Your Reward:</string>
+    <string name="level">LEVEL %1$d</string>
+    <string name="go">Go!</string>
 </resources>
