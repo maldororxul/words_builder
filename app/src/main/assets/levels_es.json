@@ -1,162 +1,102 @@
 [
   {
     "id": 1,
-    "reward": 30,
-    "hintCost": 10,
+    "reward": 80,
+    "hintCost": 30,
+    "bg_res": " bg_academy",
+    "music_res": " music_classical_antique",
+    "splash_res": " splash_level_1",
+    "description": "Un debut intelectual en las salas de la antigua Academia. Ponga a prueba sus fuerzas en la búsqueda de los términos fundamentales de la ciencia y la filosofía.",
     "words": {
-      "TELEVISOR": "Un aparato electronico con pantalla para ver canales y peliculas.",
-      "SOL": "La estrella brillante que nos ilumina y calienta cada dia.",
-      "LOS": "Articulo plural masculino que acompana a los sustantivos.",
-      "VER": "Percibir las cosas del mundo a traves de los ojos.",
-      "VISTA": "El sentido corporal que nos permite percibir la luz y el color.",
-      "SER": "El verbo mas importante de la existencia y la identidad humana.",
-      "TORTA": "Un pastel dulce horneado que se comparte en los cumpleanos.",
-      "VATE": "Palabra elegante para referirse a un poeta o adivino.",
-      "VELO": "Tela fina y transparente que cubre el rostro de una novia."
+      "DOGMATISMO": "Forma de pensamiento que opera con conceptos inmutables y excluye el análisis crítico.",
+      "HIPÓTESIS": "Suposición científica que se formula para explicar un fenómeno y que requiere verificación.",
+      "AXIOMA": "Proposición que se acepta sin demostración lógica debido a su evidencia intrínseca.",
+      "TEOREMA": "Proposición matemática cuya verdad se establece mediante una demostración.",
+      "ANÁLISIS": "Método de investigación que consiste en descomponer el objeto de estudio en sus partes constituyentes.",
+      "SÍNTESIS": "Unión de diversos elementos en un todo unificado en el proceso del conocimiento.",
+      "DIALÉCTICA": "Método filosófico de argumentación que investiga las contradicciones internas de los fenómenos.",
+      "LÓGICA": "Ciencia que estudia las leyes, formas y métodos del pensamiento correcto.",
+      "SOFISMA": "Razonamiento o conclusión que es formalmente aparente pero intrínsecamente falsa."
     }
   },
   {
     "id": 2,
-    "reward": 35,
-    "hintCost": 10,
+    "reward": 100,
+    "hintCost": 35,
+    "bg_res": " bg_observatory",
+    "music_res": " music_cosmic_ambient",
+    "splash_res": " splash_level_2",
+    "description": "Una mirada a través de las lentes de los telescopios hacia las profundidades del espacio. Las palabras de este nivel describen los grandiosos fenómenos del Universo.",
     "words": {
-      "ASTRONAUTA": "Un piloto espacial entrenado para viajar mas alla de la Tierra.",
-      "ASTRO": "Cualquier cuerpo celeste brillante, como una estrella o planeta.",
-      "RUTA": "Un camino o direccion establecida para llegar a un destino.",
-      "RATA": "Un roedor pequeno con cola larga, comun en las ciudades.",
-      "NASA": "La agencia del gobierno estadounidense encargada del espacio.",
-      "CASA": "Un edificio rigido donde vive una familia o persona.",
-      "TAZA": "Un recipiente con asa usado para tomar cafe o te caliente.",
-      "UNO": "El primer numero entero y la base de las matematicas.",
-      "SANTO": "Una persona bondadosa consagrada a Dios en la religion."
+      "ASTEROIDE": "Cuerpo celeste pequeño del sistema solar que se desplaza en una órbita alrededor del Sol.",
+      "GALAXIA": "Sistema gigante, unido por la gravedad, que se compone de estrellas, gas, polvo y materia oscura.",
+      "SUPERNOVA": "Fenómeno astronómico excepcional que va acompañado de una explosión colosal de una estrella.",
+      "CUÁSAR": "Objeto extragaláctico de gran luminosidad alimentado por un agujero negro supermasivo.",
+      "ÓRBITA": "Trayectoria de un cuerpo celeste o aparato artificial en el campo gravitatorio de otro cuerpo.",
+      "CÉNIT": "Punto más alto e imaginario de la esfera celeste que se encuentra directamente sobre la cabeza del observador.",
+      "ENTRAÑAS": "Profundidades internas de un cuerpo cósmico que están ocultas a la observación directa.",
+      "TELESCOPIO": "Instrumento óptico diseñado para observar objetos astronómicos distantes.",
+      "PÚLSAR": "Estrella de neutrones en rotación que emite pulsos de radiación estrictamente periódicos."
     }
   },
   {
     "id": 3,
-    "reward": 40,
-    "hintCost": 15,
+    "reward": 120,
+    "hintCost": 40,
+    "bg_res": " bg_labyrinth",
+    "music_res": " music_mystic_echo",
+    "splash_res": " splash_level_3",
+    "description": "Laberintos de mitos y civilizaciones antiguas. Resuelva los términos que hunden sus raíces en la cultura clásica.",
     "words": {
-      "FERROCARRIL": "Un tren o sistema de transporte que corre sobre rieles de metal.",
-      "FERIA": "Un mercado o fiesta publica con juegos, comida y puestos.",
-      "CARRIL": "La banda estrecha en una carretera destinada a un solo coche.",
-      "CARRO": "Un vehiculo con ruedas usado para transportar cosas o manejar.",
-      "CALOR": "La sensacion termica alta que sentimos durante el verano.",
-      "CINE": "El arte de proyectar peliculas e historias en una pantalla grande.",
-      "COLOR": "La percepcion visual de la luz, como el rojo, azul o verde.",
-      "CORAL": "Estructura marina de colores formada por pequenos esqueletos.",
-      "CLORO": "Elemento quimico usado para desinfectar el agua de las piscinas."
+      "ARQUETIPO": "Prototipo psíquico, universal e innato, que estructura la percepción humana.",
+      "PANTEÓN": "Conjunto de dioses de una religión determinada, o monumento consagrado a ellos.",
+      "ARTEFACTO": "Objeto de la cultura material creado o modificado por el ser humano en el pasado.",
+      "ALEGORÍA": "Representación artística de conceptos abstractos por medio de imágenes concretas.",
+      "LABERINTO": "Estructura compleja con una gran cantidad de caminos enredados y callejones sin salida.",
+      "MITOLOGÍA": "Sistema de relatos sobre dioses, héroes y el origen del universo.",
+      "RITUAL": "Orden tradicional de celebración de actos solemnes o religiosos.",
+      "TÓTEM": "Animal o planta simbólica que se considera ancestro y protector de un clan.",
+      "LEYENDA": "Relato poético tradicional sobre un acontecimiento histórico o una personalidad."
     }
   },
   {
     "id": 4,
-    "reward": 45,
-    "hintCost": 15,
+    "reward": 140,
+    "hintCost": 45,
+    "bg_res": " bg_steampunk_lab",
+    "music_res": " music_mechanic_rhythm",
+    "splash_res": " splash_level_4",
+    "description": "Una época de grandes descubrimientos y mecanismos complejos. Un nivel para conocedores de las ciencias exactas y los inventos.",
     "words": {
-      "CHOCOLATE": "Un dulce delicioso de color marron hecho con semillas de cacao.",
-      "LOCA": "Un adjetivo para referirse a una persona que perdio la razon.",
-      "COLA": "La extremidad posterior del cuerpo de muchos animales.",
-      "GATO": "Un felino domestico pequeno que es una mascota popular.",
-      "ACTO": "Una celebracion publica o una parte de una obra de teatro.",
-      "ALTA": "El adjetivo para describir algo que tiene mucha estatura.",
-      "CARTA": "Un mensaje escrito en papel que se envia dentro de un sobre.",
-      "HOTEL": "Un edificio donde los viajeros pagan por dormir y descansar.",
-      "HOLA": "La palabra mas comun usada para saludar a alguien en espanol."
+      "CONDENSADOR": "Componente electrónico de dos terminales diseñado para almacenar carga eléctrica.",
+      "RESONANCIA": "Fenómeno de aumento drástico en la amplitud de las oscilaciones cuando las frecuencias coinciden.",
+      "ALQUIMIA": "Doctrina precientífica de la química que pretendía obtener la piedra filosofal.",
+      "TRAYECTORIA": "Línea continua que describe un punto material durante su movimiento.",
+      "MECANISMO": "Sistema de elementos diseñado para transformar el movimiento de un cuerpo en el movimiento de otros.",
+      "DINÁMICA": "Rama de la mecánica que estudia el movimiento de los cuerpos bajo la acción de las fuerzas aplicadas.",
+      "IMPULSO": "Magnitud física vectorial que actúa como medida del movimiento mecánico.",
+      "ENERGÍA": "Magnitud física escalar que representa una medida unificada de las diversas formas de movimiento.",
+      "TERMOSTATO": "Dispositivo para mantener una temperatura constante en un espacio cerrado."
     }
   },
   {
     "id": 5,
-    "reward": 50,
-    "hintCost": 20,
+    "reward": 160,
+    "hintCost": 50,
+    "bg_res": " bg_royal_library",
+    "music_res": " music_orchestra_epic",
+    "splash_res": " splash_level_5",
+    "description": "El examen final en la Biblioteca Real. Palabras para auténticos eruditos que dominan el lenguaje de forma magistral.",
     "words": {
-      "ORDENADOR": "La palabra espanola para referirse a una computadora de escritorio.",
-      "ORDEN": "La organizacion o colocacion correcta de las cosas en su lugar.",
-      "ROSE": "El acto de tocar ligeramente la superficie de otra cosa.",
-      "AMOR": "El sentimiento mas profundo de afecto hacia otra persona.",
-      "ROMA": "La capital de Italia, famosa por su gran Coliseo romano.",
-      "ONDA": "La curva que se forma en el agua o la senal del Wi-Fi.",
-      "DAR": "Entregar un objeto a otra persona de forma voluntaria.",
-      "DOS": "El numero que sigue al uno y representa una pareja.",
-      "DON": "Una habilidad especial natural o un trato de respeto masculino."
-    }
-  },
-  {
-    "id": 6,
-    "reward": 55,
-    "hintCost": 20,
-    "words": {
-      "MARIPOSAS": "Insectos con alas grandes de colores hermosos que vuelan.",
-      "MAR": "La inmensa masa de agua salada que cubre el planeta.",
-      "ROSA": "Una flor muy hermosa que suele tener espinas en su tallo.",
-      "SOPA": "Un plato de caldo caliente con fideos, verduras o carne.",
-      "SANO": "Un adjetivo para alguien que goza de una salud perfecta.",
-      "MISA": "La celebracion religiosa principal de la iglesia catolica.",
-      "MAPA": "Un dibujo geografico que representa la Tierra o un pais.",
-      "RAP": "Estilo de musica urbana donde se cantan rimas habladas.",
-      "PAZ": "El estado de tranquilidad donde no hay guerras ni violencia."
-    }
-  },
-  {
-    "id": 7,
-    "reward": 60,
-    "hintCost": 25,
-    "words": {
-      "DICCIONARIO": "Un libro grande que contiene el significado de todas las palabras.",
-      "DIARIO": "Un cuaderno donde escribes lo que haces todos los dias.",
-      "ONDA": "Un movimiento dinamico en el agua o una frecuencia de radio.",
-      "CORO": "Un grupo de personas que cantan juntas una cancion.",
-      "CINE": "Lugar al que vas a comer palomitas y ver peliculas nuevas.",
-      "CUNA": "La cama pequena especial con barandillas para los bebes.",
-      "NIDO": "La casita redonda que construyen los pajaros en los arboles.",
-      "DON": "Un talento natural o un titulo de respeto para un hombre.",
-      "DAR": "Transferir la propiedad de algo a alguien sin cobrarle."
-    }
-  },
-  {
-    "id": 8,
-    "reward": 65,
-    "hintCost": 25,
-    "words": {
-      "ZAPATERIA": "Una tienda comercial dedicada exclusivamente a vender calzado.",
-      "ZAPATO": "Prenda de cuero o tela que protege el pie al caminar.",
-      "PIE": "La parte del cuerpo humano que toca el suelo al estar de pie.",
-      "PAZ": "La ausencia de conflictos, peleas, discusiones o guerras.",
-      "TAPA": "Una pequena porcion de comida que se sirve con la bebida.",
-      "TAZA": "Recipiente con oreja usado para tomar te o cafe caliente.",
-      "RATA": "Un animal roedor mediano que suele vivir en los sotanos.",
-      "REI": "Forma del verbo reir en el pasado de la primera persona.",
-      "TIA": "La hermana de tu madre o de tu padre en el arbol familiar."
-    }
-  },
-  {
-    "id": 9,
-    "reward": 70,
-    "hintCost": 30,
-    "words": {
-      "DORMITORIO": "La habitacion de la casa destinada para dormir y descansar.",
-      "MOTO": "Vehiculo de dos ruedas muy rapido impulsado por un motor.",
-      "DIA": "El periodo de tiempo en que hay luz del sol en el cielo.",
-      "ROMA": "La capital historica de Italia, nucleo del antiguo imperio.",
-      "AMOR": "Un sentimiento hermoso de cariño profundo hacia alguien.",
-      "ORO": "Metal precioso de color amarillo muy valioso en el mundo.",
-      "RIO": "Una corriente natural de agua dulce que fluye hacia el mar.",
-      "ROJO": "El color vivo de la sangre, las fresas y las manzanas.",
-      "TORO": "El macho de la vaca, un animal grande con cuernos fuertes."
-    }
-  },
-  {
-    "id": 10,
-    "reward": 80,
-    "hintCost": 30,
-    "words": {
-      "ESCRITORIO": "Mesa de trabajo que tiene cajones para guardar papeles.",
-      "TORRE": "Estructura vertical muy alta que sobresale en las iglesias.",
-      "TREN": "Medio de transporte pesado que viaja sobre vias ferreas.",
-      "RIO": "Corriente de agua dulce donde viven peces y patos.",
-      "RETRO": "Estilo estetico basado en modas o tendencias del pasado.",
-      "COSTA": "La orilla donde la tierra firme se junta con el oceano.",
-      "CINE": "Establecimiento para la proyeccion de filmes cinematograficos.",
-      "CORO": "Conjunto de cantantes que interpretan musica vocal juntos.",
-      "SACO": "Prenda de vestir elegante con mangas y botones para hombres."
+      "VESTIGIO": "Órgano o rasgo que ha perdido su significado original en el curso de la evolución.",
+      "ECLECTICISMO": "Mezcla o combinación artística de estilos, ideas o puntos de vista heterogéneos.",
+      "METAMORFOSIS": "Cambio completo y radical de forma, estructura o esencia interna.",
+      "SINÉCDOQUE": "Tropo o recurso estilístico basado en la transferencia de significado de la parte al todo.",
+      "METÁFORA": "Figura retórica que consiste en el uso de una palabra o expresión en un sentido figurado.",
+      "PARADOJA": "Situación que puede existir en la realidad pero que carece de una explicación lógica.",
+      "GENOTIPO": "Conjunto de todos los genes localizados en los cromosomas de un organismo dado.",
+      "RETROSPECTIVA": "Mirada al pasado o examen de los acontecimientos y etapas de desarrollo ya transcurridos.",
+      "FENÓMENO": "Suceso inusual, hecho raro o aquello que resulta difícil de comprender o explicar."
     }
   }
 ]

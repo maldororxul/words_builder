@@ -1,162 +1,102 @@
 [
   {
     "id": 1,
-    "reward": 30,
-    "hintCost": 10,
+    "reward": 80,
+    "hintCost": 30,
+    "bg_res": " bg_academy",
+    "music_res": " music_classical_antique",
+    "splash_res": " splash_level_1",
+    "description": "An intellectual debut within the halls of the ancient Academy. Test your strength in searching for the fundamental terms of science and philosophy.",
     "words": {
-      "SPACESHIP": "A vehicle designed for travel and exploration in outer space.",
-      "SPACE": "The infinite empty void beyond the atmosphere of the Earth.",
-      "SHIP": "A large boat that carries passengers or cargo across the ocean.",
-      "CASH": "Money in the physical form of paper banknotes and metal coins.",
-      "CAP": "A soft flat hat with a visor, often worn during sports.",
-      "ICE": "Water that has frozen solid due to very cold temperatures.",
-      "SEA": "A large body of salty water that covers much of the Earth.",
-      "PIN": "A tiny sharp piece of metal used to fasten pieces of cloth.",
-      "HAS": "The third-person singular form of the verb indicating possession."
+      "DOGMATISM": "A way of thinking that operates with unalterable concepts and excludes critical analysis.",
+      "HYPOTHESIS": "A scientific assumption put forward to explain a phenomenon and requiring verification.",
+      "AXIOM": "A statement accepted without logical proof due to its inherent truth.",
+      "THEOREM": "A mathematical statement, the truth of which is established by means of a proof.",
+      "ANALYSIS": "A research method that breaks down the studied object into its constituent parts.",
+      "SYNTHESIS": "The combination of various elements into a single whole in the process of cognition.",
+      "DIALECTICS": "A philosophical method of argumentation that investigates the internal contradictions of phenomena.",
+      "LOGIC": "The science of the laws, forms, and methods of correct thinking.",
+      "SOPHISM": "A formal, seemingly correct, but inherently false argument or conclusion."
     }
   },
   {
     "id": 2,
-    "reward": 35,
-    "hintCost": 10,
+    "reward": 100,
+    "hintCost": 35,
+    "bg_res": " bg_observatory",
+    "music_res": " music_cosmic_ambient",
+    "splash_res": " splash_level_2",
+    "description": "A gaze through telescope lenses into the depths of space. The words of this level describe the grandiose phenomena of the Universe.",
     "words": {
-      "KEYBOARD": "A panel of keys used for typing text into a computer.",
-      "KEY": "A small metal tool used for locking or unlocking a door.",
-      "BOARD": "A flat piece of wood used for building or playing games.",
-      "BEAR": "A large heavy wild mammal with thick fur and sharp claws.",
-      "ROAD": "A prepared track or street for cars and buses to drive on.",
-      "BOY": "A young male human being who has not become a man yet.",
-      "BAD": "The opposite of good; something of very poor quality.",
-      "RED": "The bright color of blood, tomatoes, and fire trucks.",
-      "DARK": "The total absence of light, especially during the night."
+      "ASTEROID": "A small celestial body of the Solar System moving in an orbit around the Sun.",
+      "GALAXY": "A giant, gravitationally bound system consisting of stars, gas, dust, and dark matter.",
+      "SUPERNOVA": "A phenomenal astronomical event accompanied by a colossal explosion of a star.",
+      "QUASAR": "An extragalactic object of high luminosity powered by a supermassive black hole.",
+      "ORBIT": "The path of a celestial body or an artificial spacecraft in the gravitational field of another body.",
+      "ZENITH": "The highest imaginary point of the celestial sphere located directly above the observer's head.",
+      "INTERIOR": "The inner depths of a cosmic body hidden from direct observation.",
+      "TELESCOPE": "An optical instrument for observing distant astronomical objects.",
+      "PULSAR": "A rotating neutron star that emits strictly periodic pulses of radiation."
     }
   },
   {
     "id": 3,
-    "reward": 40,
-    "hintCost": 15,
+    "reward": 120,
+    "hintCost": 40,
+    "bg_res": " bg_labyrinth",
+    "music_res": " music_mystic_echo",
+    "splash_res": " splash_level_3",
+    "description": "Labyrinths of myths and ancient civilizations. Unravel the terms that are rooted in antique culture.",
     "words": {
-      "RAINFOREST": "A dense, thick green forest that receives a lot of rain.",
-      "RAIN": "Water droplets that fall from clouds in the sky to the earth.",
-      "FOREST": "A large area of land covered completely by green trees.",
-      "TRAIN": "A connected line of vehicles that moves along iron rails.",
-      "REST": "A period of time spent relaxing or sleeping to regain energy.",
-      "STAR": "A glowing ball of hot gas in space visible at night.",
-      "ROSE": "A beautiful sweet-smelling flower that usually has sharp thorns.",
-      "EAST": "The direction where the Sun rises in the morning sky.",
-      "NEST": "A cozy structure built by birds to hold their tiny eggs."
+      "ARCHETYPE": "A universal innate psychic prototype that structures human perception.",
+      "PANTHEON": "A collection of gods of a particular religion, or a monumental building dedicated to them.",
+      "ARTIFACT": "An object of material culture created or modified by a human in the past.",
+      "ALLEGORY": "A artistic personification of abstract concepts through concrete images.",
+      "LABYRINTH": "A complex structure with many tangled paths and dead ends.",
+      "MYTHOLOGY": "A system of tales about gods, heroes, and the origin of the universe.",
+      "RITUAL": "A traditional order of performing solemn or religious actions.",
+      "TOTEM": "A symbolic animal or plant considered an ancestor and protector of a clan.",
+      "LEGEND": "A poetic tradition or story about a historical event or personality."
     }
   },
   {
     "id": 4,
-    "reward": 45,
-    "hintCost": 15,
+    "reward": 140,
+    "hintCost": 45,
+    "bg_res": " bg_steampunk_lab",
+    "music_res": " music_mechanic_rhythm",
+    "splash_res": " splash_level_4",
+    "description": "An era of great discoveries and complex mechanisms. A level for connoisseurs of exact sciences and inventions.",
     "words": {
-      "CHOCOLATE": "A delicious sweet brown food made from processed cacao seeds.",
-      "LATE": "Arriving or happening after the expected or planned time.",
-      "CAT": "A small furry pet that loves catching mice and sleeping.",
-      "HAT": "A piece of clothing worn on the head for warmth or style.",
-      "COAL": "A hard black mineral burned as fuel to create heat.",
-      "COOL": "An adjective for a pleasantly low temperature or a trendy style.",
-      "TALE": "A fictional story about magical events or ancient heroes.",
-      "HOT": "An adjective for a very high temperature, like fire or summer.",
-      "ICE": "Frozen solid water that melts when exposed to warmth."
+      "CAPACITOR": "An electronic two-terminal component designed to store an electrical charge.",
+      "RESONANCE": "The phenomenon of a sharp increase in the amplitude of oscillations when frequencies match.",
+      "ALCHEMY": "A pre-scientific direction in chemistry that sought to obtain the philosopher's stone.",
+      "TRAJECTORY": "A continuous line described by a material point during its movement.",
+      "MECHANISM": "A system of links designed to convert the motion of one body into the motion of others.",
+      "DYNAMICS": "A branch of mechanics that studies the motion of bodies under the action of applied forces.",
+      "MOMENTUM": "A vector physical quantity that serves as a measure of mechanical motion.",
+      "ENERGY": "A scalar physical quantity that is a unified measure of various forms of motion.",
+      "THERMOSTAT": "A device for maintaining a constant temperature in an enclosed space."
     }
   },
   {
     "id": 5,
-    "reward": 50,
-    "hintCost": 20,
+    "reward": 160,
+    "hintCost": 50,
+    "bg_res": " bg_royal_library",
+    "music_res": " music_orchestra_epic",
+    "splash_res": " splash_level_5",
+    "description": "The final exam in the Royal Library. Words for true erudites who master the language masterfully.",
     "words": {
-      "SMARTPHONE": "A modern mobile phone that works like a small computer.",
-      "SMART": "An adjective describing someone who is very clever and intelligent.",
-      "PHONE": "A device used to talk to people who are far away.",
-      "MARS": "The fourth planet from the Sun, known as the Red Planet.",
-      "STAR": "A beautiful burning point of light in the night sky.",
-      "PORT": "A safe harbor where ships dock to load and unload cargo.",
-      "PART": "A piece or fraction of a whole object or machine.",
-      "MAP": "A visual drawing of an area showing roads, rivers, and cities.",
-      "HEAP": "A large, untidy pile of objects thrown together on top of each other."
-    }
-  },
-  {
-    "id": 6,
-    "reward": 55,
-    "hintCost": 20,
-    "words": {
-      "CROSSWORD": "A word puzzle where intersecting words are written into squares.",
-      "WORD": "A single unit of language that has a specific meaning.",
-      "CROW": "A large glossy black bird known for its loud cawing sound.",
-      "ROD": "A thin, straight bar made of wood, metal, or fiberglass.",
-      "WOOD": "The hard fibrous material that makes up the trunk of a tree.",
-      "DOOR": "A flat wooden or metal barrier used to close an entrance.",
-      "COW": "A large farm animal kept for producing milk and beef.",
-      "SOW": "To plant seeds in the ground so that crops can grow.",
-      "ROW": "A line of objects or people arranged side by side."
-    }
-  },
-  {
-    "id": 7,
-    "reward": 60,
-    "hintCost": 25,
-    "words": {
-      "WATERMELON": "A giant sweet fruit with green skin and red juicy flesh.",
-      "WATER": "The clear liquid that falls as rain and is vital for life.",
-      "MELON": "A large round fruit with sweet flesh and many seeds inside.",
-      "LION": "A majestic wild cat often called the King of the Jungle.",
-      "TERM": "A word or phrase used to describe a specific concept.",
-      "TEAM": "A group of players or workers uniting to achieve a goal.",
-      "MEAT": "The flesh of an animal consumed as food by humans.",
-      "MALT": "Grain, usually barley, used for brewing beer and whiskey.",
-      "LANE": "A narrow road or a designated strip for swimming or racing."
-    }
-  },
-  {
-    "id": 8,
-    "reward": 65,
-    "hintCost": 25,
-    "words": {
-      "SUBMARINE": "A specialized naval ship that can operate completely underwater.",
-      "MARINE": "An adjective relating to the sea, ocean life, or ships.",
-      "SUN": "The bright star at the center of our solar system.",
-      "BUS": "A large road vehicle designed to carry many passengers.",
-      "RAIN": "Water droplets falling from the sky when it is cloudy.",
-      "MAIN": "The most important or primary part of something.",
-      "BEAR": "A large wild mammal with sharp claws and heavy fur.",
-      "MAN": "An adult male human being who is no longer a boy.",
-      "SUE": "To take legal action against someone in a court of law."
-    }
-  },
-  {
-    "id": 9,
-    "reward": 70,
-    "hintCost": 30,
-    "words": {
-      "AIRPLANE": "A flying vehicle with wings and powerful jet engines.",
-      "AIR": "The invisible mixture of gases that we breathe to survive.",
-      "PLANET": "A massive round space object that orbits around a star.",
-      "LINE": "A long, thin continuous mark drawn on a surface.",
-      "PALE": "An adjective describing a face with very little color.",
-      "RAIN": "Liquid precipitation falling down from gray storm clouds.",
-      "PEAR": "A sweet green or yellow fruit shaped like a teardrop.",
-      "EAR": "The organ on the side of your head used for hearing.",
-      "LANE": "A narrow country road or a driving path on a highway."
-    }
-  },
-  {
-    "id": 10,
-    "reward": 80,
-    "hintCost": 30,
-    "words": {
-      "FIREWORKS": "Explosive devices that create colorful light displays in the sky.",
-      "FIRE": "The hot, bright flame produced when something burns.",
-      "WORK": "An activity involving physical or mental effort to earn money.",
-      "FOX": "A clever wild animal with a bushy tail and reddish fur.",
-      "FORK": "A kitchen utensil with prongs used for eating food.",
-      "ROSE": "A beautiful flower that symbols love and has sharp thorns.",
-      "WIRE": "A thin flexible thread of metal used to carry electricity.",
-      "ROW": "A horizontal arrangement of cells or items in a line.",
-      "SEW": "To join pieces of cloth together using a needle and thread."
+      "VESTIGE": "An organ or trait that has lost its primary significance in the course of evolution.",
+      "ECLECTICISM": "An artistic mixing or combination of heterogeneous styles, ideas, or views.",
+      "METAMORPHOSIS": "A complete, radical change of form, structure, or inner essence.",
+      "SYNECDOCHE": "A trope, a stylistic device based on transferring meaning from a part to the whole.",
+      "METAPHOR": "A figure of speech consisting in the use of a word or expression in a figurative meaning.",
+      "PARADOX": "A situation that can exist in reality but has no logical explanation.",
+      "GENOTYPE": "The sum total of all genes localized in the chromosomes of a given organism.",
+      "RETROSPECTIVE": "A look into the past, an examination of past events or stages of development.",
+      "PHENOMENON": "An unusual occurrence, a rare fact, something that is difficult to understand or explain."
     }
   }
 ]
