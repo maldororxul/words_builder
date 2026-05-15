@@ -1,14 +1,162 @@
 [
   {
     "id": 1,
-    "reward": 50,
-    "hint_cost": 20,
-    "words": ["APPLE", "PALE", "LEAP", "PEAL"]
+    "reward": 30,
+    "hintCost": 10,
+    "words": {
+      "SPACESHIP": "A vehicle designed for travel and exploration in outer space.",
+      "SPACE": "The infinite empty void beyond the atmosphere of the Earth.",
+      "SHIP": "A large boat that carries passengers or cargo across the ocean.",
+      "CASH": "Money in the physical form of paper banknotes and metal coins.",
+      "CAP": "A soft flat hat with a visor, often worn during sports.",
+      "ICE": "Water that has frozen solid due to very cold temperatures.",
+      "SEA": "A large body of salty water that covers much of the Earth.",
+      "PIN": "A tiny sharp piece of metal used to fasten pieces of cloth.",
+      "HAS": "The third-person singular form of the verb indicating possession."
+    }
   },
   {
     "id": 2,
-    "reward": 100,
-    "hint_cost": 30,
-    "words": ["PLEASE", "SLEEP", "LEAP", "PEAL", "SALE"]
+    "reward": 35,
+    "hintCost": 10,
+    "words": {
+      "KEYBOARD": "A panel of keys used for typing text into a computer.",
+      "KEY": "A small metal tool used for locking or unlocking a door.",
+      "BOARD": "A flat piece of wood used for building or playing games.",
+      "BEAR": "A large heavy wild mammal with thick fur and sharp claws.",
+      "ROAD": "A prepared track or street for cars and buses to drive on.",
+      "BOY": "A young male human being who has not become a man yet.",
+      "BAD": "The opposite of good; something of very poor quality.",
+      "RED": "The bright color of blood, tomatoes, and fire trucks.",
+      "DARK": "The total absence of light, especially during the night."
+    }
+  },
+  {
+    "id": 3,
+    "reward": 40,
+    "hintCost": 15,
+    "words": {
+      "RAINFOREST": "A dense, thick green forest that receives a lot of rain.",
+      "RAIN": "Water droplets that fall from clouds in the sky to the earth.",
+      "FOREST": "A large area of land covered completely by green trees.",
+      "TRAIN": "A connected line of vehicles that moves along iron rails.",
+      "REST": "A period of time spent relaxing or sleeping to regain energy.",
+      "STAR": "A glowing ball of hot gas in space visible at night.",
+      "ROSE": "A beautiful sweet-smelling flower that usually has sharp thorns.",
+      "EAST": "The direction where the Sun rises in the morning sky.",
+      "NEST": "A cozy structure built by birds to hold their tiny eggs."
+    }
+  },
+  {
+    "id": 4,
+    "reward": 45,
+    "hintCost": 15,
+    "words": {
+      "CHOCOLATE": "A delicious sweet brown food made from processed cacao seeds.",
+      "LATE": "Arriving or happening after the expected or planned time.",
+      "CAT": "A small furry pet that loves catching mice and sleeping.",
+      "HAT": "A piece of clothing worn on the head for warmth or style.",
+      "COAL": "A hard black mineral burned as fuel to create heat.",
+      "COOL": "An adjective for a pleasantly low temperature or a trendy style.",
+      "TALE": "A fictional story about magical events or ancient heroes.",
+      "HOT": "An adjective for a very high temperature, like fire or summer.",
+      "ICE": "Frozen solid water that melts when exposed to warmth."
+    }
+  },
+  {
+    "id": 5,
+    "reward": 50,
+    "hintCost": 20,
+    "words": {
+      "SMARTPHONE": "A modern mobile phone that works like a small computer.",
+      "SMART": "An adjective describing someone who is very clever and intelligent.",
+      "PHONE": "A device used to talk to people who are far away.",
+      "MARS": "The fourth planet from the Sun, known as the Red Planet.",
+      "STAR": "A beautiful burning point of light in the night sky.",
+      "PORT": "A safe harbor where ships dock to load and unload cargo.",
+      "PART": "A piece or fraction of a whole object or machine.",
+      "MAP": "A visual drawing of an area showing roads, rivers, and cities.",
+      "HEAP": "A large, untidy pile of objects thrown together on top of each other."
+    }
+  },
+  {
+    "id": 6,
+    "reward": 55,
+    "hintCost": 20,
+    "words": {
+      "CROSSWORD": "A word puzzle where intersecting words are written into squares.",
+      "WORD": "A single unit of language that has a specific meaning.",
+      "CROW": "A large glossy black bird known for its loud cawing sound.",
+      "ROD": "A thin, straight bar made of wood, metal, or fiberglass.",
+      "WOOD": "The hard fibrous material that makes up the trunk of a tree.",
+      "DOOR": "A flat wooden or metal barrier used to close an entrance.",
+      "COW": "A large farm animal kept for producing milk and beef.",
+      "SOW": "To plant seeds in the ground so that crops can grow.",
+      "ROW": "A line of objects or people arranged side by side."
+    }
+  },
+  {
+    "id": 7,
+    "reward": 60,
+    "hintCost": 25,
+    "words": {
+      "WATERMELON": "A giant sweet fruit with green skin and red juicy flesh.",
+      "WATER": "The clear liquid that falls as rain and is vital for life.",
+      "MELON": "A large round fruit with sweet flesh and many seeds inside.",
+      "LION": "A majestic wild cat often called the King of the Jungle.",
+      "TERM": "A word or phrase used to describe a specific concept.",
+      "TEAM": "A group of players or workers uniting to achieve a goal.",
+      "MEAT": "The flesh of an animal consumed as food by humans.",
+      "MALT": "Grain, usually barley, used for brewing beer and whiskey.",
+      "LANE": "A narrow road or a designated strip for swimming or racing."
+    }
+  },
+  {
+    "id": 8,
+    "reward": 65,
+    "hintCost": 25,
+    "words": {
+      "SUBMARINE": "A specialized naval ship that can operate completely underwater.",
+      "MARINE": "An adjective relating to the sea, ocean life, or ships.",
+      "SUN": "The bright star at the center of our solar system.",
+      "BUS": "A large road vehicle designed to carry many passengers.",
+      "RAIN": "Water droplets falling from the sky when it is cloudy.",
+      "MAIN": "The most important or primary part of something.",
+      "BEAR": "A large wild mammal with sharp claws and heavy fur.",
+      "MAN": "An adult male human being who is no longer a boy.",
+      "SUE": "To take legal action against someone in a court of law."
+    }
+  },
+  {
+    "id": 9,
+    "reward": 70,
+    "hintCost": 30,
+    "words": {
+      "AIRPLANE": "A flying vehicle with wings and powerful jet engines.",
+      "AIR": "The invisible mixture of gases that we breathe to survive.",
+      "PLANET": "A massive round space object that orbits around a star.",
+      "LINE": "A long, thin continuous mark drawn on a surface.",
+      "PALE": "An adjective describing a face with very little color.",
+      "RAIN": "Liquid precipitation falling down from gray storm clouds.",
+      "PEAR": "A sweet green or yellow fruit shaped like a teardrop.",
+      "EAR": "The organ on the side of your head used for hearing.",
+      "LANE": "A narrow country road or a driving path on a highway."
+    }
+  },
+  {
+    "id": 10,
+    "reward": 80,
+    "hintCost": 30,
+    "words": {
+      "FIREWORKS": "Explosive devices that create colorful light displays in the sky.",
+      "FIRE": "The hot, bright flame produced when something burns.",
+      "WORK": "An activity involving physical or mental effort to earn money.",
+      "FOX": "A clever wild animal with a bushy tail and reddish fur.",
+      "FORK": "A kitchen utensil with prongs used for eating food.",
+      "ROSE": "A beautiful flower that symbols love and has sharp thorns.",
+      "WIRE": "A thin flexible thread of metal used to carry electricity.",
+      "ROW": "A horizontal arrangement of cells or items in a line.",
+      "SEW": "To join pieces of cloth together using a needle and thread."
+    }
   }
 ]

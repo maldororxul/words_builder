@@ -50,7 +50,6 @@ import com.example.wordsbuilder.R
 fun CrosswordGrid(
     placedWords: List<PlacedWord>,
     solvedWords: Set<String>,
-    wordsMap: Map<String, String>,
     onWordLongPressed: (String) -> Unit,
     selectedWord: String?,
     modifier: Modifier = Modifier
@@ -288,7 +287,7 @@ fun CrosswordGrid(
                         val shadowColor = if (isPartofSelectedWord) Color(0xFFE65100) else if (isVisible) Color(0xFF1B5E20) else Color(0xFF424242)
                         Box(modifier = Modifier.fillMaxSize().background(color = shadowColor, shape = tileShape))
 
-                        val containerColor = if (isPartofSelectedWord) Color(0xFFFF9800) else if (isVisible) Color(0xFF4CAF50) else Color(0xFFE0E0E0)
+                        val containerColor = if (isPartofSelectedWord) Color(0xFFFF8000 ) else if (isVisible) Color(0xFF4CAF50) else Color(0xFFE0E0E0)
                         val borderColor = if (isPartofSelectedWord) Color(0xFFFFB74D) else if (isVisible) Color(0xFF81C784) else Color.White
 
                         Box(
@@ -327,7 +326,7 @@ fun CrosswordGrid(
                     .background(Color.Black.copy(alpha = 0.75f), shape = androidx.compose.foundation.shape.RoundedCornerShape(12.dp))
                     .padding(horizontal = 20.dp, vertical = 10.dp)
             ) {
-                Text(text = stringResource(R.string.zoom_me), color = Color(0xFFFF9800), fontSize = 24.sp, fontWeight = FontWeight.ExtraBold)
+                Text(text = stringResource(R.string.zoom_me), color = Color(0xFFFF8000 ), fontSize = 24.sp, fontWeight = FontWeight.ExtraBold)
             }
         }
         AnimatedVisibility(
@@ -341,13 +340,13 @@ fun CrosswordGrid(
                     .background(Color.Black.copy(alpha = 0.75f), shape = androidx.compose.foundation.shape.RoundedCornerShape(12.dp))
                     .padding(horizontal = 20.dp, vertical = 10.dp)
             ) {
-                Text(text = stringResource(R.string.tap_me), color = Color(0xFFFF9800), fontSize = 24.sp, fontWeight = FontWeight.ExtraBold)
+                Text(text = stringResource(R.string.tap_me), color = Color(0xFFFF8000 ), fontSize = 24.sp, fontWeight = FontWeight.ExtraBold)
             }
         }
 
         // Статичная магическая рамка
         Canvas(modifier = Modifier.fillMaxSize()) {
-            val orangeColor = Color(0xFFFF9800)
+            val orangeColor = Color(0xFFFF8000 )
             fun drawStaticMagicEdge(start: Offset, end: Offset, edgeId: Int) {
                 val path = Path().apply { moveTo(start.x, start.y) }
                 val distance = sqrt((end.x - start.x) * (end.x - start.x) + (end.y - start.y) * (end.y - start.y))

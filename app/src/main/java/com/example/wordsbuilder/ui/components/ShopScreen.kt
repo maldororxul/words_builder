@@ -60,7 +60,9 @@ fun ShopScreen(bgManager: BackgroundManager, onBack: () -> Unit) {
                 GameButton(
                     text = stringResource(id = R.string.back),
                     onClick = onBack,
-                    modifier = Modifier.weight(0.50f)
+                    modifier = Modifier
+                        .weight(0.50f)
+                        .padding(end = 24.dp)
                 )
                 Text("🪙 $playerCoins", fontSize = 20.sp, color = Color.White)
             }

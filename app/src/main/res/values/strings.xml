@@ -9,7 +9,7 @@
     <string name="exit_message">Return to main menu</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
-    <string name="score_label">Score</string>
+    <string name="score_label">✍️ %1$d</string>
     <string name="help">Help</string>
     <string name="level_short">Lvl. %1$d</string>
     <string name="campaign_finished">CAMPAIGN COMPLETED!</string>

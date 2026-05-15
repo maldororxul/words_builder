@@ -103,7 +103,6 @@ class MainActivity : AppCompatActivity() {
                                             MainMenu(
                                                 currentLevelId = currentCampaignLevel,
                                                 isCampaignFinished = isCampaignFinished,
-                                                coins = currentCoins,
                                                 onStartCampaign = {
                                                     gameMode = "campaign"
                                                     currentScreen = "game"

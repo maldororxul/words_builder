@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.example.wordsbuilder.R
+import com.example.wordsbuilder.ui.components.GameButton
 
 
 @Composable
@@ -38,7 +39,6 @@ fun DefinitionDialog(
         }
 
         // ВЫЧИСЛЕНИЕ ОТКРЫТЫХ БУКВ ЧЕРЕЗ ПЕРЕСЕЧЕНИЯ СЕТКИ
-        // Замените блок расчета displayWord в DefinitionDialog.kt на этот:
         val displayWord = remember(word, isWordFullySolved, solvedWords, placedWords) {
             if (isWordFullySolved) {
                 word.uppercase().map { it.toString() }.joinToString(" ")
@@ -72,7 +72,6 @@ fun DefinitionDialog(
             }
         }
 
-
         Dialog(
             onDismissRequest = {
                 SoundManager.playSound(context, R.raw.click)
@@ -103,7 +102,7 @@ fun DefinitionDialog(
                             text = displayWord,
                             fontSize = 26.sp,
                             fontWeight = FontWeight.ExtraBold,
-                            color = if (isWordFullySolved) Color(0xFFFF9800) else Color.LightGray,
+                            color = if (isWordFullySolved) Color(0xFFFF8000 ) else Color.LightGray,
                             textAlign = TextAlign.Center,
                             letterSpacing = 2.sp
                         )
@@ -120,20 +119,14 @@ fun DefinitionDialog(
 
                         Spacer(modifier = Modifier.height(28.dp))
 
-                        Button(
+                        GameButton(
+                            text = "OK",
                             onClick = {
                                 SoundManager.playSound(context, R.raw.click)
                                 onDismiss()
                             },
-                            modifier = Modifier.fillMaxWidth().height(48.dp),
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = Color(0xFFFF9800),
-                                contentColor = Color.White
-                            ),
-                            shape = RoundedCornerShape(12.dp)
-                        ) {
-                            Text(text = "OK", fontSize = 16.sp, fontWeight = FontWeight.Bold)
-                        }
+                            modifier = Modifier.fillMaxWidth().height(48.dp)
+                        )
                     }
                 }
             }

@@ -1,10 +1,162 @@
 [
   {
     "id": 1,
-    "words": ["АРБУЗ", "БАР", "РАБ", "ЗУБ"]
+    "reward": 30,
+    "hintCost": 10,
+    "words": {
+      "TELEVISOR": "Un aparato electronico con pantalla para ver canales y peliculas.",
+      "SOL": "La estrella brillante que nos ilumina y calienta cada dia.",
+      "LOS": "Articulo plural masculino que acompana a los sustantivos.",
+      "VER": "Percibir las cosas del mundo a traves de los ojos.",
+      "VISTA": "El sentido corporal que nos permite percibir la luz y el color.",
+      "SER": "El verbo mas importante de la existencia y la identidad humana.",
+      "TORTA": "Un pastel dulce horneado que se comparte en los cumpleanos.",
+      "VATE": "Palabra elegante para referirse a un poeta o adivino.",
+      "VELO": "Tela fina y transparente que cubre el rostro de una novia."
+    }
   },
   {
     "id": 2,
-    "words": ["ЗАБОР", "БАР", "РАБ", "РОЗА", "БОРА"]
+    "reward": 35,
+    "hintCost": 10,
+    "words": {
+      "ASTRONAUTA": "Un piloto espacial entrenado para viajar mas alla de la Tierra.",
+      "ASTRO": "Cualquier cuerpo celeste brillante, como una estrella o planeta.",
+      "RUTA": "Un camino o direccion establecida para llegar a un destino.",
+      "RATA": "Un roedor pequeno con cola larga, comun en las ciudades.",
+      "NASA": "La agencia del gobierno estadounidense encargada del espacio.",
+      "CASA": "Un edificio rigido donde vive una familia o persona.",
+      "TAZA": "Un recipiente con asa usado para tomar cafe o te caliente.",
+      "UNO": "El primer numero entero y la base de las matematicas.",
+      "SANTO": "Una persona bondadosa consagrada a Dios en la religion."
+    }
+  },
+  {
+    "id": 3,
+    "reward": 40,
+    "hintCost": 15,
+    "words": {
+      "FERROCARRIL": "Un tren o sistema de transporte que corre sobre rieles de metal.",
+      "FERIA": "Un mercado o fiesta publica con juegos, comida y puestos.",
+      "CARRIL": "La banda estrecha en una carretera destinada a un solo coche.",
+      "CARRO": "Un vehiculo con ruedas usado para transportar cosas o manejar.",
+      "CALOR": "La sensacion termica alta que sentimos durante el verano.",
+      "CINE": "El arte de proyectar peliculas e historias en una pantalla grande.",
+      "COLOR": "La percepcion visual de la luz, como el rojo, azul o verde.",
+      "CORAL": "Estructura marina de colores formada por pequenos esqueletos.",
+      "CLORO": "Elemento quimico usado para desinfectar el agua de las piscinas."
+    }
+  },
+  {
+    "id": 4,
+    "reward": 45,
+    "hintCost": 15,
+    "words": {
+      "CHOCOLATE": "Un dulce delicioso de color marron hecho con semillas de cacao.",
+      "LOCA": "Un adjetivo para referirse a una persona que perdio la razon.",
+      "COLA": "La extremidad posterior del cuerpo de muchos animales.",
+      "GATO": "Un felino domestico pequeno que es una mascota popular.",
+      "ACTO": "Una celebracion publica o una parte de una obra de teatro.",
+      "ALTA": "El adjetivo para describir algo que tiene mucha estatura.",
+      "CARTA": "Un mensaje escrito en papel que se envia dentro de un sobre.",
+      "HOTEL": "Un edificio donde los viajeros pagan por dormir y descansar.",
+      "HOLA": "La palabra mas comun usada para saludar a alguien en espanol."
+    }
+  },
+  {
+    "id": 5,
+    "reward": 50,
+    "hintCost": 20,
+    "words": {
+      "ORDENADOR": "La palabra espanola para referirse a una computadora de escritorio.",
+      "ORDEN": "La organizacion o colocacion correcta de las cosas en su lugar.",
+      "ROSE": "El acto de tocar ligeramente la superficie de otra cosa.",
+      "AMOR": "El sentimiento mas profundo de afecto hacia otra persona.",
+      "ROMA": "La capital de Italia, famosa por su gran Coliseo romano.",
+      "ONDA": "La curva que se forma en el agua o la senal del Wi-Fi.",
+      "DAR": "Entregar un objeto a otra persona de forma voluntaria.",
+      "DOS": "El numero que sigue al uno y representa una pareja.",
+      "DON": "Una habilidad especial natural o un trato de respeto masculino."
+    }
+  },
+  {
+    "id": 6,
+    "reward": 55,
+    "hintCost": 20,
+    "words": {
+      "MARIPOSAS": "Insectos con alas grandes de colores hermosos que vuelan.",
+      "MAR": "La inmensa masa de agua salada que cubre el planeta.",
+      "ROSA": "Una flor muy hermosa que suele tener espinas en su tallo.",
+      "SOPA": "Un plato de caldo caliente con fideos, verduras o carne.",
+      "SANO": "Un adjetivo para alguien que goza de una salud perfecta.",
+      "MISA": "La celebracion religiosa principal de la iglesia catolica.",
+      "MAPA": "Un dibujo geografico que representa la Tierra o un pais.",
+      "RAP": "Estilo de musica urbana donde se cantan rimas habladas.",
+      "PAZ": "El estado de tranquilidad donde no hay guerras ni violencia."
+    }
+  },
+  {
+    "id": 7,
+    "reward": 60,
+    "hintCost": 25,
+    "words": {
+      "DICCIONARIO": "Un libro grande que contiene el significado de todas las palabras.",
+      "DIARIO": "Un cuaderno donde escribes lo que haces todos los dias.",
+      "ONDA": "Un movimiento dinamico en el agua o una frecuencia de radio.",
+      "CORO": "Un grupo de personas que cantan juntas una cancion.",
+      "CINE": "Lugar al que vas a comer palomitas y ver peliculas nuevas.",
+      "CUNA": "La cama pequena especial con barandillas para los bebes.",
+      "NIDO": "La casita redonda que construyen los pajaros en los arboles.",
+      "DON": "Un talento natural o un titulo de respeto para un hombre.",
+      "DAR": "Transferir la propiedad de algo a alguien sin cobrarle."
+    }
+  },
+  {
+    "id": 8,
+    "reward": 65,
+    "hintCost": 25,
+    "words": {
+      "ZAPATERIA": "Una tienda comercial dedicada exclusivamente a vender calzado.",
+      "ZAPATO": "Prenda de cuero o tela que protege el pie al caminar.",
+      "PIE": "La parte del cuerpo humano que toca el suelo al estar de pie.",
+      "PAZ": "La ausencia de conflictos, peleas, discusiones o guerras.",
+      "TAPA": "Una pequena porcion de comida que se sirve con la bebida.",
+      "TAZA": "Recipiente con oreja usado para tomar te o cafe caliente.",
+      "RATA": "Un animal roedor mediano que suele vivir en los sotanos.",
+      "REI": "Forma del verbo reir en el pasado de la primera persona.",
+      "TIA": "La hermana de tu madre o de tu padre en el arbol familiar."
+    }
+  },
+  {
+    "id": 9,
+    "reward": 70,
+    "hintCost": 30,
+    "words": {
+      "DORMITORIO": "La habitacion de la casa destinada para dormir y descansar.",
+      "MOTO": "Vehiculo de dos ruedas muy rapido impulsado por un motor.",
+      "DIA": "El periodo de tiempo en que hay luz del sol en el cielo.",
+      "ROMA": "La capital historica de Italia, nucleo del antiguo imperio.",
+      "AMOR": "Un sentimiento hermoso de cariño profundo hacia alguien.",
+      "ORO": "Metal precioso de color amarillo muy valioso en el mundo.",
+      "RIO": "Una corriente natural de agua dulce que fluye hacia el mar.",
+      "ROJO": "El color vivo de la sangre, las fresas y las manzanas.",
+      "TORO": "El macho de la vaca, un animal grande con cuernos fuertes."
+    }
+  },
+  {
+    "id": 10,
+    "reward": 80,
+    "hintCost": 30,
+    "words": {
+      "ESCRITORIO": "Mesa de trabajo que tiene cajones para guardar papeles.",
+      "TORRE": "Estructura vertical muy alta que sobresale en las iglesias.",
+      "TREN": "Medio de transporte pesado que viaja sobre vias ferreas.",
+      "RIO": "Corriente de agua dulce donde viven peces y patos.",
+      "RETRO": "Estilo estetico basado en modas o tendencias del pasado.",
+      "COSTA": "La orilla donde la tierra firme se junta con el oceano.",
+      "CINE": "Establecimiento para la proyeccion de filmes cinematograficos.",
+      "CORO": "Conjunto de cantantes que interpretan musica vocal juntos.",
+      "SACO": "Prenda de vestir elegante con mangas y botones para hombres."
+    }
   }
 ]

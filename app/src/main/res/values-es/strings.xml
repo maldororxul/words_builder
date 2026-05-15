@@ -8,7 +8,7 @@
     <string name="exit_message">Volver al menú principal</string>
     <string name="yes">Sí</string>
     <string name="no">No</string>
-    <string name="score_label">Puntuación</string>
+    <string name="score_label">✍️ %1$d</string>
     <string name="help">Ayuda</string>
     <string name="level_short">Nivel %1$d</string>
     <string name="campaign_finished">¡CAMPAÑA COMPLETADA!</string>

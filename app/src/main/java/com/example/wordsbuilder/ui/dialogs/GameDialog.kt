@@ -89,8 +89,7 @@ fun GameDialog(
                         ) {
                             GameButton(
                                 text = confirmButtonText,
-                                onClick = onConfirm,
-                                containerColor = Color(0xFF4CAF50)
+                                onClick = onConfirm
                             )
                             GameButton(
                                 text = dismissButtonText,

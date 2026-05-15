@@ -8,7 +8,7 @@
     <string name="exit_message">Вернуться в главное меню</string>
     <string name="yes">Да</string>
     <string name="no">Нет</string>
-    <string name="score_label">Счет</string>
+    <string name="score_label">✍️ %1$d</string>
     <string name="help">Помощь</string>
     <string name="hint_confirm_title">Использовать подсказку?</string>
     <string name="hint_confirm_msg">Вы уверены, что хотите потратить %1$d🪙 на подсказку?</string>

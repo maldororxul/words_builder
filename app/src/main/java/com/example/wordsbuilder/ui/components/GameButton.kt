@@ -27,7 +27,7 @@ import com.example.wordsbuilder.R
 fun GameButton(
     text: String,
     modifier: Modifier = Modifier,
-    containerColor: Color = Color(0xFFFF9800),
+    containerColor: Color = Color(0xFFFF8000),
     onClick: () -> Unit,
     enabled: Boolean = true
 ) {
@@ -50,7 +50,7 @@ fun GameButton(
     val targetOffset = if (isPressed && enabled) 6f else 0f
     val animatedOffset by animateFloatAsState(
         targetValue = targetOffset,
-        animationSpec = tween(durationMillis = 60),
+        animationSpec = tween(durationMillis = 30),
         label = "ButtonPress"
     )
 

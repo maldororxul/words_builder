@@ -25,6 +25,7 @@ import kotlin.random.Random
 fun WordWheel(
     letters: List<Char>,
     targetWords: List<String>,
+    modifier: Modifier = Modifier,
     onWordComposed: (String) -> Unit
 ) {
     var selectedIndices by remember { mutableStateOf(emptyList<Int>()) }
@@ -46,7 +47,7 @@ fun WordWheel(
         }
     }
 
-    Canvas(modifier = Modifier
+    Canvas(modifier = modifier
         .size(300.dp)
         .pointerInput(letters) {
             detectDragGestures(
@@ -110,7 +111,7 @@ fun WordWheel(
         )
 
         // Отрисовка "магических" искривленных разрядов (Path) вместо прямых линий
-        val orangeColor = Color(0xFFFF9800)
+        val orangeColor = Color(0xFFFF8000 )
 
         fun drawLightningPath(start: Offset, end: Offset) {
             val path = Path().apply { moveTo(start.x, start.y) }

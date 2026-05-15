@@ -23,7 +23,6 @@ import com.example.wordsbuilder.ui.components.PassiveIncomeRow
 fun MainMenu(
     currentLevelId: Int,
     isCampaignFinished: Boolean,
-    coins: Int,
     onStartCampaign: () -> Unit,
     onStartRandom: () -> Unit,
     onOpenShop: () -> Unit,
@@ -41,7 +40,7 @@ fun MainMenu(
             contentDescription = "Game Logo",
             modifier = Modifier
                 .fillMaxWidth(0.8f)
-                .height(180.dp)
+                .height(260.dp)
                 .padding(top = 32.dp),
             contentScale = ContentScale.Fit
         )

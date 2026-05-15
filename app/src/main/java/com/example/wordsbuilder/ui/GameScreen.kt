@@ -4,16 +4,14 @@ import CurrentWordDisplay
 import ExitConfirmationDialog
 import LevelCompleteOverlay
 import LevelInfo
-import WordWheelContainer
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
@@ -26,9 +24,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import com.example.wordsbuilder.data.LevelManager
 import com.example.wordsbuilder.domain.game.RandomWordGenerator
 import com.example.wordsbuilder.ui.components.CrosswordGrid
+import com.example.wordsbuilder.ui.components.GameHintButton
+import com.example.wordsbuilder.ui.components.GameLevelStats
+import com.example.wordsbuilder.ui.components.WordWheel
 import com.example.wordsbuilder.ui.dialogs.DefinitionDialog
 import com.example.wordsbuilder.ui.dialogs.HintConfirmationDialog
 import generateCrossword
@@ -61,7 +63,7 @@ fun GameScreen(
 
     // Основные состояния
     var coins by remember { mutableIntStateOf(getSavedCoins(context)) }
-    var totalScore by remember { mutableStateOf(getSavedScore(context)) }
+    var totalScore by remember { mutableIntStateOf(getSavedScore(context)) }
     var showHintDialog by remember { mutableStateOf(false) }
     var showExitDialog by remember { mutableStateOf(false) }
     var randomLevelCounter by rememberSaveable { mutableIntStateOf(1) }
@@ -173,13 +175,18 @@ fun GameScreen(
                 CrosswordGrid(
                     placedWords = crosswordGrid,
                     solvedWords = solvedWords,
-                    wordsMap = currentLevelWordsMap, // Передаем словарь определений
                     selectedWord = if (showDefinitionDialog) targetedWordForDefinition else null, // Подсвечиваем слово, пока открыт диалог
                     onWordLongPressed = { word ->
                         targetedWordForDefinition = word
                         showDefinitionDialog = true // Открываем всплывающее окно
                     },
                     modifier = Modifier.fillMaxSize()
+                )
+                GameHintButton(
+                    onClick = { showHintDialog = true },
+                    modifier = Modifier
+                        .align(Alignment.BottomEnd) // Смещение в левый нижний угол
+                        .padding(end = 9.dp, bottom = 9.dp) // Безопасные отступы от краев колеса
                 )
             }
 
@@ -195,39 +202,53 @@ fun GameScreen(
                     modifier = Modifier.fillMaxWidth()
                 )
                 // Колесо со всеми оверлеями
-                WordWheelContainer(
-                    letters = wheelLetters,
-                    targetWords = targetWords,
-                    totalScore = totalScore,
-                    coins = coins,
-                    campaignLevelId = campaignLevelId,
-                    onWordComposed = { input ->
-                        val isSuccess = handleWordInput(
-                            input = input,
-                            targetWords = targetWords,
-                            solvedWords = solvedWords,
-                            gameMode = gameMode,
-                            context = context,
-                            onSolvedUpdate = { newSolved ->
-                                solvedWords = newSolved
-                            },
-                            onScoreUpdate = { pointsToAdd ->
-                                totalScore += pointsToAdd
-                                saveScore(context, totalScore)
-                            },
-                            onCurrentWordChange = { currentWord = it }
-                        )
+                Box(
+                    contentAlignment = Alignment.Center
+                ) {
+                    WordWheel(
+                        modifier = Modifier.zIndex(1f),
+                        letters = wheelLetters,
+                        targetWords = targetWords,
+                        onWordComposed = { input ->
+                            val isSuccess = handleWordInput(
+                                input = input,
+                                targetWords = targetWords,
+                                solvedWords = solvedWords,
+                                gameMode = gameMode,
+                                context = context,
+                                onSolvedUpdate = { newSolved ->
+                                    solvedWords = newSolved
+                                },
+                                onScoreUpdate = { pointsToAdd ->
+                                    totalScore += pointsToAdd
+                                    saveScore(context, totalScore)
+                                },
+                                onCurrentWordChange = { currentWord = it }
+                            )
 
-                        if (isSuccess) {
-                            // Фиксируем слово для анимации, пока оно не стерлось
-                            lastSolvedWord = currentWord
-                            // Увеличиваем счетчик, чтобы запустить WordFlyUpEffect
-                            wordFlyTrigger++
-                        }
-                    },
-                    onHintClick = { showHintDialog = true }
+                            if (isSuccess) {
+                                // Фиксируем слово для анимации, пока оно не стерлось
+                                lastSolvedWord = currentWord
+                                // Увеличиваем счетчик, чтобы запустить WordFlyUpEffect
+                                wordFlyTrigger++
+                            }
+                        },
+                    )
+                    // кнопка подсказки строго по центру колеса
+//                    GameHintButton(
+//                        onClick = { showHintDialog = true },
+//                        modifier = Modifier
+//                            .size(64.dp)
+//                    )
+                }
+                // полоса статистики
+                GameLevelStats(
+                    coins = coins,
+                    levelNumber = campaignLevelId,
+                    score = totalScore,
+                    gameMode = gameMode,
+                    modifier = Modifier.padding(top = 4.dp, bottom = 0.dp)
                 )
-                Spacer(modifier = Modifier.height(10.dp))
             }
         }
 

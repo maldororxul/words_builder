@@ -123,8 +123,7 @@ fun HintConfirmationDialog(
                                         Toast.makeText(context, context.getString(R.string.not_enough_coins), Toast.LENGTH_SHORT).show()
                                         onDismiss()
                                     }
-                                },
-                                containerColor = Color(0xFF4CAF50)
+                                }
                             )
                             // Кнопка отмены
                             GameButton(
