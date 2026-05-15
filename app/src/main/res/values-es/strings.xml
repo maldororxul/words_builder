@@ -41,4 +41,7 @@
     <string name="get">¡Recibir!</string>
     <string name="zoom_me">¡Agrandame! 🔍</string>
     <string name="tap_me">¡Mantén pulsado! ☝️</string>
+    <string name="watch_ads">Ver anuncio x%1$d 📺</string>
+    <string name="double_reward">¡La recompensa se ha duplicado! 🎉</string>
+    <string name="your_reward">Tu recompensa:</string>
 </resources>

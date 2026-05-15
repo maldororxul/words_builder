@@ -251,7 +251,6 @@ fun GameScreen(
         // === ОКНО ПОБЕДЫ ===
         if (isLevelComplete) {
             LevelCompleteOverlay(
-                gameMode = gameMode,
                 levelReward = levelReward,
                 context = context,
                 onCoinsUpdate = { newCoins ->

@@ -40,4 +40,7 @@
     <string name="get">Забрать!</string>
     <string name="zoom_me">Увеличь меня! 🔍</string>
     <string name="tap_me">Нажми на меня! ☝️</string>
+    <string name="watch_ads">Смотреть рекламу x%1$d 📺</string>
+    <string name="double_reward">Награда удвоена! 🎉</string>
+    <string name="your_reward">Ваша награда:</string>
 </resources>

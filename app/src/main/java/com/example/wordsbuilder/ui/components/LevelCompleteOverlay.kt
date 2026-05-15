@@ -31,7 +31,6 @@ import androidx.compose.ui.text.style.TextAlign
 
 @Composable
 fun LevelCompleteOverlay(
-    gameMode: String,
     levelReward: Int,
     context: Context,
     onCoinsUpdate: (Int) -> Unit,
@@ -67,7 +66,7 @@ fun LevelCompleteOverlay(
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             Text(
-                text = "УРОВЕНЬ ЗАВЕРШЕН!",
+                text = stringResource(id = R.string.level_completed),
                 color = Color(0xFFF1C40F),
                 fontSize = 28.sp,
                 fontWeight = FontWeight.Bold,
@@ -79,7 +78,7 @@ fun LevelCompleteOverlay(
                 verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
                 Text(
-                    text = "Ваша награда:",
+                    text = stringResource(id = R.string.your_reward),
                     color = Color.White,
                     fontSize = 18.sp
                 )
@@ -95,7 +94,7 @@ fun LevelCompleteOverlay(
 
             if (!isAdWatched) {
                 GameButton(
-                    text = "Смотреть рекламу x2 📺",
+                    text = stringResource(id = R.string.watch_ads, 2),
                     onClick = {
                         isAdWatched = true
                         // Реклама просмотрена: доначисляем еще раз сумму levelReward (удвоение)
@@ -108,7 +107,7 @@ fun LevelCompleteOverlay(
                 )
             } else {
                 Text(
-                    text = "Награда удвоена! 🎉",
+                    text = stringResource(id = R.string.double_reward),
                     color = Color(0xFFE67E22),
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Medium
@@ -116,7 +115,7 @@ fun LevelCompleteOverlay(
             }
 
             GameButton(
-                text = "Далее",
+                text = stringResource(id = R.string.next_level),
                 onClick = onNextLevel,
                 modifier = Modifier.fillMaxWidth()
             )

@@ -42,4 +42,7 @@
     <string name="get">Get!</string>
     <string name="zoom_me">Zoom me! 🔍</string>
     <string name="tap_me">Long-tap me! ☝️</string>
+    <string name="watch_ads">Watch AD x%1$d 📺</string>
+    <string name="double_reward">Double Reward 🎉</string>
+    <string name="your_reward">Your Reward:</string>
 </resources>
