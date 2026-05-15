@@ -3,37 +3,6 @@ import androidx.core.content.edit
 import com.example.wordsbuilder.R
 import com.example.wordsbuilder.data.StatsManager
 
-fun generateLevel(dictionary: List<String>, wordCount: Int = 6): Pair<List<String>, List<Char>> {
-    if (dictionary.isEmpty()) return Pair(emptyList(), emptyList())
-
-    // Берем слова подлиннее для лучшего колеса
-    val longWords = dictionary.filter { it.length >= 5 }
-    val mainWord = if (longWords.isNotEmpty()) longWords.random() else dictionary.random()
-
-    val mainLetterCount = mainWord.groupingBy { it }.eachCount()
-
-    // Находим все слова, которые можно составить из букв главного слова
-    val possibleWords = dictionary.filter { word ->
-        word != mainWord && word.length >= 3 &&
-                word.groupingBy { it }.eachCount().all { (char, count) ->
-                    count <= mainLetterCount.getOrDefault(char, 0)
-                }
-    }
-
-    // Выбираем нужное количество
-    val selectedWords = (listOf(mainWord) + possibleWords.shuffled().take(wordCount - 1))
-        .distinct() // на всякий случай
-
-    // Перемешиваем для разнообразия
-    val levelWords = selectedWords.shuffled()
-
-    // Буквы для колеса — из самого длинного слова
-    val wheelLetters = levelWords.maxByOrNull { it.length }?.toList()?.shuffled()
-        ?: mainWord.toList().shuffled()
-
-    return levelWords to wheelLetters
-}
-
 fun saveScore(context: Context, score: Int) {
     val prefs = context.getSharedPreferences("game_prefs", Context.MODE_PRIVATE)
     prefs.edit { putInt("total_score", score) }

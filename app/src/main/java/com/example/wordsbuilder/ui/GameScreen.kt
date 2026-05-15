@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -42,6 +43,7 @@ import getSavedLevelProgress
 import getSavedScore
 import handleWordInput
 import saveCampaignLevelIndex
+import saveCoins
 import saveCurrentLevelProgress
 import saveScore
 
@@ -234,12 +236,6 @@ fun GameScreen(
                             }
                         },
                     )
-                    // кнопка подсказки строго по центру колеса
-//                    GameHintButton(
-//                        onClick = { showHintDialog = true },
-//                        modifier = Modifier
-//                            .size(64.dp)
-//                    )
                 }
                 // полоса статистики
                 GameLevelStats(
@@ -256,13 +252,13 @@ fun GameScreen(
         if (isLevelComplete) {
             LevelCompleteOverlay(
                 gameMode = gameMode,
-                levelReward = levelReward, // Передаем динамическую награду из JSON конфигурации уровня
+                levelReward = levelReward,
                 context = context,
                 onCoinsUpdate = { newCoins ->
                     coins = newCoins
                 },
                 onNextLevel = {
-                    if (gameMode == "campaign") {
+                    if (gameMode == " campaign") {
                         campaignLevelId++
                         saveCampaignLevelIndex(context, currentLocale, campaignLevelId)
                         saveCurrentLevelProgress(context, emptySet())
