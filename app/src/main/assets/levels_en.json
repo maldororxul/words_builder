@@ -8,14 +8,9 @@
     "splash_res": "splash_level_1",
     "description": "An intellectual debut within the halls of the ancient Academy. Test your strength in searching for the fundamental terms of science and philosophy.",
     "words": {
-      "DOGMATISM": "A way of thinking that operates with unalterable concepts and excludes critical analysis.",
       "HYPOTHESIS": "A scientific assumption put forward to explain a phenomenon and requiring verification.",
       "AXIOM": "A statement accepted without logical proof due to its inherent truth.",
-      "THEOREM": "A mathematical statement, the truth of which is established by means of a proof.",
-      "ANALYSIS": "A research method that breaks down the studied object into its constituent parts.",
       "SYNTHESIS": "The combination of various elements into a single whole in the process of cognition.",
-      "DIALECTICS": "A philosophical method of argumentation that investigates the internal contradictions of phenomena.",
-      "LOGIC": "The science of the laws, forms, and methods of correct thinking.",
       "SOPHISM": "A formal, seemingly correct, but inherently false argument or conclusion."
     }
   },
@@ -29,13 +24,8 @@
     "description": "A gaze through telescope lenses into the depths of space. The words of this level describe the grandiose phenomena of the Universe.",
     "words": {
       "ASTEROID": "A small celestial body of the Solar System moving in an orbit around the Sun.",
-      "GALAXY": "A giant, gravitationally bound system consisting of stars, gas, dust, and dark matter.",
       "SUPERNOVA": "A phenomenal astronomical event accompanied by a colossal explosion of a star.",
-      "QUASAR": "An extragalactic object of high luminosity powered by a supermassive black hole.",
       "ORBIT": "The path of a celestial body or an artificial spacecraft in the gravitational field of another body.",
-      "ZENITH": "The highest imaginary point of the celestial sphere located directly above the observer's head.",
-      "INTERIOR": "The inner depths of a cosmic body hidden from direct observation.",
-      "TELESCOPE": "An optical instrument for observing distant astronomical objects.",
       "PULSAR": "A rotating neutron star that emits strictly periodic pulses of radiation."
     }
   },
@@ -48,14 +38,8 @@
     "splash_res": "splash_level_3",
     "description": "Labyrinths of myths and ancient civilizations. Unravel the terms that are rooted in antique culture.",
     "words": {
-      "ARCHETYPE": "A universal innate psychic prototype that structures human perception.",
-      "PANTHEON": "A collection of gods of a particular religion, or a monumental building dedicated to them.",
-      "ARTIFACT": "An object of material culture created or modified by a human in the past.",
-      "ALLEGORY": "A artistic personification of abstract concepts through concrete images.",
       "LABYRINTH": "A complex structure with many tangled paths and dead ends.",
-      "MYTHOLOGY": "A system of tales about gods, heroes, and the origin of the universe.",
       "RITUAL": "A traditional order of performing solemn or religious actions.",
-      "TOTEM": "A symbolic animal or plant considered an ancestor and protector of a clan.",
       "LEGEND": "A poetic tradition or story about a historical event or personality."
     }
   },
@@ -68,15 +52,10 @@
     "splash_res": "splash_level_4",
     "description": "An era of great discoveries and complex mechanisms. A level for connoisseurs of exact sciences and inventions.",
     "words": {
-      "CAPACITOR": "An electronic two-terminal component designed to store an electrical charge.",
-      "RESONANCE": "The phenomenon of a sharp increase in the amplitude of oscillations when frequencies match.",
       "ALCHEMY": "A pre-scientific direction in chemistry that sought to obtain the philosopher's stone.",
-      "TRAJECTORY": "A continuous line described by a material point during its movement.",
       "MECHANISM": "A system of links designed to convert the motion of one body into the motion of others.",
       "DYNAMICS": "A branch of mechanics that studies the motion of bodies under the action of applied forces.",
-      "MOMENTUM": "A vector physical quantity that serves as a measure of mechanical motion.",
-      "ENERGY": "A scalar physical quantity that is a unified measure of various forms of motion.",
-      "THERMOSTAT": "A device for maintaining a constant temperature in an enclosed space."
+      "ENERGY": "A scalar physical quantity that is a unified measure of various forms of motion."
     }
   },
   {
@@ -88,15 +67,9 @@
     "splash_res": "splash_level_5",
     "description": "The final exam in the Royal Library. Words for true erudites who master the language masterfully.",
     "words": {
-      "VESTIGE": "An organ or trait that has lost its primary significance in the course of evolution.",
-      "ECLECTICISM": "An artistic mixing or combination of heterogeneous styles, ideas, or views.",
-      "METAMORPHOSIS": "A complete, radical change of form, structure, or inner essence.",
-      "SYNECDOCHE": "A trope, a stylistic device based on transferring meaning from a part to the whole.",
       "METAPHOR": "A figure of speech consisting in the use of a word or expression in a figurative meaning.",
       "PARADOX": "A situation that can exist in reality but has no logical explanation.",
-      "GENOTYPE": "The sum total of all genes localized in the chromosomes of a given organism.",
-      "RETROSPECTIVE": "A look into the past, an examination of past events or stages of development.",
-      "PHENOMENON": "An unusual occurrence, a rare fact, something that is difficult to understand or explain."
+      "GENOTYPE": "The sum total of all genes localized in the chromosomes of a given organism."
     }
   }
 ]
