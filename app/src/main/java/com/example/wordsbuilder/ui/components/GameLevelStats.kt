@@ -31,6 +31,12 @@ fun GameLevelStats(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
+        // Счет
+        Text(
+            text = stringResource(id = R.string.score_label, score),
+            color = Color.White,
+            fontSize = 14.sp
+        )
         // Уровень
         if (gameMode == "campaign") {
             Text(
@@ -39,12 +45,6 @@ fun GameLevelStats(
                 fontSize = 14.sp
             )
         }
-        // Счет
-        Text(
-            text = stringResource(id = R.string.score_label, score),
-            color = Color.White,
-            fontSize = 14.sp
-        )
         // Баланс монет
         Text(
             text = "🪙 $coins",
