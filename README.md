@@ -61,3 +61,77 @@ Un vibrante juego de rompecabezas de palabras para móviles desarrollado nativam
 * **Gestión de Estado:** Arquitectura reactiva de Compose (`remember`, `mutableStateOf`, `SnapshotStateList`).
 * **Motor de Animación:** Transiciones aceleradas por hardware mediante `Animatable` y renderizado de partículas en la GPU.
 * **Persistencia de Datos:** Progreso local y estadísticas almacenadas de forma segura a través de `SharedPreferences` y serialización con `Gson`.
+
+## PROJECT STRUCTURE (INSTRUCTION FOR AI-AGENT: Remember these links to view project files)
+```agsl
+├── app/
+│   ├── src/
+│   │   ├── androidTest/
+│   │   │   └── java/
+│   │   │       └── com/
+│   │   │           └── example/
+│   │   │               └── wordsbuilder/
+│   │   │                   └── ExampleInstrumentedTest.kt -> https://github.com/maldororxul/words_builder/blob/main/app/src/androidTest/java/com/example/wordsbuilder/ExampleInstrumentedTest.kt
+│   │   ├── main/
+│   │   │   ├── assets/
+│   │   │   │   ├── backgrounds.json -> https://github.com/maldororxul/words_builder/blob/main/app/src/main/assets/backgrounds.json
+│   │   │   │   ├── levels_en.json -> https://github.com/maldororxul/words_builder/blob/main/app/src/main/assets/levels_en.json
+│   │   │   │   ├── levels_es.json -> https://github.com/maldororxul/words_builder/blob/main/app/src/main/assets/levels_es.json
+│   │   │   │   ├── levels_ru.json -> https://github.com/maldororxul/words_builder/blob/main/app/src/main/assets/levels_ru.json
+│   │   │   │   ├── passive_income.json -> https://github.com/maldororxul/words_builder/blob/main/app/src/main/assets/passive_income.json
+│   │   │   │   ├── words_en.json -> https://github.com/maldororxul/words_builder/blob/main/app/src/main/assets/words_en.json
+│   │   │   │   ├── words_es.json -> https://github.com/maldororxul/words_builder/blob/main/app/src/main/assets/words_es.json
+│   │   │   │   └── words_ru.json -> https://github.com/maldororxul/words_builder/blob/main/app/src/main/assets/words_ru.json
+│   │   │   ├── java/
+│   │   │   │   └── com/
+│   │   │   │       └── example/
+│   │   │   │           └── wordsbuilder/
+│   │   │   │               ├── data/
+│   │   │   │               │   ├── BackgroundManager.kt -> https://github.com/maldororxul/words_builder/blob/main/app/src/main/java/com/example/wordsbuilder/data/BackgroundManager.kt
+│   │   │   │               │   ├── BackgroundModel.kt -> https://github.com/maldororxul/words_builder/blob/main/app/src/main/java/com/example/wordsbuilder/data/BackgroundModel.kt
+│   │   │   │               │   ├── CampaignLevel.kt -> https://github.com/maldororxul/words_builder/blob/main/app/src/main/java/com/example/wordsbuilder/data/CampaignLevel.kt
+│   │   │   │               │   ├── DictionaryManager.kt -> https://github.com/maldororxul/words_builder/blob/main/app/src/main/java/com/example/wordsbuilder/data/DictionaryManager.kt
+│   │   │   │               │   ├── LevelData.kt -> https://github.com/maldororxul/words_builder/blob/main/app/src/main/java/com/example/wordsbuilder/data/LevelData.kt
+│   │   │   │               │   ├── LevelInfo.kt -> https://github.com/maldororxul/words_builder/blob/main/app/src/main/java/com/example/wordsbuilder/data/LevelInfo.kt
+│   │   │   │               │   ├── LevelManager.kt -> https://github.com/maldororxul/words_builder/blob/main/app/src/main/java/com/example/wordsbuilder/data/LevelManager.kt
+│   │   │   │               │   ├── PassiveIncomeManager.kt -> https://github.com/maldororxul/words_builder/blob/main/app/src/main/java/com/example/wordsbuilder/data/PassiveIncomeManager.kt
+│   │   │   │               │   ├── SoundManager.kt -> https://github.com/maldororxul/words_builder/blob/main/app/src/main/java/com/example/wordsbuilder/data/SoundManager.kt
+│   │   │   │               │   ├── StatsManager.kt -> https://github.com/maldororxul/words_builder/blob/main/app/src/main/java/com/example/wordsbuilder/data/StatsManager.kt
+│   │   │   │               │   └── WordRepository.kt -> https://github.com/maldororxul/words_builder/blob/main/app/src/main/java/com/example/wordsbuilder/data/WordRepository.kt
+│   │   │   │               ├── domain/
+│   │   │   │               │   ├── game/
+│   │   │   │               │   │   ├── CrosswordGenerator.kt -> https://github.com/maldororxul/words_builder/blob/main/app/src/main/java/com/example/wordsbuilder/domain/game/CrosswordGenerator.kt
+│   │   │   │               │   │   └── GameLogic.kt -> https://github.com/maldororxul/words_builder/blob/main/app/src/main/java/com/example/wordsbuilder/domain/game/GameLogic.kt
+│   │   │   │               │   └── model/
+│   │   │   │               │       └── PlacedWord.kt -> https://github.com/maldororxul/words_builder/blob/main/app/src/main/java/com/example/wordsbuilder/domain/model/PlacedWord.kt
+│   │   │   │               ├── ui/
+│   │   │   │               │   ├── components/
+│   │   │   │               │   │   ├── AddBanner.kt -> https://github.com/maldororxul/words_builder/blob/main/app/src/main/java/com/example/wordsbuilder/ui/components/AddBanner.kt
+│   │   │   │               │   │   ├── AnimatedCrosswordCell.kt -> https://github.com/maldororxul/words_builder/blob/main/app/src/main/java/com/example/wordsbuilder/ui/components/AnimatedCrosswordCell.kt
+│   │   │   │               │   │   ├── CoinExplosionEffect.kt -> https://github.com/maldororxul/words_builder/blob/main/app/src/main/java/com/example/wordsbuilder/ui/components/CoinExplosionEffect.kt
+│   │   │   │               │   │   ├── CrosswordGrid.kt -> https://github.com/maldororxul/words_builder/blob/main/app/src/main/java/com/example/wordsbuilder/ui/components/CrosswordGrid.kt
+│   │   │   │               │   │   ├── CurrentWordDisplay.kt -> https://github.com/maldororxul/words_builder/blob/main/app/src/main/java/com/example/wordsbuilder/ui/components/CurrentWordDisplay.kt
+│   │   │   │               │   │   ├── GameBackground.kt -> https://github.com/maldororxul/words_builder/blob/main/app/src/main/java/com/example/wordsbuilder/ui/components/GameBackground.kt
+│   │   │   │               │   │   ├── GameButton.kt -> https://github.com/maldororxul/words_builder/blob/main/app/src/main/java/com/example/wordsbuilder/ui/components/GameButton.kt
+│   │   │   │               │   │   ├── GameHintButton.kt -> https://github.com/maldororxul/words_builder/blob/main/app/src/main/java/com/example/wordsbuilder/ui/components/GameHintButton.kt
+│   │   │   │               │   │   ├── GameLevelStats.kt -> https://github.com/maldororxul/words_builder/blob/main/app/src/main/java/com/example/wordsbuilder/ui/components/GameLevelStats.kt
+│   │   │   │               │   │   ├── LevelCompleteOverlay.kt -> https://github.com/maldororxul/words_builder/blob/main/app/src/main/java/com/example/wordsbuilder/ui/components/LevelCompleteOverlay.kt
+│   │   │   │               │   │   ├── PassiveIncomeRow.kt -> https://github.com/maldororxul/words_builder/blob/main/app/src/main/java/com/example/wordsbuilder/ui/components/PassiveIncomeRow.kt
+│   │   │   │               │   │   ├── SettingsScreen.kt -> https://github.com/maldororxul/words_builder/blob/main/app/src/main/java/com/example/wordsbuilder/ui/components/SettingsScreen.kt
+│   │   │   │               │   │   ├── ShopScreen.kt -> https://github.com/maldororxul/words_builder/blob/main/app/src/main/java/com/example/wordsbuilder/ui/components/ShopScreen.kt
+│   │   │   │               │   │   ├── StatsScreen.kt -> https://github.com/maldororxul/words_builder/blob/main/app/src/main/java/com/example/wordsbuilder/ui/components/StatsScreen.kt
+│   │   │   │               │   │   ├── VideoBackground.kt -> https://github.com/maldororxul/words_builder/blob/main/app/src/main/java/com/example/wordsbuilder/ui/components/VideoBackground.kt
+│   │   │   │               │   │   ├── WordFlyUpEffect.kt -> https://github.com/maldororxul/words_builder/blob/main/app/src/main/java/com/example/wordsbuilder/ui/components/WordFlyUpEffect.kt
+│   │   │   │               │   │   └── WordWheel.kt -> https://github.com/maldororxul/words_builder/blob/main/app/src/main/java/com/example/wordsbuilder/ui/components/WordWheel.kt
+│   │   │   │               │   ├── dialogs/
+│   │   │   │               │   │   ├── DefinitionDialog.kt -> https://github.com/maldororxul/words_builder/blob/main/app/src/main/java/com/example/wordsbuilder/ui/dialogs/DefinitionDialog.kt
+│   │   │   │               │   │   ├── ExitConfirmationDialog.kt -> https://github.com/maldororxul/words_builder/blob/main/app/src/main/java/com/example/wordsbuilder/ui/dialogs/ExitConfirmationDialog.kt
+│   │   │   │               │   │   ├── GameDialog.kt -> https://github.com/maldororxul/words_builder/blob/main/app/src/main/java/com/example/wordsbuilder/ui/dialogs/GameDialog.kt
+│   │   │   │               │   │   └── HintConfirmationDialog.kt -> https://github.com/maldororxul/words_builder/blob/main/app/src/main/java/com/example/wordsbuilder/ui/dialogs/HintConfirmationDialog.kt
+│   │   │   │               │   ├── model/
+│   │   │   │               │   │   └── CoinParticle.kt -> https://github.com/maldororxul/words_builder/blob/main/app/src/main/java/com/example/wordsbuilder/ui/model/CoinParticle.kt
+│   │   │   │               │   ├── theme/
+│   │   │   │               │   │   ├── Color.kt -> https://github.com/maldororxul/words_builder/blob/main/app/src/main/java/com/example/wordsbuilder/ui/theme/Color.kt
+│   │   │   │               │   │   ├── Theme.kt -> https://github.com/maldororxul/words_builder/blob/main/app/src/main/java/com/example/wordsbuilder/ui/theme/Theme.kt
+│   │   │   │               │   │   ├── Type.kt -> https://github.com/maldororxul/words_builder/blob/main/app/src/main/java/com/example/wordsbuilder/ui/theme/Type.kt
+```
