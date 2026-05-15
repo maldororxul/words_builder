@@ -24,6 +24,17 @@ object LevelManager {
         }
     }
 
+    fun getAllAvailableMediaResources(context: Context): List<Pair<String, String>> {
+        return try {
+            val jsonString = context.assets.open("levels_en.json").bufferedReader().use { it.readText() }
+            val listType = object : com.google.gson.reflect.TypeToken<List<CampaignLevel>>() {}.type
+            val levels: List<CampaignLevel> = com.google.gson.Gson().fromJson(jsonString, listType)
+            levels.map { it.bgRes to it.musicRes }
+        } catch (e: Exception) {
+            listOf("bg_forest" to "music_cozy_forest") // Фоллбэк
+        }
+    }
+
     // Получение количества уровней в кампании
     fun getCampaignLevelsCount(context: Context, langCode: String): Int {
         return loadCampaignLevels(context, langCode).size

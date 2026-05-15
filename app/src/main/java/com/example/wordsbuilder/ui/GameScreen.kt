@@ -1,5 +1,7 @@
 package com.example.wordsbuilder.ui
 
+import BackgroundManager
+import CampaignLevel
 import CurrentWordDisplay
 import ExitConfirmationDialog
 import LevelCompleteOverlay
@@ -11,7 +13,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import GameBackground
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -31,6 +33,7 @@ import com.example.wordsbuilder.domain.game.RandomWordGenerator
 import com.example.wordsbuilder.ui.components.CrosswordGrid
 import com.example.wordsbuilder.ui.components.GameHintButton
 import com.example.wordsbuilder.ui.components.GameLevelStats
+import com.example.wordsbuilder.ui.components.LevelStartOverlay
 import com.example.wordsbuilder.ui.components.WordWheel
 import com.example.wordsbuilder.ui.dialogs.DefinitionDialog
 import com.example.wordsbuilder.ui.dialogs.HintConfirmationDialog
@@ -43,14 +46,13 @@ import getSavedLevelProgress
 import getSavedScore
 import handleWordInput
 import saveCampaignLevelIndex
-import saveCoins
 import saveCurrentLevelProgress
 import saveScore
 
 @Composable
 fun GameScreen(
     gameMode: String,
-    paddingValues: PaddingValues,
+    bgManager: BackgroundManager,
     onBackToMenu: () -> Unit
 ) {
     val context = LocalContext.current
@@ -58,6 +60,50 @@ fun GameScreen(
 
     var lastSolvedWord by remember { mutableStateOf("") }
     var wordFlyTrigger by remember { mutableIntStateOf(0) }
+
+    // Стейт показа стартового экрана (для кампании — true, для случайного — false)
+    var showStartOverlay by remember { mutableStateOf(gameMode == "campaign") }
+    var campaignLevelId by rememberSaveable {
+        mutableIntStateOf(getSavedCampaignLevelIndex(context, currentLocale))
+    }
+
+    val allLevels = LevelManager.loadCampaignLevels(context, currentLocale)
+    val currentLevel = allLevels.find { it.id == campaignLevelId } ?: allLevels.firstOrNull()
+    currentLevel?.words ?: emptyMap()
+
+    // Конфигурация медиа-ресурсов для текущей сессии
+    val bgResName = remember {
+        if (gameMode == "campaign" && currentLevel != null) {
+            currentLevel.bgRes
+        } else {
+            // Выбираем случайный фон из уровней en.json
+            val mediaPool = LevelManager.getAllAvailableMediaResources(context)
+            mediaPool.map { it.first }.randomOrNull() ?: "bg_forest"
+        }
+    }
+
+    val musicResName = remember {
+        if (gameMode == "campaign" && currentLevel != null) {
+            currentLevel.musicRes
+        } else {
+            // Выбираем случайную музыку из уровней en.json
+            val mediaPool = LevelManager.getAllAvailableMediaResources(context)
+            mediaPool.map { it.second }.randomOrNull() ?: "music_cozy_forest"
+        }
+    }
+
+    // Запуск фонового трека уровня при старте экрана (или после закрытия заставки)
+    LaunchedEffect(musicResName, showStartOverlay) {
+        if (!showStartOverlay) {
+            SoundManager.playMusicByName(context, musicResName)
+        }
+    }
+
+    // Обработка кнопки "Назад" (сброс музыки на меню)
+    val handleBack = {
+        SoundManager.playMusicByName(context, "menu_music")
+        onBackToMenu()
+    }
 
     // Состояния для показа определений
     var targetedWordForDefinition by remember { mutableStateOf("") }
@@ -69,9 +115,6 @@ fun GameScreen(
     var showHintDialog by remember { mutableStateOf(false) }
     var showExitDialog by remember { mutableStateOf(false) }
     var randomLevelCounter by rememberSaveable { mutableIntStateOf(1) }
-    var campaignLevelId by rememberSaveable {
-        mutableIntStateOf(getSavedCampaignLevelIndex(context, currentLocale))
-    }
 
     val screenKey = rememberSaveable { mutableIntStateOf(0) }
 
@@ -165,87 +208,102 @@ fun GameScreen(
     BackHandler { showExitDialog = true }
 
     Box(modifier = Modifier.fillMaxSize()) {
-        Column(modifier = Modifier.fillMaxSize()) {
-            // === КРОССВОРД ===
-            Box(
-                modifier = Modifier
-                    .weight(1f)
-                    .fillMaxWidth()
-                    .padding(4.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                CrosswordGrid(
-                    placedWords = crosswordGrid,
-                    solvedWords = solvedWords,
-                    selectedWord = if (showDefinitionDialog) targetedWordForDefinition else null, // Подсвечиваем слово, пока открыт диалог
-                    onWordLongPressed = { word ->
-                        targetedWordForDefinition = word
-                        showDefinitionDialog = true // Открываем всплывающее окно
-                    },
-                    modifier = Modifier.fillMaxSize()
-                )
-                GameHintButton(
-                    onClick = { showHintDialog = true },
-                    modifier = Modifier
-                        .align(Alignment.BottomEnd) // Смещение в левый нижний угол
-                        .padding(end = 9.dp, bottom = 9.dp) // Безопасные отступы от краев колеса
-                )
-            }
+        GameBackground(bgManager = bgManager)
 
-            Column(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                // Текущее слово
-                CurrentWordDisplay(
-                    currentWord = currentWord,
-                    triggerWord = lastSolvedWord,
-                    flyTrigger = wordFlyTrigger,
-                    modifier = Modifier.fillMaxWidth()
-                )
-                // Колесо со всеми оверлеями
+        if (!showStartOverlay) {
+            Column(modifier = Modifier.fillMaxSize()) {
+                // === КРОССВОРД ===
                 Box(
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxWidth()
+                        .padding(4.dp),
                     contentAlignment = Alignment.Center
                 ) {
-                    WordWheel(
-                        modifier = Modifier.zIndex(1f),
-                        letters = wheelLetters,
-                        targetWords = targetWords,
-                        onWordComposed = { input ->
-                            val isSuccess = handleWordInput(
-                                input = input,
-                                targetWords = targetWords,
-                                solvedWords = solvedWords,
-                                gameMode = gameMode,
-                                context = context,
-                                onSolvedUpdate = { newSolved ->
-                                    solvedWords = newSolved
-                                },
-                                onScoreUpdate = { pointsToAdd ->
-                                    totalScore += pointsToAdd
-                                    saveScore(context, totalScore)
-                                },
-                                onCurrentWordChange = { currentWord = it }
-                            )
-
-                            if (isSuccess) {
-                                // Фиксируем слово для анимации, пока оно не стерлось
-                                lastSolvedWord = currentWord
-                                // Увеличиваем счетчик, чтобы запустить WordFlyUpEffect
-                                wordFlyTrigger++
-                            }
+                    CrosswordGrid(
+                        placedWords = crosswordGrid,
+                        solvedWords = solvedWords,
+                        selectedWord = if (showDefinitionDialog) targetedWordForDefinition else null, // Подсвечиваем слово, пока открыт диалог
+                        onWordLongPressed = { word ->
+                            targetedWordForDefinition = word
+                            showDefinitionDialog = true // Открываем всплывающее окно
                         },
+                        modifier = Modifier.fillMaxSize()
+                    )
+                    GameHintButton(
+                        onClick = { showHintDialog = true },
+                        modifier = Modifier
+                            .align(Alignment.BottomEnd) // Смещение в левый нижний угол
+                            .padding(end = 9.dp, bottom = 9.dp) // Безопасные отступы от краев колеса
                     )
                 }
-                // полоса статистики
-                GameLevelStats(
-                    coins = coins,
-                    levelNumber = campaignLevelId,
-                    score = totalScore,
-                    gameMode = gameMode,
-                    modifier = Modifier.padding(top = 4.dp, bottom = 0.dp)
-                )
+
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    // Текущее слово
+                    CurrentWordDisplay(
+                        currentWord = currentWord,
+                        triggerWord = lastSolvedWord,
+                        flyTrigger = wordFlyTrigger,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    // Колесо со всеми оверлеями
+                    Box(
+                        contentAlignment = Alignment.Center
+                    ) {
+                        WordWheel(
+                            modifier = Modifier.zIndex(1f),
+                            letters = wheelLetters,
+                            targetWords = targetWords,
+                            onWordComposed = { input ->
+                                val isSuccess = handleWordInput(
+                                    input = input,
+                                    targetWords = targetWords,
+                                    solvedWords = solvedWords,
+                                    gameMode = gameMode,
+                                    context = context,
+                                    onSolvedUpdate = { newSolved ->
+                                        solvedWords = newSolved
+                                    },
+                                    onScoreUpdate = { pointsToAdd ->
+                                        totalScore += pointsToAdd
+                                        saveScore(context, totalScore)
+                                    },
+                                    onCurrentWordChange = { currentWord = it }
+                                )
+
+                                if (isSuccess) {
+                                    // Фиксируем слово для анимации, пока оно не стерлось
+                                    lastSolvedWord = currentWord
+                                    // Увеличиваем счетчик, чтобы запустить WordFlyUpEffect
+                                    wordFlyTrigger++
+                                }
+                            },
+                        )
+                    }
+                    // полоса статистики
+                    GameLevelStats(
+                        coins = coins,
+                        levelNumber = campaignLevelId,
+                        score = totalScore,
+                        gameMode = gameMode,
+                        modifier = Modifier.padding(top = 4.dp, bottom = 0.dp)
+                    )
+                }
             }
+        }
+
+        // 3. Оверлей ЗАСТАВКИ уровня перед стартом
+        if (showStartOverlay && gameMode == "campaign" && currentLevel != null) {
+            LevelStartOverlay(
+                levelId = currentLevel.id,
+                splashResName = currentLevel.splashRes,
+                description = currentLevel.description,
+                context = context,
+                onStartClick = { showStartOverlay = false }
+            )
         }
 
         // === ОКНО ПОБЕДЫ ===

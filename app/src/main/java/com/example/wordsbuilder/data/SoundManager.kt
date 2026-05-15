@@ -77,6 +77,27 @@ object SoundManager {
         }
     }
 
+    fun playMusic(context: Context, resId: Int) {
+        musicPlayer?.release()
+        musicPlayer = MediaPlayer.create(context, resId).apply {
+            setVolume(musicVolume, musicVolume)
+            start()
+            setOnCompletionListener { release() }
+        }
+    }
+
+    fun playMusicByName(context: Context, musicResName: String) {
+        val musicResId = context.resources.getIdentifier(musicResName, "raw", context.packageName)
+        if (musicResId != 0) {
+            // Вызываем ваш существующий метод воспроизведения музыки по ID
+            playMusic(context, musicResId)
+        } else {
+            // Фоллбэк, если трек не найден — играем дефолтную музыку меню
+            val defaultId = context.resources.getIdentifier("menu_music", "raw", context.packageName)
+            if (defaultId != 0) playMusic(context, defaultId)
+        }
+    }
+
     fun stopMusic() {
         musicPlayer?.stop()
         musicPlayer?.release()

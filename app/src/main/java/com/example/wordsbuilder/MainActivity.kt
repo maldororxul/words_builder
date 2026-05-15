@@ -160,7 +160,7 @@ class MainActivity : AppCompatActivity() {
                                 }
                                 GameScreen(
                                     gameMode = gameMode,
-                                    paddingValues = innerPadding,
+                                    bgManager = bgManager,
                                     onBackToMenu = { currentScreen = "menu" }
                                 )
                             }

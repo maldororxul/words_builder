@@ -10,6 +10,8 @@ import androidx.core.content.edit
 
 class BackgroundManager(private val context: Context) {
     private val prefs = context.getSharedPreferences("game_prefs", Context.MODE_PRIVATE)
+    // Переменная для хранения оригинального бэкграунда, который купил/выбрал игрок в магазине
+    private var originalBackgroundId: String = selectedBackgroundId
 
     var coins: Int
         get() = getSavedCoins(context)
@@ -48,6 +50,31 @@ class BackgroundManager(private val context: Context) {
             return true
         }
         return false
+    }
+
+    fun setTemporaryBackground(resourceName: String) {
+        val detectedType = if (resourceName.startsWith("vid_") || resourceName.contains("video")) "video" else "image"
+
+        val tempBg = BackgroundModel(
+            id = "temp_level_bg",
+            nameResKey = "temp_bg",
+            type = detectedType,
+            resourceName = resourceName,
+            price = 0
+        )
+
+        // Сохраняем текущий пользовательский ID, если мы еще не на временном фоне
+        if (selectedBackgroundId != "temp_level_bg") {
+            originalBackgroundId = selectedBackgroundId
+        }
+
+        // Перезаписываем активный ID, чтобы метод getCurrentBackground() вернул этот объект
+        selectedBackgroundId = tempBg.id
+    }
+
+    fun resetToMenuBackground() {
+        // Возвращаем тот фон, который был у пользователя до старта уровня
+        selectedBackgroundId = originalBackgroundId
     }
 
     @SuppressLint("LocalContextResourcesRead", "DiscouragedApi")

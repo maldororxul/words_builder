@@ -112,3 +112,15 @@ fun getRandomWordsCount(context: Context): Int {
     val prefs = context.getSharedPreferences("words_builder_prefs", Context.MODE_PRIVATE)
     return prefs.getInt("random_words_count", 5) // 5 — дефолтное значение
 }
+
+fun getResourceIdentifier(context: Context, resName: String, defType: String): Int {
+    val id = context.resources.getIdentifier(resName, defType, context.packageName)
+    return if (id != 0) id else {
+        // Дефолтные значения, если ресурс не найден
+        when (defType) {
+            "drawable" -> android.R.drawable.ic_dialog_alert
+            "raw" -> 0 // логика тишины или стандартного трека
+            else -> 0
+        }
+    }
+}

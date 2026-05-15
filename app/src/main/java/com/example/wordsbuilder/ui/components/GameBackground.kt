@@ -13,9 +13,9 @@ import androidx.compose.runtime.key
 @SuppressLint("LocalContextResourcesRead")
 @Composable
 fun GameBackground(
+    modifier: Modifier = Modifier,
     bgManager: BackgroundManager,
     selectedId: String = bgManager.selectedBackgroundId, // Принимает ID как ключ для отслеживания
-    modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
     val currentBg = bgManager.getCurrentBackground()
